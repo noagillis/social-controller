@@ -1,0 +1,100 @@
+.ready-to-play-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ready-to-play-modal {
+  background: #080c11;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  width: 360px;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  &__dismiss {
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px 10px 0 0;
+
+    button {
+      background: transparent;
+      border: none;
+      padding: 4px;
+      cursor: pointer;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 0 28px 24px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: white;
+    text-align: center;
+  }
+
+  &__description {
+    margin: 0;
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 18px;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  &__btn-primary {
+    width: 100%;
+    padding: 7px 16px;
+    border-radius: 4px;
+    border: none;
+    background: white;
+    color: black;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 22px;
+    cursor: pointer;
+
+    &:active {
+      opacity: 0.85;
+    }
+  }
+
+  &__btn-tertiary {
+    width: 100%;
+    padding: 6px 16px;
+    border-radius: 4px;
+    border: none;
+    background: transparent;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px;
+    cursor: pointer;
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".", // Base directory for non-relative imports
+        "paths": {
+            "@/*": [
+                "src/*"
+            ] // Alias '@' points to 'src' folder
+        }
+    },
+    "exclude": [
+        "node_modules"
+    ]
+}

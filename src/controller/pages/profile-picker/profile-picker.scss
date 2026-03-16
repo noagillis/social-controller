@@ -1,0 +1,161 @@
+.profile-picker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+  background: black;
+}
+
+.profile-picker__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profile-picker__bg-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.85) 40%,
+    rgba(0, 0, 0, 0.95) 50%,
+    black 55%
+  );
+}
+
+.profile-picker__card {
+  position: relative;
+  z-index: 1;
+  background: #232323;
+  border: 1px solid rgba(128, 128, 128, 0.16);
+  border-radius: 16px;
+  padding: 10px 20px 20px;
+  margin: 0 18px 140px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+
+.profile-picker__header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.profile-picker__header-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.profile-picker__header span {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 27px;
+}
+
+.profile-picker__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  padding: 10px 0;
+  width: 100%;
+}
+
+.profile-picker__profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.profile-picker__avatar-frame {
+  width: 90px;
+  height: 90px;
+  border-radius: 8px;
+  border: 1.2px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.profile-picker__handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 90px;
+
+  span {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13.66px;
+    font-weight: 500;
+    line-height: 21px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+.profile-picker__controller-icon {
+  width: 17px;
+  height: 17px;
+  flex-shrink: 0;
+}
+
+.profile-picker__divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  margin: 10px 0;
+}
+
+.profile-picker__footer {
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+
+  span {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 27px;
+  }
+}

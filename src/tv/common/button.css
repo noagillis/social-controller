@@ -1,0 +1,75 @@
+.button {
+  --color: white;
+  --bgColor: var(--Button-button--surface-primary, rgba(128, 128, 128, 0.7));
+  --borderColor: transparent;
+  width: max-content;
+  padding: 13px 20px;
+  border-radius: 100px;
+  gap: 6px;
+  background: var(--bgColor);
+  color: var(--color);
+  fill: var(--color);
+  stroke: var(--color);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px var(--borderColor) solid;
+}
+
+.button svg {
+  width: 22px;
+}
+
+.button.isFocusedLeaf:not(.isBlurred) {
+  --color: black;
+  --borderColor: white;
+  --bgColor: white;
+}
+
+.button-secondary {
+  --bgColor: var(--Button-button--surface-secondary, rgba(128, 128, 128, 0.4));
+  --borderColor: transparent;
+}
+
+.button-supplemental {
+  --bgColor: var(--button-button-surface-supplemental, rgba(22, 22, 22, 0.7));
+}
+
+.button.button-tertiary {
+  --bgColor: var(
+    --interactive-background-interactive-tertiary-background-color-default,
+    rgba(0, 0, 0, 0)
+  );
+}
+
+.button-large {
+  font-size: 24px;
+  font-weight: 400;
+  padding: 13px 30px;
+  border-radius: 5px !important;
+}
+.button.button-game-dp {
+  --borderColor: rgba(255, 255, 255, 0.2);
+  --bgColor: transparent;
+  height: 57px;
+  padding: 16px 30px;
+  backdrop-filter: blur(17px);
+  border-radius: 100px;
+}
+
+.button.button-game-dp-rating {
+  width: 46px;
+  height: 46px;
+  padding: 10.5px 10px 9.5px 10px;
+}
+
+.button-game-dp-rating svg {
+  width: 26px;
+}
+
+.button.button-in-game {
+  border-radius: 4px !important;
+  height: 40px;
+  padding: 8px 16px;
+}

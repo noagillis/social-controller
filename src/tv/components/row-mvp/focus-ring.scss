@@ -1,0 +1,151 @@
+.mvp__row__focusring {
+  left: 0;
+  top: 0;
+  z-index: 2;
+  position: absolute;
+}
+
+.focusring {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  outline: 2px solid #fff;
+  border-radius: var(--corners-round-l, 16px);
+  z-index: 3;
+  background-blend-mode: lighten;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.7) inset;
+}
+
+.mvp__focused__wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: black;
+
+  .skrim-bottom {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    z-index: 1;
+    height: 184px;
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 1.39%,
+      rgba(0, 0, 0, 0.5) 75.22%,
+      rgba(0, 0, 0, 0.9) 130.46%
+    );
+  }
+
+  .focused__img__wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    background: black;
+
+    &.-v {
+      transform: scale(1);
+    }
+
+    .bg {
+      z-index: 0;
+      height: 100%;
+      top: 50%;
+      left: 50%;
+      position: absolute;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .video__container {
+      transform: scale(1.3);
+      z-index: 1;
+    }
+  }
+
+  .focused__info__wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+
+    .info {
+      bottom: 20px;
+      left: 20px;
+      z-index: 1;
+      width: calc(100% - 20px);
+    }
+
+    .logo {
+      width: calc(var(--setting-mediumIFLogoWidth) * 1px);
+      img {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.mvp__row_s .mvp__row__focusring .focused__info__wrapper {
+  .info {
+    bottom: 16px;
+    left: 12px;
+  }
+  .skrim-bottom {
+    height: 136px;
+    border-radius: 0px 0px var(--border-radius-border-radius-small, 8px)
+      var(--border-radius-border-radius-small, 8px);
+
+    background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) -2.91%,
+      rgba(0, 0, 0, 0.5) 43.43%,
+      rgba(0, 0, 0, 0.9) 96.38%
+    );
+  }
+
+  .logo {
+    max-width: 160px;
+  }
+
+  .evidences {
+    display: inline-flex;
+    right: 12px;
+    bottom: 16px;
+  }
+}
+.metatags {
+  width: max-content;
+  display: flex;
+  gap: 21px;
+  margin: 0;
+
+  .meta__cert {
+    background: transparent;
+    padding: 0;
+    p {
+      margin: 0;
+    }
+  }
+
+  span {
+    position: relative;
+  }
+
+  span:after {
+    content: '';
+    background: rgba(255, 255, 255, 0.4);
+    height: 5px;
+    width: 5px;
+    border-radius: 50%;
+    position: absolute;
+    right: -12px;
+    top: 9px;
+  }
+  span:last-child:after {
+    opacity: 0;
+  }
+
+  .tagline {
+    gap: 5px;
+  }
+}

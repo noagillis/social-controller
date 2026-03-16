@@ -1,0 +1,745 @@
+.fifa-landing-page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  .fifa-landing-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.controller-connect {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &-scrim {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.40) 22.92%, rgba(0, 0, 0, 0.90) 74.64%, #000 100%);
+    }
+
+    &-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(60.77% 34.8% at 50% 104.79%, rgba(222, 23, 57, 0.70) 0%, rgba(51, 0, 77, 0.21) 85.5%, rgba(51, 0, 77, 0.00) 99%);
+    }
+  }
+
+  &__panel {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 82%;
+    max-width: 967px;
+    aspect-ratio: 967 / 383;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1.844px solid rgba(255, 255, 255, 0.04);
+
+    background: radial-gradient(99.39% 87.76% at 50% 24.84%, #252F3B 0%, rgba(34, 42, 55, 0.81) 25.7%, rgba(23, 18, 38, 0.00) 100%), #080C11;
+
+
+    &-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 16px;
+    }
+
+    &-content {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      gap: 50px;
+      padding: 46px;
+      height: 100%;
+      z-index: 1;
+      border: 1.844px solid rgba(255, 255, 255, 0.1);
+
+    }
+  }
+
+  &__qr {
+    flex-shrink: 0;
+    width: 260px;
+    height: 260px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .qrCodeContainer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    flex: 1;
+    padding-top: 4px;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  &__desc {
+    font-size: 15px;
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    line-height: 1.4;
+    max-width: 520px;
+  }
+
+  &__slots {
+    display: flex;
+    gap: 15px;
+  }
+
+  &__slot {
+    width: 88px;
+    flex-shrink: 0;
+
+    > img {
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+    }
+
+    &-connected {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    &-avatar {
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      object-fit: cover;
+    }
+
+    &-label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+    }
+
+    &-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.7);
+      letter-spacing: 0.02em;
+    }
+
+    &-waiting {
+      width: 88px;
+      height: 88px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background:
+        radial-gradient(340.5% 175.47% at 50% 130.19%, #DE1739 0%, rgba(193, 23, 60, 0.89) 12.05%, rgba(67, 24, 70, 0.70) 100%),
+        rgba(8, 12, 17, 0.70);
+
+      &-icon {
+        width: 40px;
+        height: 40px;
+        object-fit: contain;
+      }
+
+      &-text {
+        font-size: 11px;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 0.02em;
+      }
+    }
+  }
+
+  &__back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 148px;
+    padding: 4px 15px;
+    border-radius: 18px;
+    background: rgba(128, 128, 128, 0.4);
+    color: white;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 24px;
+
+    &.isFocused,
+    &.isFocusedLeaf {
+      outline: 2px solid white;
+    }
+  }
+}
+
+// Friends Overlay
+.friends-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &-dark {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.4) 18.6%,
+        rgba(0, 0, 0, 0.95) 34%,
+        #000 100%
+      );
+    }
+
+    &-glow {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        60.77% 34.8% at 50% 104.79%,
+        rgba(222, 23, 57, 0.70) 0%,
+        rgba(51, 0, 77, 0.21) 85.5%,
+        rgba(51, 0, 77, 0.00) 99%
+      );
+    }
+  }
+
+  // Cards viewport (clips overflow)
+  &__cards-viewport {
+    position: absolute;
+    left: 63px;
+    top: 194px;
+    right: 0;
+    overflow: hidden;
+  }
+
+  // Cards row (slides via transform)
+  &__cards {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    width: max-content;
+  }
+
+  // Focus wrapper around each card
+  &__card-focus-wrapper {
+    border-radius: 20px;
+    border: 3px solid transparent;
+    transition: border-color 0.2s ease;
+
+    &.isFocused,
+    &.isFocusedLeaf {
+      border-color: white;
+    }
+  }
+
+  // Friends title card
+  &__title-card {
+    width: 390px;
+    height: 386px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    &-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background:
+        radial-gradient(80% 40% at 50% 8%, rgba(176, 56, 220, 0.55) 0%, rgba(109, 59, 227, 0) 100%),
+        linear-gradient(180deg, #1c0e20 0%, #020202 50%, #020202 100%);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &-icon {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 8px;
+    }
+
+    &-heading {
+      position: relative;
+      z-index: 1;
+      font-size: 32px;
+      font-weight: 700;
+      color: white;
+      margin: 0 0 12px 0;
+      text-align: center;
+    }
+
+    &-btn {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 6px 16px;
+      border-radius: 32px;
+      background: rgba(128, 128, 128, 0.4);
+      color: white;
+      font-size: 20px;
+      font-weight: 500;
+      height: 42px;
+      width: 262px;
+      justify-content: center;
+    }
+  }
+
+  // Player card
+  &__player-card {
+    width: 244px;
+    height: 386px;
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+
+    &-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: linear-gradient(180deg, #161616 0%, #020202 75%, #101010 100%);
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    &-gradient {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 260px;
+      border-radius: 20px 20px 0 0;
+      background: radial-gradient(
+        80% 25% at 50% 0%,
+        rgba(230, 19, 29, 0.22) 0%,
+        rgba(230, 19, 29, 0) 100%
+      );
+    }
+
+    &-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 64px 20px 0;
+    }
+
+    &-profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    &-name-lockup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      height: 50px;
+      width: 200px;
+    }
+
+    &-name {
+      font-size: 22px;
+      font-weight: 500;
+      color: white;
+      text-align: center;
+      margin: 0;
+      line-height: 29px;
+    }
+
+    &-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      &-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #4caf50;
+      }
+
+      &-text {
+        font-size: 12px;
+        font-weight: 500;
+        color: white;
+        line-height: 17px;
+      }
+    }
+
+    &-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(128, 128, 128, 0.4);
+      box-shadow: 0px 0px 20px rgba(230, 19, 29, 0.2);
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    &-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      width: 100%;
+    }
+
+    &-playing {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 14px;
+
+      svg {
+        width: 16px;
+        height: 16px;
+        flex-shrink: 0;
+      }
+    }
+
+    &-game {
+      font-size: 16px;
+      font-weight: 500;
+      color: white;
+      text-align: center;
+      margin: 0;
+      line-height: 22px;
+      width: 128px;
+    }
+  }
+
+  // Find Friends card viewport (replaces cards row when searching)
+  &__find-friends-viewport {
+    position: absolute;
+    left: 63px;
+    top: 194px;
+    display: flex;
+    align-items: flex-start;
+    gap: 24px;
+  }
+
+  // Bottom menu
+  &__menu {
+    position: absolute;
+    bottom: 56px;
+    left: 50%;
+    transform: translateX(calc(-50% - 35px));
+    display: flex;
+    align-items: center;
+    gap: 24px;
+
+    &-group {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 24px;
+    }
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 44px;
+      padding: 0 15px 0 18px;
+      border-radius: 25px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 18px;
+      font-weight: 500;
+      white-space: nowrap;
+      cursor: pointer;
+
+      &.-active {
+        color: white;
+        font-weight: 600;
+      }
+
+      &.-separate {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 200px;
+      }
+
+      &.isFocused,
+      &.isFocusedLeaf {
+        color: black;
+        background: white;
+        border-radius: 25px;
+      }
+    }
+  }
+
+  // Key guide
+  &__keyguide {
+    position: absolute;
+    bottom: 20px;
+    left: 28px;
+    display: flex;
+    gap: 20px;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    &-btn {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 9px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &--a {
+        background: rgba(93, 229, 221, 1);
+        color: #000;
+        border: 1.5px solid #fff;
+      }
+
+      &--b {
+        background: rgba(236, 74, 90, 1);
+        color: #fff;
+        border: 1.5px solid #fff;
+      }
+    }
+
+    &-label {
+      font-size: 16px;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.5);
+      letter-spacing: 0.16px;
+    }
+  }
+}
+
+// Find Friends Card (shown inside friends overlay when searching)
+.find-friends-card {
+  width: 706px;
+  height: 386px;
+  border-radius: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.04);
+    background:
+      radial-gradient(
+        ellipse at 50% 12%,
+        rgba(176, 56, 220, 0.3) 0%,
+        rgba(109, 59, 227, 0) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgb(28, 14, 32) 0%,
+        rgb(2, 2, 2) 65.85%,
+        rgb(16, 16, 16) 100%
+      );
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.1);
+  }
+
+  &__illustration {
+    position: relative;
+    z-index: 1;
+    width: 158px;
+    height: 158px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: -10px;
+  }
+
+  &__title {
+    position: relative;
+    z-index: 1;
+    font-size: 32px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 16px;
+    text-align: center;
+    line-height: 42px;
+  }
+
+  &__search-area {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    width: 262px;
+  }
+
+  &__input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    height: 42px;
+    padding: 0 16px;
+    border-radius: 4px;
+    background: #232323;
+    overflow: hidden;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  &__input-text {
+    font-size: 20px;
+    line-height: 27px;
+    color: white;
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  &__cursor {
+    display: inline-block;
+    width: 2px;
+    height: 24px;
+    background: white;
+    margin-left: 1px;
+    animation: find-friends-blink 1s step-end infinite;
+  }
+
+  &__search-btn {
+    width: 100%;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 32px;
+    background: rgba(128, 128, 128, 0.4);
+
+    span {
+      font-size: 20px;
+      font-weight: 500;
+      color: white;
+      line-height: 27px;
+    }
+  }
+}
+
+@keyframes find-friends-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// Grid Keyboard (used in Find Friends search)
+.grid-keyboard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  &__row {
+    display: flex;
+    gap: 2px;
+  }
+
+  &__key {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+
+    &.-wide {
+      flex: 1;
+    }
+
+    &.isFocused,
+    &.isFocusedLeaf {
+      background: white;
+      color: black;
+    }
+  }
+}

@@ -1,0 +1,204 @@
+.controller {
+  width: 100vw;
+  overflow: hidden;
+  position: absolute;
+  background: black;
+
+
+  padding-top: env(safe-area-inset-top);
+  padding-top: constant(safe-area-inset-top);
+  height: calc(100vh - env(safe-area-inset-top));
+  height: calc(100vh - constant(safe-area-inset-top));
+
+  -webkit-touch-callout: none; /* Prevents callout menu on long press */
+  -webkit-user-select: none; /* Disables text selection on long press for Safari */
+  -moz-user-select: none; /* Disables text selection for Firefox */
+  -ms-user-select: none; /* Disables text selection for IE */
+  user-select: none; /* Standard property */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+.controller-alert {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10;
+  display: flex;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* Background blur */
+  text-align: center;
+
+  img {
+    transform: translateY(-50px);
+    width: 100px;
+  }
+
+  h1 {
+    color: white;
+    font-size: 20px;
+    width: 70%;
+    margin: auto;
+  }
+}
+
+.controller-screen {
+  --topNavHeight: 52px;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  background: #04060a;
+  z-index: 10;
+  display: flex;
+  flex-flow: column;
+  text-align: center;
+  justify-content: flex-start;
+
+  --glow-opacity: 0.15;
+  --glow-offset: 100px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 150%;
+    height: 740px;
+    left: calc(-25% - var(--glow-offset));
+    right: calc(25% - var(--glow-offset));
+    top: -420px;
+    opacity: var(--glow-opacity);
+    background: radial-gradient(
+      38.86% 38.86% at 50% 50%,
+      rgb(255, 14, 14) 0%,
+      rgba(255, 14, 14, 0) 100%
+    );
+    pointer-events: none;
+  }
+}
+
+.controller-screen__body {
+  margin-top: 10px;
+  width: 100%;
+  color: white;
+  overflow: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+  }
+}
+
+.controller-debug {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  background: none;
+
+  p {
+    margin: 0rem;
+    font-size: 12px;
+    color: white;
+  }
+  .debug-panel {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+    top: 0px;
+    right: 0px;
+    position: absolute;
+    gap: 5px;
+
+    &.disconnected {
+      text-align: center;
+      align-items: center;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      p {
+        font-size: 16px;
+      }
+    }
+  }
+  &:before {
+    opacity: 0;
+  }
+}
+
+/* Mobile: Rotate the container for landscape mode */
+@media only screen and (orientation: portrait) {
+  .controller-screen {
+    width: var(--vh);
+    height: var(--vw);
+    transform: translate3d(-50%, -50%, 0) rotate(90deg);
+    top: 50%;
+    left: 50%;
+  }
+}
+
+/* Mobile: Rotate the container for landscape mode */
+@media only screen and (orientation: landscape) {
+  .controller-alert {
+    display: none;
+  }
+}
+
+/* Mobile Typography */
+.controller {
+  .subheader-standard-heavy {
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 30px;
+  }
+  .body-standard {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 24px;
+  }
+
+  .body-standard-heavy {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px;
+  }
+
+  .body-small {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+  }
+
+  .body-small-heavy {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 21px;
+  }
+
+  .legal {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 20px;
+  }
+  .legal-heavy {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+  }
+  .title-heavy {
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 30px; /* 150% */
+  }
+  .button--text {
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 24px; /* 150% */
+  }
+}

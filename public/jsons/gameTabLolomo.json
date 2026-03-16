@@ -1,0 +1,34 @@
+{
+  "row_game_m_ed": {
+    "title": "Learn About Netflix Games",
+    "videoIds": [
+      "netflix_tv_games",
+      "how_to_tv",
+      "netflix_mobile_games",
+      "how_to_mobile"
+    ]
+  },
+  "row_game_dp_update": {
+    "title": "Latest Updates"
+  },
+  "row_game_dp_square": {
+    "title": "More Games Like This",
+    "videoIds": ["gone", "infernax", "three", "link"]
+  },
+  "row_game_dp_achievements": {
+    "title": "Achievements",
+    "videoIds": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "unlocked",
+      "unlocked",
+      "unlocked",
+      "unlocked",
+      "unlocked",
+      "unlocked"
+    ]
+  }
+}

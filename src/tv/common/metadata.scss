@@ -1,0 +1,21 @@
+.meta,
+.meta__synopsis,
+.meta__tagline {
+  margin: 0;
+}
+
+.meta__cert {
+  background: #414141;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px 6px;
+  height: 24px;
+  width: fit-content;
+}
+
+.meta__type {
+  display: flex;
+  gap: 4px;
+}

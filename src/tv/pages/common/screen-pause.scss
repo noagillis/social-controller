@@ -1,0 +1,54 @@
+.screen-pause {
+  position: absolute;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.9) 100%);
+
+
+  &__img{
+    top: 130px;
+    right: 50px;
+    position: absolute;
+    width: 270px;
+    height: 425px;
+  }
+}
+
+.screen-pause__mobile {
+  &__text {
+    z-index: 1;
+    gap: 21px;
+    top: 10px;
+    left: 20px;
+    position: absolute;
+  }
+
+  &__bg {
+    transform: rotate(159.601deg) translate3d(250px, 250px, 0px);
+    width: 1104.328px;
+    height: 385.71px;
+    z-index: -1;
+    background: radial-gradient(
+        152.45% 117.14% at 64.3% 100%,
+        rgba(191, 28, 37, 0.3) 0%,
+        rgba(65, 0, 100, 0.06) 49.55%,
+        rgba(65, 0, 100, 0) 72.54%,
+        rgba(65, 0, 100, 0) 100%
+      ),
+      radial-gradient(
+        87.93% 72.2% at 15% 100%,
+        rgba(121, 50, 238, 0.3) 0%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      radial-gradient(
+        42.74% 93.28% at 50% 100%,
+        #000 25%,
+        rgba(0, 0, 0, 0.5) 60%,
+        rgba(0, 0, 0, 0) 100%
+      ),
+      radial-gradient(
+        134.63% 100% at 50% 100%,
+        rgba(0, 0, 0, 0.8) 25%,
+        rgba(0, 0, 0, 0.4) 60%,
+        rgba(0, 0, 0, 0) 100%
+      );
+  }
+}

@@ -1,0 +1,136 @@
+.ssic-dpad {
+  --size: 240px;
+  position: absolute;
+  bottom: 20px;
+  width: var(--size);
+  height: var(--size);
+
+  // Highlight glow — bottom-right area
+  .dpad-highlight {
+    position: absolute;
+    width: 118px;
+    height: 118px;
+    top: 132px;
+    left: 133px;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  // Shadow glow — top-left area
+  .dpad-shadow {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    top: -110px;
+    left: -90px;
+    pointer-events: none;
+    overflow: visible;
+  }
+
+  // Touch zones — diagonal quadrants via clip-path
+  .dpad-zone {
+    position: absolute;
+    inset: 0;
+    width: var(--size);
+    height: var(--size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1;
+
+    // Quadrant SVG shape — sits inside the zone so it scales on press
+    .dpad-quadrant {
+      position: absolute;
+      inset: 0;
+      width: var(--size);
+      height: var(--size);
+      pointer-events: none;
+    }
+
+    // Quadrant highlight that grows from center on press
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: radial-gradient(
+        circle at 50% 50%,
+        rgba(255, 255, 255, 0.12) 0%,
+        rgba(255, 255, 255, 0.06) 40%,
+        rgba(255, 255, 255, 0) 70%
+      );
+      transform: scale(0.3);
+      opacity: 0;
+      transition: transform 150ms ease-out, opacity 100ms ease-out;
+      pointer-events: none;
+    }
+
+    &.pressed::before {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    .dpad-arrow {
+      position: absolute;
+      opacity: 0.85;
+      transition: opacity 100ms ease-out;
+    }
+
+    &.pressed .dpad-arrow {
+      opacity: 1;
+    }
+
+    // Up: top triangle
+    &.--Up {
+      -webkit-clip-path: polygon(0 0, 100% 0, 50% 50%);
+      clip-path: polygon(0 0, 100% 0, 50% 50%);
+
+      .dpad-arrow {
+        width: 21px;
+        height: 24px;
+        top: 30px;
+        left: calc(50% - 10px);
+      }
+    }
+
+    // Down: bottom triangle
+    &.--Down {
+      -webkit-clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+      clip-path: polygon(0 100%, 100% 100%, 50% 50%);
+
+      .dpad-arrow {
+        width: 21px;
+        height: 24px;
+        bottom: 30px;
+        left: calc(50% - 10px);
+      }
+    }
+
+    // Left: left triangle
+    &.--Left {
+      -webkit-clip-path: polygon(0 0, 0 100%, 50% 50%);
+      clip-path: polygon(0 0, 0 100%, 50% 50%);
+
+      .dpad-arrow {
+        width: 24px;
+        height: 21px;
+        left: 30px;
+        top: calc(50% - 10px);
+      }
+    }
+
+    // Right: right triangle
+    &.--Right {
+      -webkit-clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+      clip-path: polygon(100% 0, 100% 100%, 50% 50%);
+
+      .dpad-arrow {
+        width: 24px;
+        height: 21px;
+        right: 30px;
+        top: calc(50% - 10px);
+      }
+    }
+  }
+}

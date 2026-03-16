@@ -1,0 +1,41 @@
+.ssic-grid {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
+.ssic-grid-row {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+}
+
+.ssic-grid-row-item {
+  width: 50px;
+  height: 50px;
+  outline: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.ssic-grid-row-item.isFocused {
+  outline: 2px solid rgba(255, 255, 255, 1);
+}
+
+.ssic-grid-row-item.isSelected {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.ssic-grid.isOnLogo .ssic-grid-row {
+  opacity: 0.5;
+}
+
+.ssic-grid-logo {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 50px;
+  color: rgba(255, 255, 255, 0.7);
+}

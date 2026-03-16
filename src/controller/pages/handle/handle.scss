@@ -1,0 +1,96 @@
+.ssic-handle {
+  display: grid;
+  place-items: center;
+
+  p {
+    margin-top: auto;
+    width: 100%;
+  }
+
+  &__content {
+    width: 60%;
+  }
+
+  &__title {
+    margin-bottom: 7px;
+  }
+  &__subtitle {
+    margin-bottom: 15px;
+  }
+  &__input {
+    position: relative;
+    margin-bottom: 6px;
+    display: flex;
+    height: 56px;
+    padding: 8px 20px;
+    align-items: center;
+    gap: 12px;
+    align-self: stretch;
+    border-radius: 4px;
+    border: 1px solid var(--Green-green-400, #2bb871);
+    background: var(
+      --interactive-background-interactive-supplemental-background-color-default,
+      rgba(22, 22, 22, 0.7)
+    );
+
+    input {
+      width: 100%;
+      height: 100%;
+      margin: 18px 0px 0;
+      background: transparent;
+      outline: none;
+      border: none;
+      color: white;
+      text-align: left;
+      padding: 0;
+    }
+
+    label {
+      position: absolute;
+      left: 20px;
+      top: 5px;
+      color: #ffffffb2;
+    }
+  }
+  .legal {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(
+      --on-surface-text-on-surface-text-color-success,
+      var(--Green-green-400, #2bb871)
+    );
+    svg {
+      width: 16px;
+    }
+  }
+}
+
+.ssic-handle.-tv {
+  justify-content: center;
+  position: absolute;
+  background: black;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+
+  .ssic-handle__content {
+    gap: 1rem;
+  }
+  .ssic-handle__bg {
+    z-index: -1;
+  }
+
+  input {
+    margin: 0;
+  }
+
+  &.isOnInput {
+    opacity: 1;
+    z-index: 11;
+    pointer-events: auto;
+  }
+}

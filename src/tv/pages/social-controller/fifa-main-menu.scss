@@ -1,0 +1,230 @@
+.fifa-main-menu {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  font-family: 'Netflix Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color: white;
+
+  &__bg {
+    position: absolute;
+    inset: 0;
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &__content {
+    position: relative;
+    z-index: 1;
+    padding: 60px 80px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  // Header: Logo + selected item info
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+
+  &__logo {
+    font-size: 56px;
+    font-weight: 900;
+    font-style: italic;
+    letter-spacing: -1px;
+    line-height: 1;
+    color: white;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+
+    &-year {
+      font-size: 32px;
+      color: #e8572a;
+      vertical-align: super;
+      margin-left: 2px;
+      font-weight: 800;
+    }
+  }
+
+  &__header-desc {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__header-title {
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  &__header-subtitle {
+    font-size: 13px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.75);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+  }
+
+  // Menu items
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 120px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &-arrow {
+      font-size: 16px;
+      color: #e8572a;
+      margin-right: 2px;
+      animation: arrow-pulse 1.2s ease-in-out infinite;
+    }
+
+    &-label {
+      font-size: 22px;
+      font-weight: 700;
+      font-style: italic;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: rgba(255, 255, 255, 0.5);
+      text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+      transition: color 0.15s ease;
+    }
+
+    &--selected &-label {
+      color: white;
+      font-size: 24px;
+    }
+
+    &:not(&--selected) {
+      padding-left: 28px;
+    }
+  }
+
+  // FIFA Live badge
+  &__live-badge {
+    position: absolute;
+    top: 36px;
+    right: 48px;
+    z-index: 2;
+    font-size: 18px;
+    font-weight: 800;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.6);
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+
+    &-text {
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+
+  // Bottom bar
+  &__bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 48px;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  }
+
+  &__bottom-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  &__bottom-action {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__bottom-btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 11px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--a {
+      background: rgba(93, 229, 221, 1);
+      color: #000;
+      border: 1.5px solid #fff;
+    }
+
+    &--b {
+      background: rgba(236, 74, 90, 1);
+      color: #fff;
+      border: 1.5px solid #fff;
+    }
+  }
+
+  &__bottom-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &__bottom-right {
+    display: flex;
+    align-items: center;
+  }
+
+  &__fifa-com {
+    font-size: 22px;
+    font-weight: 800;
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.6);
+
+    &-dot {
+      font-weight: 400;
+      font-style: normal;
+      font-size: 18px;
+    }
+  }
+}
+
+@keyframes arrow-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

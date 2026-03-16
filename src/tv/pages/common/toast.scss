@@ -1,0 +1,62 @@
+.screen-toast {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 10px;
+
+  &.-mini {
+    background: none;
+    img {
+      box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.34);
+    }
+  }
+
+  &.-expanded {
+    padding: 12px;
+    background: radial-gradient(
+        157% 169.53% at 111.09% -14.86%,
+        #a10b12 0%,
+        rgba(65, 0, 100, 0.19) 50.68%,
+        rgba(65, 0, 100, 0.1) 87.44%
+      ),
+      #000;
+    box-shadow: 0px 4px 25px 0px rgba(0, 0, 0, 0.34);
+    gap: 8px;
+    min-width: 300px;
+
+    .title-heavy {
+      font-size: 20px;
+      font-weight: 500;
+      line-height: 30px; /* 150% */
+    }
+
+    .buttons {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .buttons {
+    gap: 8px;
+    width: 100%;
+    display: flex;
+    text-align: center;
+    .button-in-game {
+      width: max-width;
+    }
+    .full-width {
+      width: 100%;
+    }
+    .button--text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 24px; /* 150% */
+    }
+  }
+}

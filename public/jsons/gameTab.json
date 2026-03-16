@@ -1,0 +1,164 @@
+{
+  "oxenfree": {
+    "videoId": "oxenfree",
+    "crossPlatform": true,
+    "type": "CloudGame",
+    "device": "tv",
+    "title": "Oxen Free",
+    "shortSynopsis": "A fun night partying takes a supernatural turn for the teens of Camena High. Unlock the mysteries of a ghostly rift in this choice-driven thriller.",
+    "releaseYear": 2022,
+    "tagline": "Recently Added",
+    "isOriginal": true,
+    "genres": ["Interactive Story"],
+    "certificationRating": "Ages 12+",
+    "callouts": ["Recently Added"],
+    "artwork": {
+      "BILLBOARD": { "url": "/gameTab/oxenfree_billboard.png" },
+      "SQUARE_ART": { "url": "/gameTab/oxenfree_square.png" },
+      "SHORT_PANEL": { "url": "/gameTab/oxenfree_uba.jpg" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/oxenfree_logo.png" }
+    },
+    "trailer_lolomo": "/videos/oxenfree.mp4"
+  },
+  "three": {
+    "videoId": "three",
+    "type": "CloudGame",
+    "device": "tv",
+    "title": "Reigns: Three Kingdoms",
+    "shortSynopsis": "Your decisions on the throne shape high-stakes negotiations, military alliances and more in this game continuation inspired by Han dynasty history.",
+    "releaseYear": 2023,
+    "tagline": "",
+    "isOriginal": true,
+    "genres": ["Card Game"],
+    "certificationRating": "All Ages",
+    "artwork": {
+      "SQUARE_ART": { "url": "/gameTab/three_square.png" },
+      "SHORT_PANEL": { "url": "/gameTab/three_uba.jpg" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/three_logo.png" }
+    },
+    "trailer_lolomo": "/videos/three.mp4"
+  },
+  "gone": {
+    "videoId": "gone",
+    "type": "CloudGame",
+    "device": "tv",
+    "title": "The Almost Gone",
+    "shortSynopsis": "In this game, you're somewhere between life and death. Dig deep into memories and other clues in a dark suburbia to unlock the mystery behind your fate.",
+    "releaseYear": 2023,
+    "tagline": "",
+    "isOriginal": true,
+    "genres": ["Puzzle"],
+    "certificationRating": "All Ages",
+    "artwork": {
+      "SQUARE_ART": { "url": "/gameTab/gone_square.png" },
+      "SHORT_PANEL": { "url": "/gameTab/gone_uba.jpg" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/gone_logo.png" }
+    },
+    "trailer_lolomo": "/videos/gone.mp4"
+  },
+
+  "link": {
+    "videoId": "link",
+    "type": "CloudGame",
+    "device": "tv",
+    "title": "Link Twin",
+    "shortSynopsis": "Where one goes, the other follows. Guide mysterious twins through a world of evolving landscapes and mind-bending puzzles in this brain teaser of a game.",
+    "releaseYear": 2023,
+    "tagline": "",
+    "isOriginal": true,
+    "genres": ["Puzzle"],
+    "certificationRating": "All Ages",
+    "artwork": {
+      "SQUARE_ART": { "url": "/gameTab/link_square.png" },
+      "SHORT_PANEL": { "url": "/gameTab/link_uba.jpg" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/link_logo.png" }
+    },
+    "callouts": ["Play Together"],
+    "trailer_lolomo": "/videos/link.mp4"
+  },
+  "infernax": {
+    "videoId": "infernax",
+    "type": "CloudGame",
+    "device": "tv",
+    "title": "Infernax",
+    "shortSynopsis": "Slay monsters and save innocents to break a dark curse. Choose with care, great knight – every move you make in this gory game reaps consequences.",
+    "releaseYear": 2023,
+    "tagline": "",
+    "isOriginal": true,
+    "genres": ["Adventure"],
+    "certificationRating": "Ages 17+",
+    "artwork": {
+      "SQUARE_ART": { "url": "/gameTab/infernax_square.png" },
+      "SHORT_PANEL": { "url": "/gameTab/infernax_uba.jpg" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/infernax_logo.png" }
+    },
+    "trailer_lolomo": "/videos/infernax.mp4"
+  },
+  "oxenfree_mobile": {
+    "videoId": "oxenfree_mobile",
+    "type": "Game",
+    "device": "Mobile",
+    "title": "OXENFREE",
+    "shortSynopsis": "A fun night partying takes a supernatural turn for the teens of Camena High. Unlock the mysteries of a ghostly rift in this choice-driven thriller.",
+    "releaseYear": 2023,
+    "tagline": "",
+    "isOriginal": true,
+    "genres": ["Adventure"],
+    "certificationRating": "Ages 12+",
+    "artwork": {
+      "BOX_ART": { "url": "/gameTab/oxenfree_boxart.png" },
+      "SHORT_PANEL": { "url": "/gameTab/oxenfree_uba.jpg" },
+      "APP_ICON": { "url": "/gameTab/oxenfree_app.png" },
+      "LOGO_BRANDED_STACKED": { "url": "/gameTab/oxenfree_logo.png" }
+    },
+    "trailer_lolomo": "/videos/oxenfree.mp4"
+  },
+  "netflix_tv_games": {
+    "title": "Games on TV",
+    "type": "GameEd",
+    "videoId": "netflix_tv_games",
+    "shortSynopsis": "Learn more about games you can play now on TV and Netflix.com.",
+    "artwork": {
+      "TITLE_CARD": { "url": "/gameTabEd/tv_card.png" },
+      "BOX_ART": { "url": "/gameTabEd/tv_boxart.png" },
+      "STORY_ART": { "url": "/gameTabEd/tv.png" }
+    },
+    "trailer_lolomo": "/gameTabEd/tv.mp4"
+  },
+  "how_to_tv": {
+    "title": "How to Play Games on TV",
+    "type": "GameEd",
+    "videoId": "how_to_tv",
+    "shortSynopsis": "Learn how to connect your mobile phone and use it as the game controller.",
+    "artwork": {
+      "TITLE_CARD": { "url": "/gameTabEd/how_tv_card.png" },
+      "BOX_ART": { "url": "/gameTabEd/how_tv_boxart.png" },
+      "STORY_ART": { "url": "/gameTabEd/how_tv.png" }
+    },
+    "trailer_lolomo": "/gameTabEd/how_tv.mp4"
+  },
+  "netflix_mobile_games": {
+    "title": "Mobile Games",
+    "type": "GameEd",
+    "videoId": "netflix_mobile_games",
+    "shortSynopsis": "Learn more about mobile games you can download and play on a phone or tablet.",
+    "artwork": {
+      "TITLE_CARD": { "url": "/gameTabEd/mobile_card.png" },
+      "BOX_ART": { "url": "/gameTabEd/mobile_boxart.png" },
+      "STORY_ART": { "url": "/gameTabEd/mobile.png" }
+    },
+    "trailer_lolomo": "/gameTabEd/mobile.mp4"
+  },
+  "how_to_mobile": {
+    "title": "How to Get Mobile Games",
+    "type": "GameEd",
+    "videoId": "how_to_mobile",
+    "shortSynopsis": "Learn where to find Netflix mobile games and how to download them.",
+    "artwork": {
+      "TITLE_CARD": { "url": "/gameTabEd/how_mobile_card.png" },
+      "BOX_ART": { "url": "/gameTabEd/how_mobile_boxart.png" },
+      "STORY_ART": { "url": "/gameTabEd/how_mobile.png" }
+    },
+    "trailer_lolomo": "/gameTabEd/how_mobile.mp4"
+  }
+}

@@ -1,0 +1,97 @@
+.ssic-actions {
+  --width: 261px;
+  --height: 261px;
+  transform-origin: right bottom;
+  position: absolute;
+  width: var(--width);
+  height: var(--height);
+  right: 0;
+  bottom: 30px;
+
+  .action-key {
+    --size: 90px;
+    --iconSize: 36px;
+    width: var(--size);
+    height: var(--size);
+    font-size: var(--iconSize);
+
+    border-radius: 50%;
+    font-weight: 900;
+    color: #111111ee;
+
+    position: absolute;
+    display: grid;
+    place-content: center;
+    user-select: none;
+    overflow: hidden;
+    cursor: pointer;
+
+    &.--A {
+      --size: 125px;
+      --iconSize: 42px;
+      left: 140px;
+      top: 130px;
+      box-shadow: 0px 4.495px 4.495px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    &.--B {
+      left: 155px;
+      top: 20px;
+      box-shadow: 0px 0px 13.486px 0px #d25a27 inset;
+    }
+
+    &.--Y {
+      left: 60px;
+      top: 60px;
+      box-shadow: 0px 0px 13.486px 0px #b9a744 inset;
+    }
+    &.--X {
+      left: 30px;
+      top: 160px;
+      box-shadow: 0px 4.495px 4.495px 0px rgba(0, 0, 0, 0.25);
+    }
+
+    svg {
+      position: absolute;
+      width: var(--size);
+      height: var(--size);
+    }
+
+    .label {
+      z-index: 1;
+      background: linear-gradient(
+        139deg,
+        #000 6.76%,
+        rgba(11, 45, 55, 0.65) 121.03%
+      );
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.8),
+        transparent 80%
+      );
+      background-blend-mode: screen;
+      transition: opacity 100ms ease-out;
+      -webkit-transition: opacity 100ms ease-out;
+    }
+
+    &:active:before {
+      opacity: 1;
+    }
+  }
+}

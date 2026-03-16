@@ -1,0 +1,14 @@
+.video {
+  position: absolute;
+  z-index: 0;
+  right: 0;
+  top: 0;
+  width: 100%;
+  background: #000;
+  aspect-ratio: 16/9;
+  transition: opacity 0.2s ease-out;
+
+  &.hide {
+    opacity: 0 !important;
+  }
+}

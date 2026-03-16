@@ -1,0 +1,82 @@
+.create-handle {
+  &__qrCode {
+    position: absolute;
+    left: 379px;
+    bottom: 129px;
+    z-index: 1;
+  }
+
+  .screen-toast {
+    width: 259px;
+
+    .toast-text {
+      position: absolute;
+      left: 58px;
+      top: 18px;
+    }
+  }
+}
+
+.create-handle-input {
+  position: absolute;
+  transform: translateX(-50%);
+  left: 50%;
+  bottom: 34px;
+  gap: 8px;
+
+  .button {
+    width: 100%;
+  }
+
+  &__handleinput {
+    z-index: 1;
+    display: flex;
+    width: 351px;
+    height: 56px;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 4px;
+    outline: 1px solid var(--Green-green-400, #2bb871);
+    background: var(
+      --interactive-background-interactive-supplemental-background-color-default,
+      rgba(22, 22, 22, 0.7)
+    );
+
+    p {
+      margin: 0;
+    }
+
+    input {
+      width: 100%;
+      height: 100%;
+      margin: 15px -3px 0;
+      background: transparent;
+      outline: none;
+      border: none;
+      color: white;
+    }
+
+    label {
+      position: absolute;
+      left: 20px;
+      top: 5px;
+      color: #ffffffb2;
+    }
+  }
+
+  .legal {
+    color: #2bb871;
+    height: 20px;
+    top: 0px;
+    left: 0;
+    align-self: flex-start;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+}
+
+.create-handle-input__handleinput.isFocused {
+  outline: 2px solid white;
+}

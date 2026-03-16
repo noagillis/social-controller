@@ -1,0 +1,184 @@
+.game-dp {
+  padding: 29px 45px;
+}
+
+.row-game-l {
+  position: absolute;
+  z-index: 0;
+
+  .game-dp__video {
+    transform: scale(1.25);
+    width: 100%;
+    z-index: 0;
+  }
+  .game-dp__gradient {
+    position: absolute;
+    z-index: 1;
+    top: -29px;
+    left: -45px;
+    height: 3246px;
+    width: 1280px;
+    background: radial-gradient(
+        183.55% 35.04% at 80.43% 78.53%,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0) 100%
+      ),
+      radial-gradient(
+        107.55% 20.53% at 8.67% 34.24%,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0) 100%
+      ),
+      radial-gradient(
+        93.67% 19.82% at 62.73% 0%,
+        rgba(2, 10, 14, 0) 0%,
+        rgba(2, 10, 14, 0) 62.84%,
+        #020a0e 100%
+      );
+  }
+
+  .bg {
+    top: -29px;
+    left: -45px;
+    width: var(--appWidth);
+    position: absolute;
+  }
+
+  .info {
+    position: absolute;
+    bottom: 20px;
+    left: 38px;
+    z-index: 1;
+
+    .logo {
+      width: 331px;
+      margin-bottom: 12px;
+
+      .logo-tag {
+        width: 60px;
+      }
+      .logo-img {
+        width: 100%;
+      }
+    }
+    .metatags {
+      margin-bottom: 5px;
+      transform-origin: left bottom;
+    }
+
+    .meta__synopsis {
+      margin-bottom: 16px;
+      width: 476px;
+    }
+    .meta__ctas {
+      gap: 24px;
+      justify-content: start;
+    }
+    .evidences {
+      right: 40px;
+      bottom: 20px;
+    }
+  }
+
+  .evidences {
+    z-index: 2;
+    position: absolute;
+    .callout-chip {
+      height: 40px;
+      padding: 8px;
+      border-radius: 8px;
+    }
+  }
+}
+
+.row-game-meta {
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 10px 20px 32px 0px rgba(0, 0, 0, 0.4);
+
+  &.isFocused {
+    width: 100%;
+    height: 100%;
+    outline: 2px solid #fff;
+    border-radius: var(--corners-round-l, 16px);
+    z-index: 3;
+    background-blend-mode: lighten;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.7) inset;
+  }
+}
+
+.row-game-update {
+  &__item {
+    background: rgba(255, 255, 255, 0.03);
+    box-shadow: 10px 20px 32px 0px rgba(0, 0, 0, 0.4);
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .focusring {
+    opacity: 0;
+  }
+
+  &.isFocused {
+    .focusring {
+      opacity: 1;
+    }
+  }
+}
+
+.row_game_m_ed {
+  .titlecard {
+    .infos {
+      position: absolute;
+      width: 100%;
+
+      .callout {
+        margin: 0;
+        display: flex;
+        height: 27px;
+        padding: 4px 6px 5px 6px;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+        border-radius: 4px;
+        background: var(--Black-Transparent-black-t50, rgba(0, 0, 0, 0.5));
+      }
+    }
+  }
+  .info-expanded {
+    .metatags {
+      gap: 0;
+      width: 100%;
+
+      p {
+        margin: 0;
+      }
+    }
+  }
+}
+
+.row_game_dp_achievements {
+  .focusring {
+    opacity: 0;
+    z-index: 1;
+  }
+  .row__icon {
+    position: absolute;
+    display: grid;
+    place-content: center;
+
+    img {
+      width: 184px;
+    }
+  }
+  .row {
+    transform: translate(260px, 0px);
+  }
+  .row.isFocused {
+    .focusring {
+      opacity: 1;
+    }
+  }
+}

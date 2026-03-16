@@ -1,0 +1,47 @@
+.controller-screen__topnav {
+  width: 100%;
+  height: var(--topNavHeight);
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  position: relative;
+
+  .topnav-item {
+    height: 100%;
+    display: flex;
+    flex-flow: row;
+    align-items: center;
+
+
+    &.-left{
+      gap: 5px;
+      min-width: 100px;
+    }
+
+    &.-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    &.-right {
+      margin-left: auto;
+      gap: 5px;
+      .icon {
+        width: 24px;
+      }
+      p {
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+
+  .logo {
+    width: 90px;
+  }
+
+  .backIcon {
+    width: 24px;
+  }
+}

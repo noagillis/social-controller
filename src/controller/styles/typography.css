@@ -1,0 +1,72 @@
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Regular'), local('Netflix Sans App'),
+    url('../assets/fonts/NetflixSans_Rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Medium'), local('Netflix Sans App Medium'),
+    url('../assets/fonts/NetflixSans_Md.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Bold'), local('Netflix Sans App Bold'),
+    url('../assets/fonts/NetflixSans_Bd.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans Black';
+  src: local('Netflix Sans Black'), local('Netflix Sans App Black'),
+    url('../assets/fonts/NetflixSans_Blk.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Light'), local('Netflix Sans App Light'),
+    url('../assets/fonts/NetflixSans_Lt.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Thin'), local('Netflix Sans App Thin'),
+    url('../assets/fonts/NetflixSans_Th.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Italic'), local('Netflix Sans App Italic'),
+    url('../assets/fonts/NetflixSans_It.ttf') format('truetype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Netflix Sans';
+  src: local('Netflix Sans Medium Italic'),
+    local('Netflix Sans App Medium Italic'),
+    url('../assets/fonts/NetflixSans_MdIt.ttf') format('truetype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}

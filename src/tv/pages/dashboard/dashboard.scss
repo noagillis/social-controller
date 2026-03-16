@@ -1,0 +1,174 @@
+.dashboard {
+  &__gradient {
+    z-index: 1;
+    position: absolute;
+    width: 1280px;
+    flex-shrink: 0;
+    opacity: 0.7;
+
+    &.-top {
+      top: 0;
+      height: 168px;
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0) 26.52%,
+        rgba(0, 0, 0, 0.5) 69.5%,
+        #000 98.15%
+      );
+    }
+    &.-bottom {
+      height: 214px;
+      bottom: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 13.69%,
+        rgba(0, 0, 0, 0.4) 43.2%,
+        rgba(0, 0, 0, 0.8) 67.35%
+      );
+    }
+  }
+  &__logo {
+    position: absolute;
+    z-index: 2;
+    top: 23px;
+    left: 21px;
+  }
+
+  &__menu {
+    gap: 36px;
+    bottom: 45px;
+    z-index: 2;
+
+    &.isOnSubMenu {
+      opacity: 0.5;
+    }
+  }
+}
+
+.dashboard__menu__item {
+  gap: 6px;
+  width: 64px;
+  height: 64px;
+  border-radius: 100px;
+  background: transparent;
+  padding: 13px;
+
+  &__icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  &__label {
+    position: absolute;
+    opacity: 0;
+    margin: 0;
+    color: #fff;
+    bottom: -30px;
+  }
+
+  &.isFocused {
+    background: var(--ButtonIcon-button-icon--surface-tertiary-focused, #fff);
+    .dashboard__menu__item__icon {
+      color: black;
+    }
+    .dashboard__menu__item__label {
+      opacity: 1;
+    }
+  }
+}
+
+.dashboard-menu-gradient {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 13.69%,
+    rgba(0, 0, 0, 0.5) 43.2%,
+    #000 67.35%
+  );
+}
+
+.dashboard-achievements {
+  p {
+    margin: 0;
+  }
+
+  &__header {
+    position: absolute;
+    left: 35px;
+    bottom: 409px;
+  }
+
+  &__trophy {
+    position: absolute;
+    width: 235px;
+    padding: 21px;
+    left: 0;
+    bottom: 145px;
+  }
+
+  &__row {
+    position: absolute;
+    bottom: 147px;
+    left: 251px;
+
+    &__focusring {
+      position: absolute;
+      opacity: 0;
+      z-index: 3;
+      width: 144px;
+      height: 225px;
+      border-radius: 10px;
+      border: var(--Button-button--border-width, 2px) #fff solid;
+      left: 0px;
+      bottom: 0px;
+    }
+  }
+}
+
+.dashboard-achievements__row.isFocused {
+  .dashboard-achievements__row__focusring {
+    opacity: 1;
+  }
+}
+
+.dashboard-achievements__row__item {
+  align-self: end;
+  gap: 5px;
+
+  .item__row {
+    height: 225px;
+    gap: 8px;
+
+    img {
+      width: 144px;
+    }
+  }
+}
+.dashboard-controllers {
+  z-index: 1;
+
+  img {
+    position: absolute;
+    width: 681px;
+    bottom: 151px;
+    transform: translate(-50%, 0);
+    left: 50%;
+  }
+}
+
+.dashboard-exit {
+  z-index: 1;
+  bottom: 200px;
+  position: absolute;
+  p {
+    margin: 0;
+  }
+  &-actions {
+    margin-top: 44px;
+    .button {
+      width: 284px;
+    }
+  }
+}

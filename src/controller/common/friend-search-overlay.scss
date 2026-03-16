@@ -1,0 +1,136 @@
+.friend-search-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+// Solid dark background
+.friend-search-overlay__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #1c0e20 0%, #020202 50%, #020202 100%);
+}
+
+// Purple glow at top (subtle)
+.friend-search-overlay__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    80% 25% at 50% 0%,
+    rgba(176, 56, 220, 0.3) 0%,
+    rgba(109, 59, 227, 0) 100%
+  );
+  pointer-events: none;
+}
+
+// X close button — top right
+.friend-search-overlay__x {
+  position: absolute;
+  top: calc(16px + env(safe-area-inset-top));
+  right: 16px;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  opacity: 0.8;
+
+  &:active {
+    opacity: 0.5;
+  }
+}
+
+// Toolbar that sits directly above the keyboard
+.friend-search-overlay__toolbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  transition: bottom 0.1s ease-out;
+}
+
+.friend-search-overlay__counter {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.friend-search-overlay__done {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  border-radius: 20px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Centered text display
+.friend-search-overlay__display {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 20%;
+
+  @media (orientation: landscape) {
+    top: 15%;
+  }
+}
+
+.friend-search-overlay__text {
+  font-size: 28px;
+  font-weight: 600;
+  color: white;
+  letter-spacing: 0.5px;
+  white-space: pre; // preserve spaces
+}
+
+.friend-search-overlay__cursor {
+  display: inline-block;
+  width: 2px;
+  height: 32px;
+  background: white;
+  margin-left: 1px;
+  animation: friend-search-blink 1s step-end infinite;
+}
+
+@keyframes friend-search-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+// Hidden input — off screen but still focusable for keyboard
+.friend-search-overlay__hidden-input {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  font-size: 16px; // 16px prevents iOS auto-zoom
+}

@@ -1,0 +1,18 @@
+:root {
+  --appWidth: 1280px;
+  --appHeight: 720px;
+  --appBg: #000;
+  --nfbrandred: rgba(229, 9, 20, 1);
+  --nfInfoBlue: #0071eb;
+  --navigationTime: 250;
+  --focusRingWidth: 2;
+  --cubicOut: cubic-bezier(0.32, 0.94, 0.6, 1);
+  --uiTransition: all 0.5s var(--cubicOut);
+  --gap: 40px;
+
+  /* Animation Easing Token */
+  --linear: cubic-bezier(0, 0, 1, 1);
+  --quintOut: cubic-bezier(0.22, 1, 0.36, 1);
+  --quadOut: cubic-bezier(0.4, 0.8, 0.74, 1);
+  --quadIn: cubic-bezier(0.26, 0, 0.6, 0.2);
+}

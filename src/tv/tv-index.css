@@ -1,0 +1,46 @@
+.tv {
+  position: absolute;
+  background: black;
+  width: 100%;
+  height: 100%;
+  color: white;
+  display: grid;
+  place-content: center;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.tv-screen {
+  width: 1280px;
+  height: 720px;
+  background: black;
+  color: white;
+  outline: #222222 3px solid;
+  position: relative;
+  overflow: hidden;
+}
+
+.block {
+  color: white;
+  display: grid;
+  place-content: center;
+  background: #3c3c3c;
+  font-size: 1.25rem;
+  font-weight: 500;
+  padding: 1rem 1.75rem;
+  margin: 0.325rem;
+  border-radius: 0.4rem;
+}
+.grid .row {
+  display: flex;
+  flex-flow: row;
+}
+
+.grid .block {
+  width: 5rem;
+  height: 3rem;
+}
+.grid-title {
+  text-align: center;
+}

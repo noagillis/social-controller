@@ -1,0 +1,71 @@
+.button-wrapper {
+  --scale-amount: 0.97;
+
+  color: white;
+  display: flex;
+  flex-flow: row;
+  transition: transform 100ms ease-out;
+  -webkit-transition: transform 100ms ease-out;
+
+  &.pressed {
+    -webkit-transform: scale(var(--scale-amount));
+    -moz-transform: scale(var(--scale-amount));
+    -ms-transform: scale(var(--scale-amount));
+    transform: scale(var(--scale-amount));
+  }
+}
+
+.button-wrapper.outline-red {
+  background: rgba(22, 22, 22, 1);
+  border: 1px solid #ff3434;
+
+  &.pressed {
+    border: 2px solid #ff3434;
+    box-shadow: 0 0 5px #ff0000, 0 0 30px #514b52;
+  }
+}
+
+.button {
+  --color: white;
+  --bgColor: var(--Button-button--surface-primary, rgba(128, 128, 128, 0.7));
+  --borderColor: transparent;
+  width: max-content;
+  padding: 8px 16px;
+  border-radius: 4px;
+  gap: 6px;
+  background: var(--bgColor);
+  color: var(--color);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  border: 1px var(--borderColor) solid;
+  p {
+    margin: 0;
+  }
+
+  &.full-width {
+    width: 100%;
+  }
+  &.-primary {
+    --bgColor: white;
+    --color: black;
+  }
+  &.-secondary {
+    --bgColor: var(
+      --Button-button--surface-secondary,
+      rgba(128, 128, 128, 0.4)
+    );
+    --borderColor: transparent;
+  }
+  &.-tertiary {
+    --color: white;
+    --bgColor: var(
+      --interactive-background-interactive-tertiary-background-color-default,
+      rgba(0, 0, 0, 0)
+    );
+  }
+  .button--text {
+    margin: 0;
+  }
+}
