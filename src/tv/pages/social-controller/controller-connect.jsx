@@ -3,6 +3,7 @@ import { FocusNode } from '@please/lrud';
 import { QrCodeScreen } from '../../components/ssic-helpers/ssic-helpers';
 import { useOnRoomUpdate } from '../../hooks/use-on-room-update';
 import { useOnReceiveMessage } from '../../hooks/use-on-receive-message';
+import { useUIContext } from '@/contexts/ui';
 import FriendsOverlay from './friends-overlay';
 
 const IMG_PATH = import.meta.env.BASE_URL + 'images';
@@ -45,7 +46,7 @@ function GamepadIcon({ size = 20 }) {
 }
 
 export default function ControllerConnect({ onBack, showFriends, onCloseFriends, onPlayGame }) {
-  const [connectedProfiles, setConnectedProfiles] = useState([]);
+  const { connectedProfiles, setConnectedProfiles } = useUIContext();
   const [controllerCount, setControllerCount] = useState(0);
 
   const handleRoomUpdate = useCallback((roomState) => {
@@ -53,7 +54,7 @@ export default function ControllerConnect({ onBack, showFriends, onCloseFriends,
     setControllerCount(count);
     // If controllers disconnected, trim the profiles list to match
     setConnectedProfiles((prev) => prev.slice(0, count));
-  }, []);
+  }, [setConnectedProfiles]);
 
   useOnRoomUpdate(handleRoomUpdate);
 
@@ -62,7 +63,7 @@ export default function ControllerConnect({ onBack, showFriends, onCloseFriends,
       if (prev.length >= 4) return prev;
       return [...prev, { name: data.name, avatar: data.avatar, isGuest: data.isGuest }];
     });
-  }, [])
+  }, [setConnectedProfiles])
 
   useOnReceiveMessage('profileSelect', handleProfileSelect);
 

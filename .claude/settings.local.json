@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vite:*)",
+      "mcp__figma__get_design_context",
+      "Bash(curl -s -o /Users/nbakergillis/code-projects/games/social-controller/social-controller/src/controller/pages/profile-picker/assets/fifa-bg.png \"https://www.figma.com/api/mcp/asset/05b5798e-ade9-45de-a08e-e3e3efb39b1f\" && echo \"Downloaded FIFA bg\")",
+      "Bash(find /Users/nbakergillis/code-projects/games/social-controller/social-controller -maxdepth 2 -type f \\\\\\( -name \".env*\" -o -name \"*.config.*\" -o -name \"package.json\" -o -name \"*.html\" \\\\\\) 2>/dev/null | grep -v node_modules)"
+    ]
+  }
+}

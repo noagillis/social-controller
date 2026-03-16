@@ -25,6 +25,16 @@ const UIWrapper = ({ children }) => {
   const setFocusedTitleObj = (v) => updateUI('focusedTitleObj', v);
   const setLastGridPosition = (v) => updateUI('lastGridPosition', v);
   const setIsToastDismissed = (v) => updateUI('isToastDismissed', v);
+  const setConnectedProfiles = (v) => {
+    if (typeof v === 'function') {
+      setUI((prevState) => ({
+        ...prevState,
+        connectedProfiles: v(prevState.connectedProfiles),
+      }));
+    } else {
+      updateUI('connectedProfiles', v);
+    }
+  };
   const resetUIContext = () => {
     setUI(defaultState);
   };
@@ -37,12 +47,14 @@ const UIWrapper = ({ children }) => {
     lastGridPosition: { rowIndex: 0, columnIndex: 0 },
     selectedTitle: {},
     isToastDismissed: true,
+    connectedProfiles: [],
     setIsToastDismissed,
     setPageId,
     setFocusedTitleObj,
     setCurrentStep,
     setLastGridPosition,
     setSelectedTitle,
+    setConnectedProfiles,
     toggleMuted,
     resetUIContext,
   };
