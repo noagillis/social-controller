@@ -12,3 +12,172 @@
     height: 50px;
   }
 }
+
+.voice-chat-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 3;
+  position: relative;
+}
+
+.voice-chat-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(123, 114, 130, 0.3);
+  background: linear-gradient(to top, rgba(11, 33, 22, 0.9), rgba(15, 56, 36, 0.9));
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  .voice-chat-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }
+
+  .voice-chat-label {
+    color: #b2edcf;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &.-muted {
+    background: linear-gradient(to top, rgba(11, 33, 22, 0.9), rgba(15, 56, 36, 0.9));
+    border-color: rgba(123, 114, 130, 0.3);
+
+    .voice-chat-label {
+      color: #b2edcf;
+    }
+  }
+}
+
+.voice-chat-dots {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+// Scrim behind the card
+.voice-players-scrim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 100;
+}
+
+// Players in voice chat card
+.voice-players-card {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 420px;
+  max-height: 80vh;
+  background: rgba(25, 25, 39, 0.99);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 400;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    object-fit: cover;
+  }
+
+  &__avatar-placeholder {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &__name {
+    color: #fff;
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  &__divider {
+    width: 60%;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  &__leave {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 10px 20px;
+    border-radius: 24px;
+    border: 1px solid rgba(123, 114, 130, 0.3);
+    background: linear-gradient(to top, rgba(39, 36, 52, 0.9), rgba(64, 54, 66, 0.9));
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+
+    &:active {
+      opacity: 0.8;
+    }
+  }
+
+  &__leave-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+  }
+}

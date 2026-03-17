@@ -28,7 +28,6 @@ export default function GridKeyboard({ onKeyPress }) {
       focusId="grid-keyboard"
       className="grid-keyboard"
       isGrid
-      defaultFocused
     >
       {ROWS.map((row, rowIndex) => (
         <FocusNode

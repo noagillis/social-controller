@@ -1,4 +1,7 @@
+import { useState } from 'react';
 import ButtonWrapper from '../../common/button-wrapper';
+import { useUIContext } from '../../../contexts/ui';
+import { useConnectedProfiles } from '../../hooks/use-connected-profiles';
 
 import ButtonA from './assets/button-a.svg?react';
 import ButtonB from './assets/button-b.svg?react';
@@ -40,8 +43,89 @@ const quadrantPaths = {
   Right: 'M221.911 19.4141C226.344 23.9786 230.1 29.205 233.024 34.9443C240 48.6347 240 66.557 240 102.4V137.6C240 173.443 240 191.365 233.024 205.056C230.1 210.795 226.344 216.021 221.911 220.585L121.326 120L221.911 19.4141Z',
 };
 
+function ThreeDotsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="8" cy="3" r="1.5" fill="white" />
+      <circle cx="8" cy="8" r="1.5" fill="white" />
+      <circle cx="8" cy="13" r="1.5" fill="white" />
+    </svg>
+  );
+}
+
+function VoiceChatPlayersCard({ profiles, onClose }) {
+  return (
+    <>
+      <div className="voice-players-scrim" onClick={onClose} />
+      <div className="voice-players-card">
+        <div className="voice-players-card__header">
+          <span>Players in voice chat</span>
+        </div>
+        <div className="voice-players-card__list">
+          {profiles.map((profile) => (
+            <div className="voice-players-card__row" key={profile.name}>
+              <div className="voice-players-card__profile">
+                {profile.avatar ? (
+                  <img src={profile.avatar} alt={profile.name} className="voice-players-card__avatar" />
+                ) : (
+                  <div className="voice-players-card__avatar-placeholder" />
+                )}
+                <span className="voice-players-card__name">
+                  {profile.name}
+                  {profile.isSelf && ' (You)'}
+                </span>
+              </div>
+              <ThreeDotsIcon />
+            </div>
+          ))}
+        </div>
+        <div className="voice-players-card__divider" />
+        <button className="voice-players-card__leave" onClick={onClose}>
+          <img src="/images/volume.png" alt="" className="voice-players-card__leave-icon" />
+          <span>Leave Voice Chat</span>
+        </button>
+      </div>
+    </>
+  );
+}
+
 export function SSICNav({ action }) {
   const NavBackground = navSVG[action];
+  const { currentStep } = useUIContext();
+  const [isMuted, setIsMuted] = useState(false);
+  const [showPlayersCard, setShowPlayersCard] = useState(false);
+  const connectedProfiles = useConnectedProfiles();
+
+  if (action === 'Profile' && currentStep === 3) {
+    return (
+      <div className="voice-chat-wrapper">
+        <button
+          className={`voice-chat-btn ${isMuted ? '-muted' : ''}`}
+          onClick={() => setIsMuted(!isMuted)}
+        >
+          <img
+            src={isMuted ? '/images/microphone-off.png' : '/images/volume.png'}
+            alt={isMuted ? 'Mute' : 'Voice Chat'}
+            className="voice-chat-icon"
+          />
+          <span className="voice-chat-label">{isMuted ? 'Mute' : 'Voice Chat'}</span>
+        </button>
+        <button
+          className="voice-chat-dots"
+          onClick={() => setShowPlayersCard(!showPlayersCard)}
+        >
+          <ThreeDotsIcon />
+        </button>
+        {showPlayersCard && (
+          <VoiceChatPlayersCard
+            profiles={connectedProfiles}
+            onClose={() => setShowPlayersCard(false)}
+          />
+        )}
+      </div>
+    );
+  }
+
   return (
     <ButtonWrapper
       className={`ssic-nav outline-red --${action}`}

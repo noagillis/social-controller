@@ -1,3 +1,4 @@
+import { FocusNode } from '@please/lrud';
 import PropTypes from 'prop-types';
 
 const IMG_PATH = import.meta.env.BASE_URL + 'images';
@@ -11,26 +12,38 @@ function MagnifyingGlassIcon() {
   );
 }
 
-export default function FindFriendsCard({ searchText }) {
+export default function FindFriendsCard({ searchText, children }) {
   return (
     <div className="find-friends-card">
       <div className="find-friends-card__bg" />
-      <div className="find-friends-card__illustration">
-        <img src={`${IMG_PATH}/handshake.png`} alt="" width="105" height="105" />
-      </div>
-      <h2 className="find-friends-card__title">Find Friends</h2>
-      <div className="find-friends-card__search-area">
-        <div className="find-friends-card__input">
-          <MagnifyingGlassIcon />
-          <span className="find-friends-card__input-text">
-            {searchText}
-            <span className="find-friends-card__cursor" />
-          </span>
-        </div>
-        <div className="find-friends-card__search-btn">
-          <span>Search</span>
-        </div>
-      </div>
+      <FocusNode
+        className="find-friends-card__content"
+        orientation="horizontal"
+      >
+        <FocusNode
+          focusId="find-friends-input"
+          className="find-friends-card__left"
+          defaultFocused
+        >
+          <div className="find-friends-card__illustration">
+            <img src={`${IMG_PATH}/handshake.png`} alt="" width="105" height="105" />
+          </div>
+          <h2 className="find-friends-card__title">Find Friends</h2>
+          <div className="find-friends-card__search-area">
+            <div className="find-friends-card__input">
+              <MagnifyingGlassIcon />
+              <span className="find-friends-card__input-text">
+                {searchText}
+                <span className="find-friends-card__cursor" />
+              </span>
+            </div>
+            <div className="find-friends-card__search-btn">
+              <span>Search</span>
+            </div>
+          </div>
+        </FocusNode>
+        {children}
+      </FocusNode>
     </div>
   );
 }

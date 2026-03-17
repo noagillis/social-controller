@@ -34,6 +34,9 @@ export default function FIFAMainMenu({ onNext, onBack }) {
         } else {
           setShowStartMenu(true);
         }
+      } else if (e.key === '2') {
+        e.preventDefault();
+        goBack();
       } else if (e.key === 'Backspace') {
         e.preventDefault();
         if (showFriends) {
@@ -71,8 +74,8 @@ export default function FIFAMainMenu({ onNext, onBack }) {
   });
 
   const bgSrc = showStartMenu
-    ? `${IMG_PATH}/FIFA-start-menu.png`
-    : `${IMG_PATH}/FIFA-main-menu-bg.png`;
+    ? `${IMG_PATH}/FIFA-start-menu.jpg`
+    : `${IMG_PATH}/FIFA-main-menu-bg.jpg`;
 
   return (
     <FocusNode focusId="fifa-main-menu" onSelected={() => {

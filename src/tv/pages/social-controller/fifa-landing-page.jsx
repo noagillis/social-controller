@@ -1,6 +1,6 @@
 import { FocusNode } from '@please/lrud';
 
-const fifaLandingImg = import.meta.env.BASE_URL + 'images/FIFA-landing-page.png';
+const fifaLandingImg = import.meta.env.BASE_URL + 'images/FIFA-landing-page.jpg';
 
 export default function FIFALandingPage({ onNext, onBack }) {
   return (

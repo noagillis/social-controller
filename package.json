@@ -9,7 +9,7 @@
     "copy-file": "cp _redirects dist/_redirects",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy-public": "vite build && netlify deploy --prod"
+    "deploy-public": "npm run build && netlify deploy --prod"
   },
   "dependencies": {
     "@netflix-internal/xd-settings": "^1.4.1",

@@ -73,7 +73,7 @@ export default function ControllerConnect({ onBack, showFriends, onCloseFriends,
         {/* Background: FIFA image with dark overlay */}
         <div className="controller-connect__bg">
           <img
-            src={`${IMG_PATH}/FIFA-game-page.png`}
+            src={`${IMG_PATH}/FIFA-game-page.jpg`}
             alt=""
             className="controller-connect__bg-img"
           />

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSendMessage } from '../hooks/use-send-message';
+import { socket } from '../utils/controller-socket';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import './friend-search-overlay.scss';
@@ -38,6 +39,17 @@ export default function FriendSearchOverlay({ isVisible, onClose }) {
       };
     }
   }, [isVisible, updateKeyboardHeight]);
+
+  // Listen for text updates from TV grid keyboard
+  useEffect(() => {
+    const handleMessage = (messageBody) => {
+      if (messageBody?.type === 'friendSearchText') {
+        setValue(messageBody.data?.text || '');
+      }
+    };
+    socket.on('receiveMessage', handleMessage);
+    return () => socket.off('receiveMessage', handleMessage);
+  }, []);
 
   const handleChange = (e) => {
     const text = e.target.value.slice(0, MAX_CHARS);

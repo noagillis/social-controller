@@ -15,7 +15,7 @@ const controllerIcon = '/images/game-controller.png';
 
 import './profile-picker.scss';
 
-const PROFILES = [
+export const PROFILES = [
   { name: 'LilnMiso', avatar: pokemonConcierge },
   { name: 'Mudkip', avatar: mudkip },
   { name: 'GeryRiviera', avatar: witcher },

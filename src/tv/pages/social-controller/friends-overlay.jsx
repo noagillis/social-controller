@@ -181,17 +181,23 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
     }
   }, [isVisible, setFocus]);
 
+  useEffect(() => {
+    if (isSearching) {
+      setFocus('find-friends-input');
+    }
+  }, [isSearching, setFocus]);
+
   const handleFindFriends = () => {
     setIsSearching(true);
     sendMessage?.('friendSearch', { state: true });
   };
 
   const handleGridKeyPress = (key) => {
-    if (key.type === 'backspace') {
-      setSearchText((prev) => prev.slice(0, -1));
-    } else {
-      setSearchText((prev) => prev + key.char);
-    }
+    setSearchText((prev) => {
+      const newText = key.type === 'backspace' ? prev.slice(0, -1) : prev + key.char;
+      sendMessage?.('friendSearchText', { text: newText });
+      return newText;
+    });
   };
 
   const handleSearchClose = () => {
@@ -240,7 +246,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
           {/* Background */}
           <div className="friends-overlay__bg">
             <img
-              src={`${IMG_PATH}/FIFA-game-page.png`}
+              src={`${IMG_PATH}/FIFA-game-page.jpg`}
               alt=""
               className="friends-overlay__bg-img"
             />
@@ -248,33 +254,40 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
             <div className="friends-overlay__bg-glow" />
           </div>
 
-          {/* Cards row — always mounted to preserve focus tree order */}
-          <motion.div
-            className="friends-overlay__cards-viewport"
-            animate={{ opacity: isSearching ? 0 : 1 }}
-            transition={uiTransition}
-            style={{ pointerEvents: isSearching ? 'none' : 'auto' }}
-          >
+          {/* Cards row */}
+          <div className="friends-overlay__cards-viewport">
             <FocusNode
               focusId="friends-cards-row"
               elementType={motion.div}
               className={`friends-overlay__cards${cardsMode ? ' -active' : ''}`}
               orientation="horizontal"
-              disabled={isSearching}
               onBlurred={() => setCardsMode(false)}
               onFocused={() => setCardsMode(true)}
               animate={{ x: -CARD_OFFSETS[focusedCardIndex] }}
               transition={uiTransition}
             >
-              <FocusNode
-                focusId="friends-card-title"
-                className="friends-overlay__card-focus-wrapper"
-                onFocused={() => setFocusedCardIndex(0)}
-                onSelected={handleFindFriends}
-              >
-                <FriendsTitleCard />
-              </FocusNode>
-              {FRIENDS.map((friend, i) => (
+              {/* Title card swaps to search card when searching */}
+              {isSearching ? (
+                <FocusNode
+                  focusId="find-friends-viewport"
+                  className="friends-overlay__card-focus-wrapper"
+                  orientation="horizontal"
+                >
+                  <FindFriendsCard searchText={searchText}>
+                    <GridKeyboard onKeyPress={handleGridKeyPress} />
+                  </FindFriendsCard>
+                </FocusNode>
+              ) : (
+                <FocusNode
+                  focusId="friends-card-title"
+                  className="friends-overlay__card-focus-wrapper"
+                  onFocused={() => setFocusedCardIndex(0)}
+                  onSelected={handleFindFriends}
+                >
+                  <FriendsTitleCard />
+                </FocusNode>
+              )}
+              {!isSearching && FRIENDS.map((friend, i) => (
                 <FocusNode
                   key={friend.name}
                   focusId={`friends-card-${friend.name}`}
@@ -285,25 +298,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
                 </FocusNode>
               ))}
             </FocusNode>
-          </motion.div>
-
-          {/* Find Friends search overlay */}
-          <AnimatePresence>
-            {isSearching && (
-              <FocusNode
-                elementType={motion.div}
-                focusId="find-friends-viewport"
-                className="friends-overlay__find-friends-viewport"
-                orientation="horizontal"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0, transition: uiTransition }}
-                exit={{ opacity: 0, y: 10, transition: uiTransition }}
-              >
-                <FindFriendsCard searchText={searchText} />
-                <GridKeyboard onKeyPress={handleGridKeyPress} />
-              </FocusNode>
-            )}
-          </AnimatePresence>
+          </div>
 
           {/* Bottom menu */}
           <FocusNode
@@ -311,6 +306,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
             className="friends-overlay__menu"
             orientation="horizontal"
             defaultFocused
+            disabled={isSearching}
           >
             <FocusNode
               focusId="friends-menu-play-game"
