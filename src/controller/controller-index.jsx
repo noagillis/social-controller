@@ -1,6 +1,7 @@
 import { createElement, useEffect, useState } from 'react';
 import { useGetMessage } from './hooks/use-get-message';
 import { useSendMessage } from './hooks/use-send-message';
+import { useDataContext } from '@/contexts/data';
 import { useUIContext } from '@/contexts/ui';
 import { roomId } from './utils/get-room-id-from-query-param';
 import RotateDevice from './assets/rotate-device.gif';
@@ -11,6 +12,7 @@ import WelcomeToast from './common/welcome-toast';
 import ReadyToPlayModal from './common/ready-to-play-modal';
 import FriendSearchOverlay from './common/friend-search-overlay';
 import SocialOverlay from './common/social-overlay';
+import GameInviteModal from './common/game-invite-modal';
 import { Pages } from './pages/page-constants';
 
 import classNames from 'classnames';
@@ -18,11 +20,22 @@ import classNames from 'classnames';
 import './controller-index.scss';
 
 export default function ControllerIndex() {
-  const { pageId, step, friendSearch, setFriendSearch } = useGetMessage();
+  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites } = useGetMessage();
   const sendMessage = useSendMessage();
+  const { profileData } = useDataContext();
   const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // Find the first invite targeting this player
+  const myInvite = pendingInvites.find(
+    (inv) => inv.toPlayer === profileData || inv.toPlayer === selectedProfile?.name
+  );
+
+  const handleDismissInvite = (invite, accepted) => {
+    setPendingInvites((prev) => prev.filter((inv) => inv.id !== invite.id));
+    sendMessage('dismissInvite', { inviteId: invite.id, accepted });
+  };
 
   useEffect(() => {
     setCurrentStep(step);
@@ -65,6 +78,13 @@ export default function ControllerIndex() {
         isVisible={friendSearch}
         onClose={() => setFriendSearch(false)}
       />
+      {myInvite && (
+        <GameInviteModal
+          invite={myInvite}
+          onAccept={() => handleDismissInvite(myInvite, true)}
+          onDecline={() => handleDismissInvite(myInvite, false)}
+        />
+      )}
       {showOnboarding && <WelcomeToast profile={selectedProfile} />}
       {showOnboarding && (
         <ReadyToPlayModal

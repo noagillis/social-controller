@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { SettingsPanel } from '@netflix-internal/xd-settings';
 import { startCase } from 'lodash';
 import { Outlet, useNavigate } from 'react-router-dom';
@@ -50,6 +50,43 @@ function TvAppWrapper({ children }) {
       navigate(data.path);
     }
   });
+
+  // ─── Game Invite persistence ───────────────────────────
+  const pendingInvitesRef = useRef([]);
+
+  // When a controller sends a game invite, store it and broadcast to room
+  useOnReceiveMessage('gameInvite', useCallback((data) => {
+    const invite = {
+      id: `invite-${Date.now()}`,
+      fromPlayer: data.fromPlayer,
+      toPlayer: data.toPlayer,
+      toAvatar: data.toAvatar,
+      game: data.game,
+      timestamp: Date.now(),
+    };
+    pendingInvitesRef.current = [...pendingInvitesRef.current, invite];
+    // Broadcast to all controllers in the room
+    if (sendMessage) {
+      sendMessage('pendingInvites', { invites: pendingInvitesRef.current });
+    }
+  }, [sendMessage]));
+
+  // When a new controller connects (profileSelect), send them pending invites
+  useOnReceiveMessage('profileSelect', useCallback((data) => {
+    if (sendMessage && pendingInvitesRef.current.length > 0) {
+      // Small delay so the controller has time to set up listeners
+      setTimeout(() => {
+        sendMessage('pendingInvites', { invites: pendingInvitesRef.current });
+      }, 500);
+    }
+  }, [sendMessage]));
+
+  // When a controller dismisses an invite, remove it
+  useOnReceiveMessage('dismissInvite', useCallback((data) => {
+    pendingInvitesRef.current = pendingInvitesRef.current.filter(
+      (inv) => inv.id !== data.inviteId
+    );
+  }, []));
 
   useEffect(() => {
     setGameData(data);
