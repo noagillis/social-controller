@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import ButtonWrapper from '../../common/button-wrapper';
 import { useUIContext } from '../../../contexts/ui';
+import { useDataContext } from '../../../contexts/data';
 import { useConnectedProfiles } from '../../hooks/use-connected-profiles';
+import { PROFILES } from '../profile-picker/profile-picker';
 
 import ButtonA from './assets/button-a.svg?react';
 import ButtonB from './assets/button-b.svg?react';
@@ -91,10 +93,32 @@ function VoiceChatPlayersCard({ profiles, onClose }) {
 
 export function SSICNav({ action }) {
   const NavBackground = navSVG[action];
-  const { currentStep } = useUIContext();
+  const { currentStep, toggleSocialOverlay } = useUIContext();
+  const { profileData } = useDataContext();
   const [isMuted, setIsMuted] = useState(false);
   const [showPlayersCard, setShowPlayersCard] = useState(false);
   const connectedProfiles = useConnectedProfiles();
+
+  // Replace gear icon with the user's profile picture once selected
+  if (action === 'Setting' && profileData) {
+    const selectedProfile = PROFILES.find((p) => p.name === profileData);
+    if (selectedProfile?.avatar) {
+      return (
+        <ButtonWrapper
+          className={`ssic-nav outline-red --${action} --has-avatar`}
+          action={action}
+          scaleAmount={1.08}
+          onClick={toggleSocialOverlay}
+        >
+          <img
+            src={selectedProfile.avatar}
+            alt={selectedProfile.name}
+            className="ssic-nav__avatar"
+          />
+        </ButtonWrapper>
+      );
+    }
+  }
 
   if (action === 'Profile' && currentStep === 3) {
     return (
@@ -131,6 +155,7 @@ export function SSICNav({ action }) {
       className={`ssic-nav outline-red --${action}`}
       action={action}
       scaleAmount={1.08}
+      onClick={undefined}
     >
       <NavBackground />
     </ButtonWrapper>

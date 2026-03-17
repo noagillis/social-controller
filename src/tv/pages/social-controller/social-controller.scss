@@ -270,6 +270,12 @@
     top: 194px;
     right: 0;
     overflow: hidden;
+
+    &.-centered {
+      left: 0;
+      display: flex;
+      justify-content: center;
+    }
   }
 
   // Cards row (slides via transform)
@@ -587,6 +593,150 @@
       font-weight: 500;
       color: rgba(255, 255, 255, 0.5);
       letter-spacing: 0.16px;
+    }
+  }
+
+  // Controllers content (shown when Controllers tab is active)
+  &__controllers {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    width: 100%;
+    max-width: 850px;
+    height: 386px;
+
+    &-bg {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      background:
+        radial-gradient(99.39% 87.76% at 50% 24.84%, #252F3B 0%, rgba(34, 42, 55, 0.81) 25.7%, rgba(23, 18, 38, 0.00) 100%),
+        #080C11;
+    }
+
+    &-content {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: flex-start;
+      gap: 40px;
+      padding: 36px;
+      width: 100%;
+    }
+
+    &-qr {
+      flex-shrink: 0;
+      width: 220px;
+      height: 220px;
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .qrCodeContainer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    &-info {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      flex: 1;
+      padding-top: 4px;
+    }
+
+    &-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: white;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    &-desc {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      line-height: 1.4;
+      max-width: 420px;
+    }
+
+    &-slots {
+      display: flex;
+      gap: 12px;
+    }
+
+    &-slot {
+      width: 76px;
+      flex-shrink: 0;
+
+      > img {
+        width: 76px;
+        height: 76px;
+        object-fit: contain;
+      }
+
+      &-connected {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+      }
+
+      &-avatar {
+        width: 76px;
+        height: 76px;
+        border-radius: 10px;
+        object-fit: cover;
+      }
+
+      &-label {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
+
+      &-name {
+        font-size: 12px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.7);
+        letter-spacing: 0.02em;
+      }
+
+      &-waiting {
+        width: 76px;
+        height: 76px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        background:
+          radial-gradient(340.5% 175.47% at 50% 130.19%, #DE1739 0%, rgba(193, 23, 60, 0.89) 12.05%, rgba(67, 24, 70, 0.70) 100%),
+          rgba(8, 12, 17, 0.70);
+
+        &-icon {
+          width: 34px;
+          height: 34px;
+          object-fit: contain;
+        }
+
+        &-text {
+          font-size: 10px;
+          font-weight: 700;
+          color: white;
+          letter-spacing: 0.02em;
+        }
+      }
     }
   }
 }

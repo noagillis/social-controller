@@ -1,0 +1,568 @@
+.social-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.social-overlay__bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #1a0e22 0%, #0d0a12 40%, #050407 100%);
+}
+
+.social-overlay__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    60% 40% at 50% 0%,
+    rgba(176, 56, 220, 0.2) 0%,
+    rgba(109, 59, 227, 0) 100%
+  );
+  pointer-events: none;
+}
+
+// ─── Top Bar ────────────────────────────────────────────
+.social-overlay__topbar {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  gap: 16px;
+}
+
+.social-overlay__logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  flex-shrink: 0;
+}
+
+.social-overlay__logo-netflix {
+  color: #e50914;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.social-overlay__logo-games {
+  color: #e50914;
+  font-size: 7px;
+  font-weight: 600;
+  letter-spacing: 3.5px;
+  line-height: 1;
+}
+
+// Segmented Tab Controller
+.social-overlay__tabs {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 22px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.social-overlay__tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 16px;
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+
+  svg {
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  &.--active {
+    background: rgba(229, 9, 20, 0.9);
+    color: #fff;
+
+    svg {
+      opacity: 1;
+    }
+  }
+
+  &:not(.--active):active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.social-overlay__topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.social-overlay__topbar-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}
+
+// ─── Content ────────────────────────────────────────────
+.social-overlay__content {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  padding: 0 20px 16px;
+  overflow: hidden;
+}
+
+// ─── Profile Card ───────────────────────────────────────
+.social-overlay__profile-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.social-overlay__profile-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.social-overlay__profile-avatar-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.social-overlay__profile-avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.social-overlay__profile-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: inherit;
+}
+
+.social-overlay__profile-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.social-overlay__profile-name {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.social-overlay__profile-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 11px;
+}
+
+.social-overlay__online-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4caf50;
+}
+
+.social-overlay__profile-stats {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+}
+
+.social-overlay__more-btn {
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.6;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 1;
+  }
+}
+
+// Now Playing Card
+.social-overlay__now-playing {
+  flex: 1;
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.social-overlay__now-playing-art {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 40%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.social-overlay__now-playing-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  z-index: 1;
+}
+
+.social-overlay__now-playing-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.08);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__now-playing-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.social-overlay__now-playing-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.social-overlay__now-playing-title {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.social-overlay__resume-btn {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  margin-top: auto;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.25);
+  }
+}
+
+// ─── Notifications ──────────────────────────────────────
+.social-overlay__notifications {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.social-overlay__notif-header {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
+  padding: 0 4px;
+}
+
+.social-overlay__notif-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.social-overlay__notif-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.social-overlay__notif-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.social-overlay__notif-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__notif-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+  border-radius: inherit;
+}
+
+.social-overlay__notif-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.social-overlay__notif-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.social-overlay__notif-sub {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+}
+
+.social-overlay__notif-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.social-overlay__notif-circle-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  &.--accept {
+    border-color: rgba(76, 175, 80, 0.4);
+    background: rgba(76, 175, 80, 0.15);
+  }
+
+  &.--reject {
+    border-color: rgba(255, 82, 82, 0.3);
+    background: rgba(255, 82, 82, 0.1);
+  }
+}
+
+// ─── Friends Panel ──────────────────────────────────────
+.social-overlay__friends-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+.social-overlay__friends-header {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  padding: 4px 4px 12px;
+}
+
+.social-overlay__friends-count {
+  color: rgba(255, 255, 255, 0.4);
+  font-weight: 400;
+}
+
+.social-overlay__friends-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.social-overlay__friend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.social-overlay__friend-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.social-overlay__friend-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__friend-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+  border-radius: inherit;
+}
+
+.social-overlay__friend-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.social-overlay__friend-name {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.social-overlay__friend-stats {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+
+  strong {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+  }
+}
+
+.social-overlay__friend-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  flex-shrink: 0;
+
+  &.--online {
+    color: #4dd8a6;
+  }
+
+  &.--offline {
+    color: rgba(255, 255, 255, 0.35);
+  }
+}
+
+.social-overlay__friend-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  .--online & {
+    background: #4dd8a6;
+  }
+
+  .--offline & {
+    background: rgba(255, 255, 255, 0.3);
+  }
+}

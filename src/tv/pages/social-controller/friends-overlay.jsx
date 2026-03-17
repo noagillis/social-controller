@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { uiTransition } from '@/tv/utils/motion';
 import { useSendMessageTV } from '@/tv/hooks/use-send-message-tv';
 import { useOnReceiveMessage } from '@/tv/hooks/use-on-receive-message';
+import { useUIContext } from '@/contexts/ui';
+import { QrCodeScreen } from '../../components/ssic-helpers/ssic-helpers';
 import PropTypes from 'prop-types';
 import FindFriendsCard from '@/tv/components/find-friends-card/find-friends-card';
 import GridKeyboard from '@/tv/components/find-friends-card/grid-keyboard';
@@ -19,10 +21,17 @@ const FRIENDS = [
 
 const MENU_ITEMS = [
   { label: 'Play Game', icon: BackIcon, id: 'play-game' },
-  { label: 'Friends', icon: UsersIcon, id: 'friends', active: true },
+  { label: 'Friends', icon: UsersIcon, id: 'friends' },
   { label: 'Controllers', icon: ControllerIcon, id: 'controllers' },
   { label: 'Achievements', icon: TrophyIcon, id: 'achievements' },
   { label: 'Exit Game', icon: XIcon, id: 'exit-game', separate: true },
+];
+
+const EMPTY_SLOTS = [
+  'controller-slot-empty.png',
+  'controller-slot-empty-alt.png',
+  'controller-slot-empty.png',
+  'controller-slot-empty-alt.png',
 ];
 
 function BackIcon() {
@@ -95,6 +104,80 @@ function GameControllerSmallIcon() {
   );
 }
 
+function GamepadIcon({ size = 20 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="6" width="20" height="13" rx="4" stroke="rgba(255,255,255,0.7)" strokeWidth="1.8" fill="none" />
+      <circle cx="9" cy="11" r="1.2" fill="rgba(255,255,255,0.7)" />
+      <line x1="9" y1="8.5" x2="9" y2="13.5" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="6.5" y1="11" x2="11.5" y2="11" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="16.5" cy="10" r="1.2" fill="rgba(255,255,255,0.7)" />
+      <circle cx="18.5" cy="12" r="1.2" fill="rgba(255,255,255,0.7)" />
+      <circle cx="14.5" cy="12" r="1.2" fill="rgba(255,255,255,0.7)" />
+      <circle cx="16.5" cy="14" r="1.2" fill="rgba(255,255,255,0.7)" />
+    </svg>
+  );
+}
+
+function ControllersContent({ connectedProfiles, controllerCount }) {
+  return (
+    <div className="friends-overlay__controllers">
+      <div className="friends-overlay__controllers-bg" />
+      <div className="friends-overlay__controllers-content">
+        <div className="friends-overlay__controllers-qr">
+          <QrCodeScreen size={200} />
+        </div>
+        <div className="friends-overlay__controllers-info">
+          <h2 className="friends-overlay__controllers-title">
+            Scan to connect your phone
+          </h2>
+          <p className="friends-overlay__controllers-desc">
+            Scan the QR code and your phone will become the controller. If
+            disconnected, return to the app or scan the QR code again.
+          </p>
+          <div className="friends-overlay__controllers-slots">
+            {EMPTY_SLOTS.map((emptyImg, i) => {
+              const profile = connectedProfiles[i];
+              const isConnectedWaiting = !profile && i < controllerCount;
+              return (
+                <div className="friends-overlay__controllers-slot" key={i}>
+                  {profile ? (
+                    <div className="friends-overlay__controllers-slot-connected">
+                      <img
+                        src={profile.avatar || `${IMG_PATH}/FIFA-avatar.png`}
+                        alt={profile.name}
+                        className="friends-overlay__controllers-slot-avatar"
+                      />
+                      <div className="friends-overlay__controllers-slot-label">
+                        <GamepadIcon />
+                        <span className="friends-overlay__controllers-slot-name">
+                          {profile.name}
+                        </span>
+                      </div>
+                    </div>
+                  ) : isConnectedWaiting ? (
+                    <div className="friends-overlay__controllers-slot-waiting">
+                      <img src={`${IMG_PATH}/phone-controller.png`} alt="" className="friends-overlay__controllers-slot-waiting-icon" />
+                      <span className="friends-overlay__controllers-slot-waiting-text">
+                        Connected
+                      </span>
+                    </div>
+                  ) : (
+                    <img
+                      src={`${IMG_PATH}/${emptyImg}`}
+                      alt={`Player ${i + 1}`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function FriendsTitleCard() {
   return (
     <div className="friends-overlay__title-card">
@@ -163,9 +246,11 @@ for (let i = 0; i < FRIENDS.length; i++) {
   CARD_OFFSETS.push(prev + prevWidth + CARD_GAP);
 }
 
-export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
+export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialTab = 'friends', controllerCount = 0 }) {
   const setFocus = useSetFocus();
   const sendMessage = useSendMessageTV();
+  const { connectedProfiles } = useUIContext();
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [cardsMode, setCardsMode] = useState(false);
   const [focusedCardIndex, setFocusedCardIndex] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -173,13 +258,20 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
 
   useEffect(() => {
     if (isVisible) {
+      setActiveTab(initialTab);
       setFocus('friends-overlay');
       setCardsMode(false);
       setFocusedCardIndex(0);
       setSearchText('');
       setIsSearching(false);
+      // Focus the correct menu item based on initialTab
+      setTimeout(() => {
+        if (initialTab !== 'friends') {
+          setFocus(`friends-menu-${initialTab}`);
+        }
+      }, 50);
     }
-  }, [isVisible, setFocus]);
+  }, [isVisible, setFocus, initialTab]);
 
   useEffect(() => {
     if (isSearching) {
@@ -254,50 +346,62 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
             <div className="friends-overlay__bg-glow" />
           </div>
 
-          {/* Cards row */}
-          <div className="friends-overlay__cards-viewport">
-            <FocusNode
-              focusId="friends-cards-row"
-              elementType={motion.div}
-              className={`friends-overlay__cards${cardsMode ? ' -active' : ''}`}
-              orientation="horizontal"
-              onBlurred={() => setCardsMode(false)}
-              onFocused={() => setCardsMode(true)}
-              animate={{ x: -CARD_OFFSETS[focusedCardIndex] }}
-              transition={uiTransition}
-            >
-              {/* Title card swaps to search card when searching */}
-              {isSearching ? (
-                <FocusNode
-                  focusId="find-friends-viewport"
-                  className="friends-overlay__card-focus-wrapper"
-                  orientation="horizontal"
-                >
-                  <FindFriendsCard searchText={searchText}>
-                    <GridKeyboard onKeyPress={handleGridKeyPress} />
-                  </FindFriendsCard>
-                </FocusNode>
-              ) : (
-                <FocusNode
-                  focusId="friends-card-title"
-                  className="friends-overlay__card-focus-wrapper"
-                  onFocused={() => setFocusedCardIndex(0)}
-                  onSelected={handleFindFriends}
-                >
-                  <FriendsTitleCard />
-                </FocusNode>
-              )}
-              {!isSearching && FRIENDS.map((friend, i) => (
-                <FocusNode
-                  key={friend.name}
-                  focusId={`friends-card-${friend.name}`}
-                  className="friends-overlay__card-focus-wrapper"
-                  onFocused={() => setFocusedCardIndex(i + 1)}
-                >
-                  <PlayerCard friend={friend} />
-                </FocusNode>
-              ))}
-            </FocusNode>
+          {/* Cards row / Controllers content */}
+          <div className={`friends-overlay__cards-viewport${activeTab === 'controllers' ? ' -centered' : ''}`}>
+            {activeTab === 'controllers' ? (
+              <FocusNode
+                focusId="controllers-content-row"
+                className="friends-overlay__cards"
+              >
+                <ControllersContent
+                  connectedProfiles={connectedProfiles}
+                  controllerCount={controllerCount}
+                />
+              </FocusNode>
+            ) : (
+              <FocusNode
+                focusId="friends-cards-row"
+                elementType={motion.div}
+                className={`friends-overlay__cards${cardsMode ? ' -active' : ''}`}
+                orientation="horizontal"
+                onBlurred={() => setCardsMode(false)}
+                onFocused={() => setCardsMode(true)}
+                animate={{ x: -CARD_OFFSETS[focusedCardIndex] }}
+                transition={uiTransition}
+              >
+                {/* Title card swaps to search card when searching */}
+                {isSearching ? (
+                  <FocusNode
+                    focusId="find-friends-viewport"
+                    className="friends-overlay__card-focus-wrapper"
+                    orientation="horizontal"
+                  >
+                    <FindFriendsCard searchText={searchText}>
+                      <GridKeyboard onKeyPress={handleGridKeyPress} />
+                    </FindFriendsCard>
+                  </FocusNode>
+                ) : (
+                  <FocusNode
+                    focusId="friends-card-title"
+                    className="friends-overlay__card-focus-wrapper"
+                    onFocused={() => setFocusedCardIndex(0)}
+                    onSelected={handleFindFriends}
+                  >
+                    <FriendsTitleCard />
+                  </FocusNode>
+                )}
+                {!isSearching && FRIENDS.map((friend, i) => (
+                  <FocusNode
+                    key={friend.name}
+                    focusId={`friends-card-${friend.name}`}
+                    className="friends-overlay__card-focus-wrapper"
+                    onFocused={() => setFocusedCardIndex(i + 1)}
+                  >
+                    <PlayerCard friend={friend} />
+                  </FocusNode>
+                ))}
+              </FocusNode>
+            )}
           </div>
 
           {/* Bottom menu */}
@@ -325,7 +429,8 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame }) {
                 <FocusNode
                   key={item.id}
                   focusId={`friends-menu-${item.id}`}
-                  className={`friends-overlay__menu-item${item.active ? ' -active' : ''}`}
+                  className={`friends-overlay__menu-item${activeTab === item.id ? ' -active' : ''}`}
+                  onSelected={() => setActiveTab(item.id)}
                 >
                   <item.icon />
                   <span>{item.label}</span>
@@ -362,4 +467,6 @@ FriendsOverlay.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   onBack: PropTypes.func.isRequired,
   onPlayGame: PropTypes.func,
+  initialTab: PropTypes.oneOf(['friends', 'controllers', 'achievements']),
+  controllerCount: PropTypes.number,
 };

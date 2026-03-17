@@ -11,6 +11,17 @@
     border-radius: 25px;
     height: 50px;
   }
+
+  &.--has-avatar {
+    overflow: hidden;
+  }
+}
+
+.ssic-nav__avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
 }
 
 .voice-chat-wrapper {

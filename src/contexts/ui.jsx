@@ -35,6 +35,9 @@ const UIWrapper = ({ children }) => {
       updateUI('connectedProfiles', v);
     }
   };
+  const setSocialOverlayOpen = (v) => updateUI('socialOverlayOpen', v);
+  const toggleSocialOverlay = () => toggleUI('socialOverlayOpen');
+
   const resetUIContext = () => {
     setUI(defaultState);
   };
@@ -48,6 +51,7 @@ const UIWrapper = ({ children }) => {
     selectedTitle: {},
     isToastDismissed: true,
     connectedProfiles: [],
+    socialOverlayOpen: false,
     setIsToastDismissed,
     setPageId,
     setFocusedTitleObj,
@@ -56,6 +60,8 @@ const UIWrapper = ({ children }) => {
     setSelectedTitle,
     setConnectedProfiles,
     toggleMuted,
+    setSocialOverlayOpen,
+    toggleSocialOverlay,
     resetUIContext,
   };
 

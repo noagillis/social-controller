@@ -10,6 +10,7 @@ import ProfilePicker from './pages/profile-picker/profile-picker';
 import WelcomeToast from './common/welcome-toast';
 import ReadyToPlayModal from './common/ready-to-play-modal';
 import FriendSearchOverlay from './common/friend-search-overlay';
+import SocialOverlay from './common/social-overlay';
 import { Pages } from './pages/page-constants';
 
 import classNames from 'classnames';
@@ -19,7 +20,7 @@ import './controller-index.scss';
 export default function ControllerIndex() {
   const { pageId, step, friendSearch, setFriendSearch } = useGetMessage();
   const sendMessage = useSendMessage();
-  const { setPageId, setCurrentStep } = useUIContext();
+  const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
 
@@ -56,6 +57,10 @@ export default function ControllerIndex() {
       {/* {showHelpers && <DebugPanel />} */}
       {Pages[pageId] && createElement(Pages[pageId])}{' '}
       {!Pages[pageId] && <SSIC />}{' '}
+      <SocialOverlay
+        isVisible={socialOverlayOpen}
+        onClose={() => setSocialOverlayOpen(false)}
+      />
       <FriendSearchOverlay
         isVisible={friendSearch}
         onClose={() => setFriendSearch(false)}
