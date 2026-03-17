@@ -1,8 +1,9 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { FocusNode } from '@please/lrud';
 import { QrCodeScreen } from '../../components/ssic-helpers/ssic-helpers';
 import { useOnRoomUpdate } from '../../hooks/use-on-room-update';
 import { useOnReceiveMessage } from '../../hooks/use-on-receive-message';
+import { useSendMessageTV } from '../../hooks/use-send-message-tv';
 import { useUIContext } from '@/contexts/ui';
 import FriendsOverlay from './friends-overlay';
 
@@ -48,6 +49,7 @@ function GamepadIcon({ size = 20 }) {
 export default function ControllerConnect({ onBack, showFriends, onCloseFriends, onPlayGame }) {
   const { connectedProfiles, setConnectedProfiles } = useUIContext();
   const [controllerCount, setControllerCount] = useState(0);
+  const sendMessageTV = useSendMessageTV();
 
   const handleRoomUpdate = useCallback((roomState) => {
     const count = roomState?.counts?.controller || 0;
@@ -66,6 +68,13 @@ export default function ControllerConnect({ onBack, showFriends, onCloseFriends,
   }, [setConnectedProfiles])
 
   useOnReceiveMessage('profileSelect', handleProfileSelect);
+
+  // Broadcast the full connected profiles list to all controllers whenever it changes
+  useEffect(() => {
+    if (sendMessageTV && connectedProfiles.length > 0) {
+      sendMessageTV('connectedProfilesSync', { profiles: connectedProfiles });
+    }
+  }, [connectedProfiles, sendMessageTV]);
 
   return (
     <FocusNode focusId={'controller-connect'} onBack={onBack}>
