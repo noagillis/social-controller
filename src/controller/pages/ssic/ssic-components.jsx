@@ -120,36 +120,6 @@ export function SSICNav({ action }) {
     }
   }
 
-  if (action === 'Profile' && currentStep === 3) {
-    return (
-      <div className="voice-chat-wrapper">
-        <button
-          className={`voice-chat-btn ${isMuted ? '-muted' : ''}`}
-          onClick={() => setIsMuted(!isMuted)}
-        >
-          <img
-            src={isMuted ? '/images/microphone-off.png' : '/images/volume.png'}
-            alt={isMuted ? 'Mute' : 'Voice Chat'}
-            className="voice-chat-icon"
-          />
-          <span className="voice-chat-label">{isMuted ? 'Mute' : 'Voice Chat'}</span>
-        </button>
-        <button
-          className="voice-chat-dots"
-          onClick={() => setShowPlayersCard(!showPlayersCard)}
-        >
-          <ThreeDotsIcon />
-        </button>
-        {showPlayersCard && (
-          <VoiceChatPlayersCard
-            profiles={connectedProfiles}
-            onClose={() => setShowPlayersCard(false)}
-          />
-        )}
-      </div>
-    );
-  }
-
   return (
     <ButtonWrapper
       className={`ssic-nav outline-red --${action}`}
@@ -159,6 +129,43 @@ export function SSICNav({ action }) {
     >
       <NavBackground />
     </ButtonWrapper>
+  );
+}
+
+export function SSICVoiceChat() {
+  const { currentStep } = useUIContext();
+  const [isMuted, setIsMuted] = useState(false);
+  const [showPlayersCard, setShowPlayersCard] = useState(false);
+  const connectedProfiles = useConnectedProfiles();
+
+  if (currentStep !== 3) return null;
+
+  return (
+    <div className="voice-chat-wrapper">
+      <button
+        className={`voice-chat-btn ${isMuted ? '-muted' : ''}`}
+        onClick={() => setIsMuted(!isMuted)}
+      >
+        <img
+          src={isMuted ? '/images/microphone-off.png' : '/images/volume.png'}
+          alt={isMuted ? 'Mute' : 'Voice Chat'}
+          className="voice-chat-icon"
+        />
+        <span className="voice-chat-label">{isMuted ? 'Mute' : 'Voice Chat'}</span>
+      </button>
+      <button
+        className="voice-chat-dots"
+        onClick={() => setShowPlayersCard(!showPlayersCard)}
+      >
+        <ThreeDotsIcon />
+      </button>
+      {showPlayersCard && (
+        <VoiceChatPlayersCard
+          profiles={connectedProfiles}
+          onClose={() => setShowPlayersCard(false)}
+        />
+      )}
+    </div>
   );
 }
 

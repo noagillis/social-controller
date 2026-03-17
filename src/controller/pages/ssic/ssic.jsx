@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import DpadHighlight from "./assets/dpad-highlight.svg?react";
 import DpadShadow from "./assets/dpad-shadow.svg?react";
 import ScreenWrapper from "../../common/screen-wrapper";
-import { SSICAction, SSICDpad, SSICNav } from "./ssic-components";
+import { SSICAction, SSICDpad, SSICNav, SSICVoiceChat } from "./ssic-components";
 import "./ssic.scss";
 
 export default function SSIC({ children, ...props }) {
@@ -12,6 +12,7 @@ export default function SSIC({ children, ...props }) {
         <div className="ssic-menu flex-row-center">
           <SSICNav action="Setting" />
           <SSICNav action="Profile" />
+          <SSICVoiceChat />
           <SSICNav action="Menu" />
         </div>
 

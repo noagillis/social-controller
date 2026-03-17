@@ -24,6 +24,37 @@
   pointer-events: none;
 }
 
+// ─── Rotate Prompt (portrait only) ──────────────────────
+.social-overlay__rotate-prompt {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  padding: 24px;
+
+  img {
+    width: 80px;
+    height: auto;
+  }
+}
+
+@media only screen and (orientation: portrait) {
+  .social-overlay__rotate-prompt {
+    display: flex;
+  }
+}
+
 // ─── Top Bar ────────────────────────────────────────────
 .social-overlay__topbar {
   position: relative;
@@ -459,17 +490,58 @@
   overflow-y: auto;
 }
 
-.social-overlay__friends-header {
-  color: #fff;
-  font-size: 18px;
-  font-weight: 700;
-  margin: 0 0 8px;
-  padding: 4px 4px 12px;
+.social-overlay__friends-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 4px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 4px;
 }
 
-.social-overlay__friends-count {
-  color: rgba(255, 255, 255, 0.4);
+.social-overlay__friends-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+
+  &.--active {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+
+  &:not(.--active):active {
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.social-overlay__friends-tab-count {
+  color: rgba(255, 255, 255, 0.35);
   font-weight: 400;
+  font-size: 13px;
+}
+
+.social-overlay__friends-tab-badge {
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: rgba(229, 9, 20, 0.85);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
 }
 
 .social-overlay__friends-list {

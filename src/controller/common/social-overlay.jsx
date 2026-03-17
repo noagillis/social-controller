@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDataContext } from '@/contexts/data';
 import { PROFILES } from '../pages/profile-picker/profile-picker';
+import RotateDevice from '../assets/rotate-device.gif';
 import './social-overlay.scss';
 
 const TABS = ['Home', 'Friends', 'Achievements', 'Discover'];
@@ -29,7 +30,7 @@ const TAB_ICONS = {
   ),
 };
 
-function ProfileCard({ profileData }) {
+function ProfileCard({ profileData, onClose }) {
   const selectedProfile = PROFILES.find((p) => p.name === profileData);
   const avatar = selectedProfile?.avatar;
   const name = profileData || 'Player';
@@ -67,7 +68,7 @@ function ProfileCard({ profileData }) {
           </div>
         </div>
         <div className="social-overlay__now-playing-art" />
-        <button className="social-overlay__resume-btn">
+        <button className="social-overlay__resume-btn" onClick={onClose}>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
             <path d="M8 5v14l11-7z" />
           </svg>
@@ -141,6 +142,13 @@ function NotificationsPanel() {
   );
 }
 
+const MOCK_FRIEND_REQUESTS = [
+  { name: 'xXShadowLordXx', avatar: PROFILES[1]?.avatar, mutualFriends: 3, timeAgo: '2h ago' },
+  { name: 'PixelQueen99', avatar: PROFILES[3]?.avatar, mutualFriends: 7, timeAgo: '5h ago' },
+  { name: 'TurboNick', avatar: null, mutualFriends: 1, timeAgo: '1d ago' },
+  { name: 'CozyGamerVal', avatar: PROFILES[2]?.avatar, mutualFriends: 0, timeAgo: '3d ago' },
+];
+
 const MOCK_FRIENDS = [
   { name: 'LilnMiso', avatar: PROFILES[0]?.avatar, friends: 24, games: 8, online: true },
   { name: 'Mudkip', avatar: PROFILES[1]?.avatar, friends: 145, games: 133, online: false },
@@ -179,16 +187,74 @@ function FriendItem({ friend }) {
   );
 }
 
+function FriendRequestItem({ request }) {
+  return (
+    <div className="social-overlay__friend-item">
+      <div className="social-overlay__friend-left">
+        <div className="social-overlay__friend-avatar">
+          {request.avatar ? (
+            <img src={request.avatar} alt={request.name} />
+          ) : (
+            <div className="social-overlay__friend-avatar-placeholder" />
+          )}
+        </div>
+        <div className="social-overlay__friend-text">
+          <span className="social-overlay__friend-name">{request.name}</span>
+          <span className="social-overlay__friend-stats">
+            {request.mutualFriends > 0 ? (
+              <><strong>{request.mutualFriends}</strong> mutual {request.mutualFriends === 1 ? 'friend' : 'friends'}</>
+            ) : (
+              'No mutual friends'
+            )}
+            {' \u00b7 '}{request.timeAgo}
+          </span>
+        </div>
+      </div>
+      <div className="social-overlay__notif-actions">
+        <button className="social-overlay__notif-circle-btn --reject">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M6 6L14 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            <path d="M14 6L6 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+        <button className="social-overlay__notif-circle-btn --accept">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10L8.5 14.5L16 6.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function FriendsPanel() {
+  const [friendsTab, setFriendsTab] = useState('friends');
+
   return (
     <div className="social-overlay__friends-panel">
-      <h3 className="social-overlay__friends-header">
-        My Friends <span className="social-overlay__friends-count">({MOCK_FRIENDS.length})</span>
-      </h3>
+      <div className="social-overlay__friends-tabs">
+        <button
+          className={`social-overlay__friends-tab ${friendsTab === 'friends' ? '--active' : ''}`}
+          onClick={() => setFriendsTab('friends')}
+        >
+          My Friends
+          <span className="social-overlay__friends-tab-count">{MOCK_FRIENDS.length}</span>
+        </button>
+        <button
+          className={`social-overlay__friends-tab ${friendsTab === 'requests' ? '--active' : ''}`}
+          onClick={() => setFriendsTab('requests')}
+        >
+          Requests
+          {MOCK_FRIEND_REQUESTS.length > 0 && (
+            <span className="social-overlay__friends-tab-badge">{MOCK_FRIEND_REQUESTS.length}</span>
+          )}
+        </button>
+      </div>
       <div className="social-overlay__friends-list">
-        {MOCK_FRIENDS.map((friend, i) => (
-          <FriendItem key={i} friend={friend} />
-        ))}
+        {friendsTab === 'friends' &&
+          MOCK_FRIENDS.map((friend, i) => <FriendItem key={i} friend={friend} />)}
+        {friendsTab === 'requests' &&
+          MOCK_FRIEND_REQUESTS.map((request, i) => <FriendRequestItem key={i} request={request} />)}
       </div>
     </div>
   );
@@ -264,11 +330,19 @@ export default function SocialOverlay({ isVisible, onClose }) {
             </div>
           </div>
 
+          {/* Rotate prompt (portrait only, Home tab) */}
+          {activeTab === 'Home' && (
+            <div className="social-overlay__rotate-prompt">
+              <img src={RotateDevice} alt="Rotate device" />
+              <span>Please rotate your device to landscape mode</span>
+            </div>
+          )}
+
           {/* Dashboard Content */}
           <div className="social-overlay__content">
             {activeTab === 'Home' && (
               <>
-                <ProfileCard profileData={profileData} />
+                <ProfileCard profileData={profileData} onClose={onClose} />
                 <NotificationsPanel />
               </>
             )}
