@@ -7,6 +7,37 @@
   overflow: hidden;
 }
 
+// ─── Persistent Profile Button ──────────────────────────
+.social-overlay__profile-btn {
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 34px;
+  border-radius: 17px;
+  border: 1px solid #ff3434;
+  background: rgba(22, 22, 22, 1);
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+
+  &:active {
+    border-width: 2px;
+    box-shadow: 0 0 5px #ff0000, 0 0 30px #514b52;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+  }
+}
+
 .social-overlay__bg {
   position: absolute;
   inset: 0;
@@ -150,13 +181,13 @@
   display: flex;
   flex-direction: row;
   gap: 16px;
-  padding: 12px 20px 8px;
+  padding: 64px 20px 8px;
   overflow: hidden;
 
   @media (orientation: portrait) {
     flex-direction: column;
     gap: 12px;
-    padding: 10px 16px 6px;
+    padding: 64px 16px 6px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -1460,4 +1491,381 @@
   &:active {
     background: rgba(255, 255, 255, 0.12);
   }
+}
+
+// ─── Party Bar ─────────────────────────────────────────
+.party-bar {
+  flex-shrink: 0;
+  padding: 0 4px 12px;
+}
+
+.party-bar__create-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 14px;
+  border: 1px dashed rgba(109, 59, 227, 0.4);
+  background: rgba(109, 59, 227, 0.08);
+  color: #c59dff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+
+  &:active {
+    background: rgba(109, 59, 227, 0.18);
+    transform: scale(0.98);
+  }
+}
+
+.party-bar__selecting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(109, 59, 227, 0.35);
+  background: rgba(109, 59, 227, 0.1);
+}
+
+.party-bar__cancel-btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}
+
+.party-bar__count {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.party-bar__next-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: default;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+
+  &.--active {
+    background: rgba(109, 59, 227, 0.7);
+    color: #fff;
+    cursor: pointer;
+
+    &:active {
+      background: rgba(109, 59, 227, 0.9);
+      transform: scale(0.96);
+    }
+  }
+}
+
+// ─── Party Select Checkmark ────────────────────────────
+.party-select-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  color: #fff;
+
+  &.--checked {
+    border-color: #4dd8a6;
+    background: #4dd8a6;
+  }
+}
+
+// Friend item party selection states
+.social-overlay__friend-item {
+  &.--selectable {
+    transition: opacity 0.2s ease;
+  }
+
+  &.--selected {
+    background: rgba(109, 59, 227, 0.08);
+    border-radius: 10px;
+    border-color: transparent;
+  }
+
+  &.--disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+}
+
+// ─── Party Strip ───────────────────────────────────────
+.party-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(109, 59, 227, 0.1);
+  border: 1px solid rgba(109, 59, 227, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+.party-strip__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.party-strip__avatars {
+  display: flex;
+  align-items: center;
+}
+
+.party-strip__avatar {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  position: relative;
+
+  &:not(:first-child) {
+    margin-left: -10px;
+  }
+}
+
+.party-strip__avatar-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #120e18;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.party-strip__avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+  border-radius: inherit;
+}
+
+.party-strip__info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.party-strip__label {
+  color: #c59dff;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.party-strip__count {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+}
+
+.party-strip__disband {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+  }
+}
+
+// ─── Discovery Panel ───────────────────────────────────
+.discovery-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.discovery-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 4px 14px;
+  flex-shrink: 0;
+}
+
+.discovery-panel__header-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.discovery-panel__header-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.discovery-panel__title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.discovery-panel__subtitle {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 12px;
+}
+
+.discovery-panel__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 8px;
+
+  @media (orientation: portrait) {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.discovery-panel__card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.97);
+    border-color: rgba(109, 59, 227, 0.3);
+  }
+
+  @media (orientation: portrait) {
+    flex-direction: row;
+    align-items: stretch;
+  }
+}
+
+.discovery-panel__card-image {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  @media (orientation: portrait) {
+    aspect-ratio: 1;
+    width: 80px;
+    flex-shrink: 0;
+  }
+}
+
+.discovery-panel__card-placeholder-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  padding: 8px;
+}
+
+.discovery-panel__card-players {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.discovery-panel__card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+
+  @media (orientation: portrait) {
+    justify-content: center;
+    padding: 10px 14px;
+  }
+}
+
+.discovery-panel__card-title {
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.discovery-panel__card-genre {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 11px;
+  font-weight: 500;
 }

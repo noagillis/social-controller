@@ -905,50 +905,149 @@
   }
 }
 
-// ─── Exit Game Confirmation ────────────────────────────
-.friends-overlay__exit-confirmation {
+// ─── Exit Game Card ────────────────────────────────────
+.friends-overlay__exit-card {
+  width: 390px;
+  height: 336px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 40px 20px;
-}
+  padding: 16px;
 
-.friends-overlay__exit-title {
-  color: #fff;
-  font-size: 48px;
-  font-weight: 800;
-  margin: 0;
-  text-align: center;
-}
-
-.friends-overlay__exit-subtitle {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 20px;
-  margin: 8px 0 40px;
-  text-align: center;
-}
-
-.friends-overlay__exit-actions {
-  display: flex;
-  gap: 20px;
-}
-
-.friends-overlay__exit-btn {
-  padding: 16px 48px;
-  border-radius: 32px;
-  border: none;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &.isFocused,
-  &.isFocusedLeaf {
-    background: rgba(255, 255, 255, 0.25);
-    outline: 3px solid white;
+  &-bg {
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    background:
+      radial-gradient(80% 40% at 50% 12%, rgba(176, 56, 220, 0.3) 0%, rgba(109, 59, 227, 0) 100%),
+      linear-gradient(180deg, #1c0e20 0%, rgba(0, 0, 0, 0.8) 66%, rgba(0, 0, 0, 0.02) 100%);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   }
+
+  &-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    gap: 16px;
+  }
+
+  &-icon {
+    flex-shrink: 0;
+  }
+
+  &-title {
+    font-size: 22px;
+    font-weight: 500;
+    color: white;
+    text-align: center;
+    margin: 0;
+    line-height: 29px;
+    max-width: 284px;
+  }
+
+  &-desc {
+    font-size: 16px;
+    font-weight: 400;
+    color: white;
+    text-align: center;
+    margin: 0;
+    line-height: 22px;
+  }
+
+  &-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 5px 12px 6px;
+    border-radius: 4px;
+    border: none;
+    background: rgba(128, 128, 128, 0.4);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    &.isFocused,
+    &.isFocusedLeaf {
+      background: white;
+      color: black;
+    }
+  }
+}
+
+// ─── Game Suggestion Card ──────────────────────────────
+.friends-overlay__game-card {
+  width: 207px;
+  height: 336px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  background: #111;
+
+  &-img {
+    position: absolute;
+    inset: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &-scrim {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+      to bottom,
+      transparent 37%,
+      rgba(0, 0, 0, 0.5) 83%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+  }
+
+  &-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &-players {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 4px 8px;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+}
+
+.friends-overlay__card-focus-wrapper.-game {
+  border-radius: 8px;
 }

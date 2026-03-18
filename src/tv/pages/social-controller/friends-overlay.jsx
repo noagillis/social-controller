@@ -9,6 +9,10 @@ import { QrCodeScreen } from '../../components/ssic-helpers/ssic-helpers';
 import PropTypes from 'prop-types';
 import FindFriendsCard from '@/tv/components/find-friends-card/find-friends-card';
 import GridKeyboard from '@/tv/components/find-friends-card/grid-keyboard';
+import SwordsImg from '@/controller/common/swords.png';
+import Game1Img from '@/controller/common/game-1.png';
+import Game2Img from '@/controller/common/game-2.png';
+import Game3Img from '@/controller/common/game-3.png';
 
 const IMG_PATH = import.meta.env.BASE_URL + 'images';
 
@@ -32,6 +36,12 @@ const EMPTY_SLOTS = [
   'controller-slot-empty-alt.png',
   'controller-slot-empty.png',
   'controller-slot-empty-alt.png',
+];
+
+const SUGGESTED_GAMES = [
+  { name: 'Game 1', players: '2-10 Players', image: Game1Img },
+  { name: 'Game 2', players: '2-10 Players', image: Game2Img },
+  { name: 'Game 3', players: '3-6 Players', image: Game3Img },
 ];
 
 function BackIcon() {
@@ -172,6 +182,53 @@ function ControllersContent({ connectedProfiles, controllerCount }) {
               );
             })}
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ExitGameCard({ onExitGame }) {
+  return (
+    <div className="friends-overlay__exit-card">
+      <div className="friends-overlay__exit-card-bg" />
+      <div className="friends-overlay__exit-card-content">
+        <div className="friends-overlay__exit-card-icon">
+          <img src={SwordsImg} alt="" width="100" height="100" />
+        </div>
+        <h2 className="friends-overlay__exit-card-title">
+          Exit this game? There's more to play
+        </h2>
+        <p className="friends-overlay__exit-card-desc">
+          Go back to Netflix or launch a different game from here. Any progress not automatically saved will be lost.
+        </p>
+        <FocusNode
+          focusId="exit-card-btn"
+          elementType="button"
+          className="friends-overlay__exit-card-btn"
+          onSelected={onExitGame}
+        >
+          <XIcon />
+          <span>Exit Game</span>
+        </FocusNode>
+      </div>
+    </div>
+  );
+}
+
+function GameSuggestionCard({ game }) {
+  return (
+    <div className="friends-overlay__game-card">
+      <div className="friends-overlay__game-card-img">
+        <img src={game.image} alt={game.name} />
+      </div>
+      <div className="friends-overlay__game-card-scrim" />
+      <div className="friends-overlay__game-card-bottom">
+        <div className="friends-overlay__game-card-players">
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M14 12.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm-6 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 1.5c-1.63 0-5 .88-5 2.5V18h10v-1.5c0-1.62-3.37-2.5-5-2.5zm6 0c-.2 0-.43.01-.67.04.83.6 1.42 1.4 1.42 2.46V18h4v-1.5c0-1.62-3.13-2.5-4.75-2.5z" />
+          </svg>
+          <span>{game.players}</span>
         </div>
       </div>
     </div>
@@ -348,38 +405,28 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGa
           </div>
 
           {/* Cards row / Controllers content / Exit confirmation */}
-          <div className={`friends-overlay__cards-viewport${activeTab === 'controllers' || showExitConfirmation ? ' -centered' : ''}`}>
+          <div className={`friends-overlay__cards-viewport${activeTab === 'controllers' ? ' -centered' : ''}`}>
             {showExitConfirmation ? (
               <FocusNode
                 focusId="exit-confirm-row"
-                className="friends-overlay__exit-confirmation"
+                className="friends-overlay__cards"
                 orientation="horizontal"
               >
-                <h2 className="friends-overlay__exit-title">Exit game?</h2>
-                <p className="friends-overlay__exit-subtitle">Any unsaved progress will be lost.</p>
-                <div className="friends-overlay__exit-actions">
+                <FocusNode
+                  focusId="exit-card-wrapper"
+                  className="friends-overlay__card-focus-wrapper"
+                >
+                  <ExitGameCard onExitGame={() => onExitGame ? onExitGame() : onBack()} />
+                </FocusNode>
+                {SUGGESTED_GAMES.map((game) => (
                   <FocusNode
-                    focusId="exit-confirm-continue"
-                    elementType="button"
-                    className="friends-overlay__exit-btn"
-                    onSelected={() => {
-                      setShowExitConfirmation(false);
-                      setFocus('friends-menu-exit-game');
-                    }}
+                    key={game.name}
+                    focusId={`exit-game-${game.name}`}
+                    className="friends-overlay__card-focus-wrapper -game"
                   >
-                    Continue Playing
+                    <GameSuggestionCard game={game} />
                   </FocusNode>
-                  <FocusNode
-                    focusId="exit-confirm-exit"
-                    elementType="button"
-                    className="friends-overlay__exit-btn"
-                    onSelected={() => {
-                      onExitGame ? onExitGame() : onBack();
-                    }}
-                  >
-                    Exit Game
-                  </FocusNode>
-                </div>
+                ))}
               </FocusNode>
             ) : activeTab === 'controllers' ? (
               <FocusNode

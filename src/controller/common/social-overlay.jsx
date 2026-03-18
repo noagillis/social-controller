@@ -4,6 +4,10 @@ import { useDataContext } from '@/contexts/data';
 import { useSendMessage } from '@/controller/hooks/use-send-message';
 import { PROFILES } from '../pages/profile-picker/profile-picker';
 import GameControllerIcon from '/images/game-controller.png';
+import Game1Img from './game-1.png';
+import Game2Img from './game-2.png';
+import Game3Img from './game-3.png';
+import SwordsImg from './swords.png';
 import './social-overlay.scss';
 
 const RANDOM_NAMES = [
@@ -31,7 +35,19 @@ function sortByPresence(friends) {
   });
 }
 
-const TABS = ['Home', 'Friends', 'Achievements', 'Profile'];
+const TABS = ['Home', 'Friends', 'Discovery'];
+
+const MAX_PARTY_SIZE = 4;
+
+const MOCK_DISCOVERY_GAMES = [
+  { id: 'g-1', title: 'FIFA 26', image: '/images/fifa-app.png', players: '2-4', genre: 'Sports' },
+  { id: 'g-2', title: "TMNT: Shredder's Revenge", image: Game1Img, players: '2-6', genre: 'Beat \'em Up' },
+  { id: 'g-3', title: 'Oxenfree II', image: Game2Img, players: '2', genre: 'Adventure' },
+  { id: 'g-4', title: 'Into the Breach', image: Game3Img, players: '2', genre: 'Strategy' },
+  { id: 'g-5', title: 'Lucky Luna', image: null, players: '2-4', genre: 'Platformer', gradient: 'linear-gradient(135deg, #1a3a5c, #0d7377)' },
+  { id: 'g-6', title: 'Rival Pirates', image: null, players: '2-4', genre: 'Action', gradient: 'linear-gradient(135deg, #5c1a1a, #8b4513)' },
+  { id: 'g-7', title: 'Poinpy', image: null, players: '2-3', genre: 'Arcade', gradient: 'linear-gradient(135deg, #2d1b4e, #6b3fa0)' },
+];
 
 const TAB_ICONS = {
   Home: (
@@ -44,9 +60,9 @@ const TAB_ICONS = {
       <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
     </svg>
   ),
-  Achievements: (
+  Discovery: (
     <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
     </svg>
   ),
   Profile: null, // uses avatar image instead
@@ -328,33 +344,6 @@ const MOCK_GAMES_PLAYING = [
   null,
 ];
 
-function FriendItem({ friend, onClick }) {
-  return (
-    <div className="social-overlay__friend-item" onClick={onClick} style={{ cursor: 'pointer' }}>
-      <div className="social-overlay__friend-left">
-        <div className="social-overlay__friend-avatar">
-          {friend.avatar ? (
-            <img src={friend.avatar} alt={friend.name} />
-          ) : (
-            <div className="social-overlay__friend-avatar-placeholder" />
-          )}
-        </div>
-        <div className="social-overlay__friend-text">
-          <span className="social-overlay__friend-name">{friend.name}</span>
-          <span className="social-overlay__friend-stats">
-            <strong>{friend.friends}</strong> {friend.friends === 1 ? 'Friend' : 'Friends'}.{' '}
-            <strong>{friend.games}</strong> {friend.games === 1 ? 'Game' : 'Games'}
-          </span>
-        </div>
-      </div>
-      <div className={`social-overlay__friend-status ${friend.online ? '--online' : '--offline'}`}>
-        <span className="social-overlay__friend-status-dot" />
-        <span>{friend.online ? 'Online' : 'Offline'}</span>
-      </div>
-    </div>
-  );
-}
-
 function FriendRequestItem({ request, onClick }) {
   return (
     <div className="social-overlay__friend-item" onClick={onClick} style={{ cursor: 'pointer' }}>
@@ -606,16 +595,6 @@ function SuggestedProfileModal({ suggestion, onClose }) {
             </div>
           )}
 
-          {/* Top games */}
-          <div className="player-card__top-games">
-            <span className="player-card__top-games-label">Top Games</span>
-            <div className="player-card__top-games-list">
-              {suggestion.topGames.map((game) => (
-                <span key={game} className="player-card__game-tag">{game}</span>
-              ))}
-            </div>
-          </div>
-
           {/* Extra info row */}
           <div className="player-card__info-row">
             {suggestion.mutualFriends > 0 && (
@@ -826,11 +805,12 @@ function FindFriendsPanel() {
   );
 }
 
-function FriendsPanel({ friends }) {
+function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancelParty, onToggleMember, onConfirmParty }) {
   const [friendsTab, setFriendsTab] = useState('friends');
   const sorted = sortByPresence(friends);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
+  const isSelecting = partyMode === 'selecting';
 
   const tabs = [
     { key: 'friends', label: 'My Friends', count: friends.length },
@@ -839,50 +819,145 @@ function FriendsPanel({ friends }) {
     { key: 'find', label: 'Find Friends' },
   ];
 
+  const handleFriendClick = (friend) => {
+    if (isSelecting) {
+      if (!friend.online) return; // can't select offline friends
+      onToggleMember(friend);
+    } else {
+      setSelectedFriend(friend);
+    }
+  };
+
   return (
     <div className="social-overlay__friends-panel">
-      <div className="social-overlay__friends-tabs">
-        {tabs.map((tab) => (
-          <button
-            key={tab.key}
-            className={`social-overlay__friends-tab ${friendsTab === tab.key ? '--active' : ''}`}
-            onClick={() => setFriendsTab(tab.key)}
+      {/* Sub-tabs — hidden during party selection */}
+      {!isSelecting && (
+        <div className="social-overlay__friends-tabs">
+          {tabs.map((tab) => (
+            <button
+              key={tab.key}
+              className={`social-overlay__friends-tab ${friendsTab === tab.key ? '--active' : ''}`}
+              onClick={() => setFriendsTab(tab.key)}
+            >
+              {tab.label}
+              {tab.count != null && (
+                <span className="social-overlay__friends-tab-count">{tab.count}</span>
+              )}
+              {tab.badge > 0 && (
+                <span className="social-overlay__friends-tab-badge">{tab.badge}</span>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Party Creation Bar — below tabs, above list */}
+      <motion.div className="party-bar" layout>
+        {!isSelecting ? (
+          <motion.button
+            className="party-bar__create-btn"
+            onClick={onStartParty}
+            layout
+            key="create"
           >
-            {tab.label}
-            {tab.count != null && (
-              <span className="social-overlay__friends-tab-count">{tab.count}</span>
-            )}
-            {tab.badge > 0 && (
-              <span className="social-overlay__friends-tab-badge">{tab.badge}</span>
-            )}
-          </button>
-        ))}
-      </div>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+            </svg>
+            Create a Party
+          </motion.button>
+        ) : (
+          <motion.div className="party-bar__selecting" layout key="selecting">
+            <button className="party-bar__cancel-btn" onClick={onCancelParty}>
+              Cancel
+            </button>
+            <span className="party-bar__count">
+              {partyMembers.length}/{MAX_PARTY_SIZE} selected
+            </span>
+            <button
+              className={`party-bar__next-btn ${partyMembers.length > 0 ? '--active' : ''}`}
+              onClick={onConfirmParty}
+              disabled={partyMembers.length === 0}
+            >
+              Next
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
+            </button>
+          </motion.div>
+        )}
+      </motion.div>
+
       <div className="social-overlay__friends-list">
-        {friendsTab === 'friends' && (
+        {(friendsTab === 'friends' || isSelecting) && (
           <AnimatePresence>
-            {sorted.map((friend) => (
-              <motion.div
-                key={friend.id}
-                layout
-                initial={friend._new ? { opacity: 0, x: -20 } : false}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, ease: [0.32, 0.94, 0.6, 1] }}
-              >
-                <FriendItem friend={friend} onClick={() => setSelectedFriend(friend)} />
-              </motion.div>
-            ))}
+            {sorted.map((friend) => {
+              const isSelected = partyMembers.some((m) => m.id === friend.id);
+              const isMaxed = partyMembers.length >= MAX_PARTY_SIZE && !isSelected;
+              const isDisabled = isSelecting && (!friend.online || isMaxed);
+
+              return (
+                <motion.div
+                  key={friend.id}
+                  layout
+                  initial={friend._new ? { opacity: 0, x: -20 } : false}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, ease: [0.32, 0.94, 0.6, 1] }}
+                >
+                  <div
+                    className={`social-overlay__friend-item ${isSelecting ? '--selectable' : ''} ${isSelected ? '--selected' : ''} ${isDisabled ? '--disabled' : ''}`}
+                    onClick={() => handleFriendClick(friend)}
+                    style={{ cursor: isDisabled ? 'default' : 'pointer' }}
+                  >
+                    <div className="social-overlay__friend-left">
+                      <div className="social-overlay__friend-avatar">
+                        {friend.avatar ? (
+                          <img src={friend.avatar} alt={friend.name} />
+                        ) : (
+                          <div className="social-overlay__friend-avatar-placeholder" />
+                        )}
+                      </div>
+                      <div className="social-overlay__friend-text">
+                        <span className="social-overlay__friend-name">{friend.name}</span>
+                        <span className="social-overlay__friend-stats">
+                          <strong>{friend.friends}</strong> {friend.friends === 1 ? 'Friend' : 'Friends'}.{' '}
+                          <strong>{friend.games}</strong> {friend.games === 1 ? 'Game' : 'Games'}
+                        </span>
+                      </div>
+                    </div>
+                    {isSelecting ? (
+                      <motion.div
+                        className={`party-select-check ${isSelected ? '--checked' : ''}`}
+                        initial={false}
+                        animate={isSelected ? { scale: [0.8, 1.1, 1] } : { scale: 1 }}
+                        transition={{ duration: 0.25, ease: [0.32, 0.94, 0.6, 1] }}
+                      >
+                        {isSelected && (
+                          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        )}
+                      </motion.div>
+                    ) : (
+                      <div className={`social-overlay__friend-status ${friend.online ? '--online' : '--offline'}`}>
+                        <span className="social-overlay__friend-status-dot" />
+                        <span>{friend.online ? 'Online' : 'Offline'}</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         )}
-        {friendsTab === 'requests' &&
+        {!isSelecting && friendsTab === 'requests' &&
           MOCK_FRIEND_REQUESTS.map((request, i) => (
             <FriendRequestItem key={i} request={request} onClick={() => setSelectedSuggestion(request)} />
           ))}
-        {friendsTab === 'suggested' &&
+        {!isSelecting && friendsTab === 'suggested' &&
           MOCK_SUGGESTED_FRIENDS.map((suggestion, i) => (
             <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => setSelectedSuggestion(suggestion)} />
           ))}
-        {friendsTab === 'find' && <FindFriendsPanel />}
+        {!isSelecting && friendsTab === 'find' && <FindFriendsPanel />}
       </div>
       <AnimatePresence>
         {selectedFriend && (
@@ -976,12 +1051,157 @@ function ChevronRight() {
   );
 }
 
+function PartyStrip({ members, onDisband }) {
+  return (
+    <motion.div
+      className="party-strip"
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
+    >
+      <div className="party-strip__left">
+        <div className="party-strip__avatars">
+          {members.map((member, i) => (
+            <motion.div
+              key={member.id}
+              className="party-strip__avatar"
+              initial={{ scale: 0.4, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              transition={{
+                delay: 0.1 + i * 0.1,
+                type: 'spring',
+                stiffness: 350,
+                damping: 22,
+              }}
+              style={{ zIndex: members.length - i }}
+            >
+              <motion.div
+                className="party-strip__avatar-inner"
+                initial={{ boxShadow: '0 0 0px rgba(109, 59, 227, 0)' }}
+                animate={{ boxShadow: ['0 0 12px rgba(109, 59, 227, 0.5)', '0 0 0px rgba(109, 59, 227, 0)'] }}
+                transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
+              >
+                {member.avatar ? (
+                  <img src={member.avatar} alt={member.name} />
+                ) : (
+                  <div className="party-strip__avatar-placeholder" />
+                )}
+              </motion.div>
+            </motion.div>
+          ))}
+        </div>
+        <div className="party-strip__info">
+          <span className="party-strip__label">Your Party</span>
+          <span className="party-strip__count">{members.length} {members.length === 1 ? 'player' : 'players'}</span>
+        </div>
+      </div>
+      <button className="party-strip__disband" onClick={onDisband}>
+        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+          <path d="M6 6L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <path d="M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
+    </motion.div>
+  );
+}
+
+function DiscoveryPanel({ partyMembers, onDisband }) {
+  return (
+    <div className="discovery-panel">
+      <AnimatePresence>
+        {partyMembers.length > 0 && (
+          <PartyStrip members={partyMembers} onDisband={onDisband} />
+        )}
+      </AnimatePresence>
+
+      <div className="discovery-panel__header">
+        <img src={SwordsImg} alt="" className="discovery-panel__header-icon" />
+        <div className="discovery-panel__header-text">
+          <h3 className="discovery-panel__title">
+            {partyMembers.length > 0 ? 'Play Together' : 'Discover Games'}
+          </h3>
+          {partyMembers.length > 0 && (
+            <span className="discovery-panel__subtitle">
+              Choose a game for your party
+            </span>
+          )}
+        </div>
+      </div>
+
+      <div className="discovery-panel__grid">
+        {MOCK_DISCOVERY_GAMES.map((game, i) => (
+          <motion.div
+            key={game.id}
+            className="discovery-panel__card"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.05, duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
+          >
+            <div
+              className="discovery-panel__card-image"
+              style={game.image ? {} : { background: game.gradient }}
+            >
+              {game.image && <img src={game.image} alt={game.title} />}
+              {!game.image && (
+                <span className="discovery-panel__card-placeholder-title">{game.title}</span>
+              )}
+              <div className="discovery-panel__card-players">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                </svg>
+                {game.players}
+              </div>
+            </div>
+            <div className="discovery-panel__card-info">
+              <span className="discovery-panel__card-title">{game.title}</span>
+              <span className="discovery-panel__card-genre">{game.genre}</span>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 let _friendIdCounter = 100;
 
 export default function SocialOverlay({ isVisible, onClose }) {
   const { profileData } = useDataContext();
   const [activeTab, setActiveTab] = useState('Home');
   const [friends, setFriends] = useState(MOCK_FRIENDS);
+  const [partyMode, setPartyMode] = useState('idle'); // idle | selecting | formed
+  const [partyMembers, setPartyMembers] = useState([]);
+
+  const startPartyMode = useCallback(() => {
+    setPartyMode('selecting');
+    setPartyMembers([]);
+  }, []);
+
+  const cancelPartyMode = useCallback(() => {
+    setPartyMode('idle');
+    setPartyMembers([]);
+  }, []);
+
+  const togglePartyMember = useCallback((friend) => {
+    setPartyMembers((prev) => {
+      const exists = prev.find((m) => m.id === friend.id);
+      if (exists) return prev.filter((m) => m.id !== friend.id);
+      if (prev.length >= MAX_PARTY_SIZE) return prev;
+      return [...prev, friend];
+    });
+  }, []);
+
+  const confirmParty = useCallback(() => {
+    setPartyMode('formed');
+    setActiveTab('Discovery');
+  }, []);
+
+  const disbandParty = useCallback(() => {
+    setPartyMode('idle');
+    setPartyMembers([]);
+    setActiveTab('Friends');
+  }, []);
 
   // Randomly toggle each friend's presence every 20s
   useEffect(() => {
@@ -1018,6 +1238,13 @@ export default function SocialOverlay({ isVisible, onClose }) {
           <div className="social-overlay__bg" />
           <div className="social-overlay__glow" />
 
+          {/* Persistent profile button at top center */}
+          {avatar && (
+            <button className="social-overlay__profile-btn" onClick={onClose}>
+              <img src={avatar} alt="Profile" />
+            </button>
+          )}
+
           {/* Dashboard Content */}
           <div className="social-overlay__content">
             {activeTab === 'Home' && (
@@ -1026,8 +1253,20 @@ export default function SocialOverlay({ isVisible, onClose }) {
                 <NotificationsPanel onFriendRequestAction={handleFriendRequestAccepted} onNavigateTab={setActiveTab} />
               </>
             )}
-            {activeTab === 'Friends' && <FriendsPanel friends={friends} />}
-            {activeTab === 'Achievements' && <AchievementsPanel />}
+            {activeTab === 'Friends' && (
+              <FriendsPanel
+                friends={friends}
+                partyMode={partyMode}
+                partyMembers={partyMembers}
+                onStartParty={startPartyMode}
+                onCancelParty={cancelPartyMode}
+                onToggleMember={togglePartyMember}
+                onConfirmParty={confirmParty}
+              />
+            )}
+            {activeTab === 'Discovery' && (
+              <DiscoveryPanel partyMembers={partyMembers} onDisband={disbandParty} />
+            )}
           </div>
 
           {/* Bottom Navbar */}

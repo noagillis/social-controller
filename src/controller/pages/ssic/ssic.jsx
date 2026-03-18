@@ -10,8 +10,8 @@ export default function SSIC({ children, ...props }) {
     <ScreenWrapper>
       <div className="ssic flex-row-center">
         <div className="ssic-menu flex-row-center">
-          <SSICNav action="Setting" />
           <SSICNav action="Profile" />
+          <SSICNav action="Setting" />
           {/* <SSICVoiceChat /> */}
           <SSICNav action="Menu" />
         </div>
