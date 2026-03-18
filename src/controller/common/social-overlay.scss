@@ -24,139 +24,122 @@
   pointer-events: none;
 }
 
-// ─── Rotate Prompt (portrait only) ──────────────────────
-.social-overlay__rotate-prompt {
-  display: none;
-  position: absolute;
-  inset: 0;
-  z-index: 100;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #fff;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: center;
-  padding: 24px;
 
-  img {
-    width: 80px;
-    height: auto;
-  }
-}
-
-@media only screen and (orientation: portrait) {
-  .social-overlay__rotate-prompt {
-    display: flex;
-  }
-}
-
-// ─── Top Bar ────────────────────────────────────────────
-.social-overlay__topbar {
+// ─── Bottom Navbar ──────────────────────────────────────
+.social-overlay__navbar {
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  gap: 16px;
-}
-
-.social-overlay__logo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1px;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 20px 16px;
   flex-shrink: 0;
+
+  @media (orientation: portrait) {
+    padding: 8px 16px 24px;
+  }
 }
 
-.social-overlay__logo-netflix {
-  color: #e50914;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  line-height: 1;
-}
-
-.social-overlay__logo-games {
-  color: #e50914;
-  font-size: 7px;
-  font-weight: 600;
-  letter-spacing: 3.5px;
-  line-height: 1;
-}
-
-// Segmented Tab Controller
-.social-overlay__tabs {
+.social-overlay__navbar-pill {
   display: flex;
   align-items: center;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 22px;
-  padding: 3px;
-  gap: 2px;
+  gap: 12px;
+  padding: 4px;
+  background: rgba(0, 0, 0, 0.34);
+  border-radius: 999px;
+  min-width: 0;
 }
 
-.social-overlay__tab {
+.social-overlay__navbar-item {
+  flex: 1 0 0;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 16px;
-  border-radius: 20px;
+  justify-content: center;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 10px;
+  border-radius: 200px;
   border: none;
   background: transparent;
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 13px;
-  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
 
   svg {
-    opacity: 0.5;
+    color: rgba(255, 255, 255, 0.5);
     flex-shrink: 0;
   }
 
   &.--active {
-    background: rgba(229, 9, 20, 0.9);
-    color: #fff;
+    background: #fff;
+    box-shadow: 0 0 21px rgba(219, 31, 75, 0.29);
+    padding: 0 24px;
 
     svg {
-      opacity: 1;
+      color: #000;
+    }
+
+    .social-overlay__navbar-avatar {
+      box-shadow: 0 0 0 2px #fff;
     }
   }
 
   &:not(.--active):active {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.1);
   }
 }
 
-.social-overlay__topbar-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.social-overlay__navbar-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  overflow: hidden;
   flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
-.social-overlay__topbar-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  background: rgba(255, 255, 255, 0.06);
+.social-overlay__navbar-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+}
+
+.social-overlay__navbar-fab {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 143px;
+  border: none;
+  background: radial-gradient(ellipse at center bottom, #3a3a3a 0%, #5b5b5b 50%, #7b7b7b 100%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 
   &:active {
-    background: rgba(255, 255, 255, 0.15);
+    filter: brightness(1.2);
   }
+}
+
+.social-overlay__navbar-fab-icon {
+  width: 19px;
+  height: 19px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 // ─── Content ────────────────────────────────────────────
@@ -167,8 +150,16 @@
   display: flex;
   flex-direction: row;
   gap: 16px;
-  padding: 0 20px 16px;
+  padding: 12px 20px 8px;
   overflow: hidden;
+
+  @media (orientation: portrait) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px 16px 6px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 // ─── Profile Card ───────────────────────────────────────
@@ -178,6 +169,11 @@
   flex-direction: column;
   gap: 12px;
   min-width: 0;
+
+  @media (orientation: portrait) {
+    flex: 0 0 auto;
+    gap: 10px;
+  }
 }
 
 .social-overlay__profile-header {
@@ -188,6 +184,11 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 14px 16px;
+
+  @media (orientation: portrait) {
+    padding: 12px 14px;
+    gap: 10px;
+  }
 }
 
 .social-overlay__profile-avatar-wrap {
@@ -196,6 +197,12 @@
   border-radius: 10px;
   overflow: hidden;
   flex-shrink: 0;
+
+  @media (orientation: portrait) {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+  }
 }
 
 .social-overlay__profile-avatar {
@@ -267,37 +274,60 @@
 // Now Playing Card
 .social-overlay__now-playing {
   flex: 1;
-  position: relative;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 12px 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
   overflow: hidden;
   min-height: 0;
+
+  @media (orientation: portrait) {
+    flex: 0 0 auto;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
 }
 
-.social-overlay__now-playing-art {
+.social-overlay__now-playing-gameplay {
+  position: relative;
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+
+  @media (orientation: portrait) {
+    flex: 0 0 100px;
+    border-radius: 0;
+    min-height: auto;
+  }
+}
+
+.social-overlay__now-playing-gameplay-bg {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.7) 0%,
-    rgba(0, 0, 0, 0.3) 40%,
-    rgba(0, 0, 0, 0.8) 100%
-  );
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   pointer-events: none;
-  z-index: 0;
 }
 
 .social-overlay__now-playing-info {
   display: flex;
   align-items: center;
   gap: 10px;
-  position: relative;
-  z-index: 1;
+
+  @media (orientation: portrait) {
+    flex: 1;
+    padding: 10px 12px;
+    min-width: 0;
+  }
 }
 
 .social-overlay__now-playing-avatar {
@@ -345,22 +375,28 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  align-self: flex-start;
-  padding: 8px 20px;
-  border-radius: 20px;
+  gap: 8px;
+  padding: 10px 28px;
+  border-radius: 24px;
   border: none;
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: #fff;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  margin-top: auto;
 
   &:active {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  @media (orientation: portrait) {
+    padding: 6px 16px;
+    font-size: 12px;
+    border-radius: 16px;
+    gap: 5px;
   }
 }
 
@@ -372,6 +408,13 @@
   gap: 0;
   min-width: 0;
   overflow-y: auto;
+
+  @media (orientation: portrait) {
+    flex: 1 1 0;
+    min-height: 0;
+    padding-top: 4px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
 }
 
 .social-overlay__notif-header {
@@ -380,6 +423,15 @@
   font-weight: 500;
   margin: 0 0 8px;
   padding: 0 4px;
+
+  @media (orientation: portrait) {
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0 0 4px;
+  }
 }
 
 .social-overlay__notif-list {
@@ -397,6 +449,10 @@
 
   &:last-child {
     border-bottom: none;
+  }
+
+  @media (orientation: portrait) {
+    padding: 9px 2px;
   }
 }
 
@@ -419,6 +475,12 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  @media (orientation: portrait) {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
   }
 }
 

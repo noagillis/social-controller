@@ -35,15 +35,25 @@ export const SubMenu = ({
   const [showSubPage, setShowSubPage] = useState('');
   const setFocus = useSetFocus();
 
+  const SUBPAGE_FOCUS_MAP = {
+    Exit: 'dashboard-exit',
+    Controllers: 'dashboard-controller',
+    Achievements: 'dashboard-achievements',
+  };
+
   const handleSelected = useCallback(
     (Nav) => {
       if (Nav.label === 'Back') {
         onBack();
       } else if (Nav?.isActive) {
         setShowSubPage(Nav.label);
+        const focusId = SUBPAGE_FOCUS_MAP[Nav.label];
+        if (focusId) {
+          setTimeout(() => setFocus(focusId), 0);
+        }
       }
     },
-    [onBack]
+    [onBack, setFocus]
   );
 
   const handleSubMenuDown = useCallback(() => {
@@ -98,6 +108,12 @@ export const SubMenu = ({
             defaultFocusChild={focusedIndex}
             onMove={(e) => {
               setFocusedIndex(e.nextChildIndex);
+              const nav = SUB_MENUS[e.nextChildIndex];
+              if (nav?.isActive && nav.label !== 'Back') {
+                setShowSubPage(nav.label);
+              } else {
+                setShowSubPage('');
+              }
             }}
           >
             {SUB_MENUS.map((Nav, idx) => (
@@ -134,12 +150,6 @@ export const SubMenu = ({
 };
 
 export const ExitRow = ({ onBack, onExit, onResume }) => {
-  const setFocus = useSetFocus();
-
-  useEffect(() => {
-    setFocus('dashboard-exit');
-  }, [setFocus]);
-
   return (
     <div className="screen flex-col-center">
       <div className="dashboard-menu-gradient" />
@@ -167,11 +177,6 @@ export const ExitRow = ({ onBack, onExit, onResume }) => {
 };
 
 export const ControllersRow = ({ onBack }) => {
-  const setFocus = useSetFocus();
-  useEffect(() => {
-    setFocus('dashboard-controller');
-  }, [setFocus]);
-
   return (
     <FocusNode
       className="screen dashboard-controllers"
@@ -189,17 +194,12 @@ export const ControllersRow = ({ onBack }) => {
 };
 
 export const AchievementRow = ({ onBack }) => {
-  const setFocus = useSetFocus();
   const [focusedIndex, setFocusedIndex] = useState(0);
 
   const CardWidth = 144 + 8;
   const unlockedItemLength = 5;
   const lockedItemLength = 7;
   const allLength = lockedItemLength + unlockedItemLength;
-
-  useEffect(() => {
-    setFocus('dashboard-achievements');
-  }, [setFocus]);
 
   return (
     <div className="dashboard-achievements screen flex-col">

@@ -9,6 +9,7 @@ export function useGetMessage() {
   const [inputFocus, setInputFocus] = useState(null);
   const [friendSearch, setFriendSearch] = useState(false);
   const [pendingInvites, setPendingInvites] = useState([]);
+  const [gameExited, setGameExited] = useState(false);
 
   useEffect(() => {
     if (typeof roomId !== 'string') {
@@ -35,6 +36,9 @@ export function useGetMessage() {
       if (messageBody?.type === 'pendingInvites') {
         setPendingInvites(messageBody.data?.invites || []);
       }
+      if (messageBody?.type === 'exitGame') {
+        setGameExited(true);
+      }
     };
 
     // Listen for the 'pageId' event from the server
@@ -45,5 +49,5 @@ export function useGetMessage() {
     };
   }, []);
 
-  return { pageId, step, inputFocus, friendSearch, setFriendSearch, pendingInvites, setPendingInvites };
+  return { pageId, step, inputFocus, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited, setGameExited };
 }

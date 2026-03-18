@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useDataContext } from '@/contexts/data';
 import { useSendMessage } from '@/controller/hooks/use-send-message';
 import { PROFILES } from '../pages/profile-picker/profile-picker';
-import RotateDevice from '../assets/rotate-device.gif';
+import GameControllerIcon from '/images/game-controller.png';
 import './social-overlay.scss';
 
 const RANDOM_NAMES = [
@@ -31,29 +31,25 @@ function sortByPresence(friends) {
   });
 }
 
-const TABS = ['Home', 'Friends', 'Achievements', 'Discover'];
+const TABS = ['Home', 'Friends', 'Achievements', 'Profile'];
 
 const TAB_ICONS = {
   Home: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 3L4 9v12h5v-7h6v7h5V9l-8-6z" />
     </svg>
   ),
   Friends: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
       <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
     </svg>
   ),
   Achievements: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z" />
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
     </svg>
   ),
-  Discover: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-    </svg>
-  ),
+  Profile: null, // uses avatar image instead
 };
 
 function ProfileCard({ profileData, onClose }) {
@@ -86,20 +82,22 @@ function ProfileCard({ profileData, onClose }) {
       <div className="social-overlay__now-playing">
         <div className="social-overlay__now-playing-info">
           <div className="social-overlay__now-playing-avatar">
-            {avatar && <img src={avatar} alt="" />}
+            <img src="/images/fifa-app.png" alt="FIFA 26" />
           </div>
           <div className="social-overlay__now-playing-text">
             <span className="social-overlay__now-playing-label">Currently Playing</span>
-            <span className="social-overlay__now-playing-title">TMNT: Shredder&apos;s Revenge</span>
+            <span className="social-overlay__now-playing-title">FIFA 26</span>
           </div>
         </div>
-        <div className="social-overlay__now-playing-art" />
-        <button className="social-overlay__resume-btn" onClick={onClose}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-          Resume
-        </button>
+        <div className="social-overlay__now-playing-gameplay">
+          <img src="/images/FIFA-gameplay-stadium.png" alt="" className="social-overlay__now-playing-gameplay-bg" />
+          <button className="social-overlay__resume-btn" onClick={onClose}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+            Resume
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -624,6 +622,9 @@ export default function SocialOverlay({ isVisible, onClose }) {
     setFriends((prev) => [{ ...newFriend, id, _new: true }, ...prev]);
   }, []);
 
+  const selectedProfile = PROFILES.find((p) => p.name === profileData);
+  const avatar = selectedProfile?.avatar;
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -637,49 +638,6 @@ export default function SocialOverlay({ isVisible, onClose }) {
           <div className="social-overlay__bg" />
           <div className="social-overlay__glow" />
 
-          {/* Top Bar */}
-          <div className="social-overlay__topbar">
-            <div className="social-overlay__logo">
-              <span className="social-overlay__logo-netflix">NETFLIX</span>
-              <span className="social-overlay__logo-games">GAMES</span>
-            </div>
-
-            <div className="social-overlay__tabs">
-              {TABS.map((tab) => (
-                <button
-                  key={tab}
-                  className={`social-overlay__tab ${activeTab === tab ? '--active' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {TAB_ICONS[tab]}
-                  <span>{tab}</span>
-                </button>
-              ))}
-            </div>
-
-            <div className="social-overlay__topbar-actions">
-              <button className="social-overlay__topbar-btn" aria-label="Menu">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="white">
-                  <path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z" />
-                </svg>
-              </button>
-              <button className="social-overlay__topbar-btn" onClick={onClose} aria-label="Close">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path d="M5 5L15 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                  <path d="M15 5L5 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          {/* Rotate prompt (portrait only, Home tab) */}
-          {activeTab === 'Home' && (
-            <div className="social-overlay__rotate-prompt">
-              <img src={RotateDevice} alt="Rotate device" />
-              <span>Please rotate your device to landscape mode</span>
-            </div>
-          )}
-
           {/* Dashboard Content */}
           <div className="social-overlay__content">
             {activeTab === 'Home' && (
@@ -690,6 +648,36 @@ export default function SocialOverlay({ isVisible, onClose }) {
             )}
             {activeTab === 'Friends' && <FriendsPanel friends={friends} />}
             {activeTab === 'Achievements' && <AchievementsPanel />}
+          </div>
+
+          {/* Bottom Navbar */}
+          <div className="social-overlay__navbar">
+            <div className="social-overlay__navbar-pill">
+              {TABS.map((tab) => (
+                <button
+                  key={tab}
+                  className={`social-overlay__navbar-item ${activeTab === tab ? '--active' : ''}`}
+                  onClick={() => setActiveTab(tab)}
+                  aria-label={tab}
+                >
+                  {tab === 'Profile' ? (
+                    <div className="social-overlay__navbar-avatar">
+                      {avatar ? (
+                        <img src={avatar} alt="Profile" />
+                      ) : (
+                        <div className="social-overlay__navbar-avatar-placeholder" />
+                      )}
+                    </div>
+                  ) : (
+                    TAB_ICONS[tab]
+                  )}
+                </button>
+              ))}
+            </div>
+            <button className="social-overlay__navbar-fab" onClick={onClose}>
+              <img src={GameControllerIcon} alt="" className="social-overlay__navbar-fab-icon" />
+              <span>Back to Game</span>
+            </button>
           </div>
         </motion.div>
       )}

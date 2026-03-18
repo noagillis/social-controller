@@ -3,6 +3,7 @@ import { FocusNode } from '@please/lrud';
 import { useNavigate } from 'react-router-dom';
 import { useUIContext } from '@/contexts/ui';
 import { useOnReceiveMessage } from '@/tv/hooks/use-on-receive-message';
+import { useSendMessageTV } from '@/tv/hooks/use-send-message-tv';
 import FriendsOverlay from './friends-overlay';
 
 import './fifa-main-menu.scss';
@@ -14,6 +15,7 @@ export default function FIFAMainMenu({ onNext, onBack }) {
   const [showFriends, setShowFriends] = useState(false);
   const { setCurrentStep } = useUIContext();
   const navigate = useNavigate();
+  const sendMessageTV = useSendMessageTV();
 
   // Ensure step is 3 when this component mounts
   useEffect(() => {
@@ -105,6 +107,13 @@ export default function FIFAMainMenu({ onNext, onBack }) {
       <FriendsOverlay
         isVisible={showFriends}
         onBack={() => setShowFriends(false)}
+        onExitGame={() => {
+          setShowFriends(false);
+          sendMessageTV?.('exitGame', {});
+          // Set step to 1 after a tick so the pageUpdate broadcast fires after navigation
+          navigate('/f10');
+          setTimeout(() => setCurrentStep(1), 50);
+        }}
       />
     </FocusNode>
   );

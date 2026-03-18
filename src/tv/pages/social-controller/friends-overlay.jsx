@@ -246,11 +246,12 @@ for (let i = 0; i < FRIENDS.length; i++) {
   CARD_OFFSETS.push(prev + prevWidth + CARD_GAP);
 }
 
-export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialTab = 'friends', controllerCount = 0 }) {
+export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGame, initialTab = 'friends', controllerCount = 0 }) {
   const setFocus = useSetFocus();
   const sendMessage = useSendMessageTV();
   const { connectedProfiles } = useUIContext();
   const [activeTab, setActiveTab] = useState(initialTab);
+  const [showExitConfirmation, setShowExitConfirmation] = useState(false);
   const [cardsMode, setCardsMode] = useState(false);
   const [focusedCardIndex, setFocusedCardIndex] = useState(0);
   const [searchText, setSearchText] = useState('');
@@ -346,9 +347,41 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialT
             <div className="friends-overlay__bg-glow" />
           </div>
 
-          {/* Cards row / Controllers content */}
-          <div className={`friends-overlay__cards-viewport${activeTab === 'controllers' ? ' -centered' : ''}`}>
-            {activeTab === 'controllers' ? (
+          {/* Cards row / Controllers content / Exit confirmation */}
+          <div className={`friends-overlay__cards-viewport${activeTab === 'controllers' || showExitConfirmation ? ' -centered' : ''}`}>
+            {showExitConfirmation ? (
+              <FocusNode
+                focusId="exit-confirm-row"
+                className="friends-overlay__exit-confirmation"
+                orientation="horizontal"
+              >
+                <h2 className="friends-overlay__exit-title">Exit game?</h2>
+                <p className="friends-overlay__exit-subtitle">Any unsaved progress will be lost.</p>
+                <div className="friends-overlay__exit-actions">
+                  <FocusNode
+                    focusId="exit-confirm-continue"
+                    elementType="button"
+                    className="friends-overlay__exit-btn"
+                    onSelected={() => {
+                      setShowExitConfirmation(false);
+                      setFocus('friends-menu-exit-game');
+                    }}
+                  >
+                    Continue Playing
+                  </FocusNode>
+                  <FocusNode
+                    focusId="exit-confirm-exit"
+                    elementType="button"
+                    className="friends-overlay__exit-btn"
+                    onSelected={() => {
+                      onExitGame ? onExitGame() : onBack();
+                    }}
+                  >
+                    Exit Game
+                  </FocusNode>
+                </div>
+              </FocusNode>
+            ) : activeTab === 'controllers' ? (
               <FocusNode
                 focusId="controllers-content-row"
                 className="friends-overlay__cards"
@@ -416,6 +449,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialT
               focusId="friends-menu-play-game"
               className="friends-overlay__menu-item"
               onSelected={onPlayGame || onBack}
+              onFocused={() => setShowExitConfirmation(false)}
             >
               <BackIcon />
               <span>Play Game</span>
@@ -431,6 +465,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialT
                   focusId={`friends-menu-${item.id}`}
                   className={`friends-overlay__menu-item${activeTab === item.id ? ' -active' : ''}`}
                   onSelected={() => setActiveTab(item.id)}
+                  onFocused={() => { setActiveTab(item.id); setShowExitConfirmation(false); }}
                 >
                   <item.icon />
                   <span>{item.label}</span>
@@ -440,6 +475,11 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, initialT
             <FocusNode
               focusId="friends-menu-exit-game"
               className="friends-overlay__menu-item -separate"
+              onFocused={() => setShowExitConfirmation(true)}
+              onSelected={() => {
+                setShowExitConfirmation(true);
+                setTimeout(() => setFocus('exit-confirm-continue'), 0);
+              }}
             >
               <XIcon />
               <span>Exit Game</span>
@@ -467,6 +507,7 @@ FriendsOverlay.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   onBack: PropTypes.func.isRequired,
   onPlayGame: PropTypes.func,
+  onExitGame: PropTypes.func,
   initialTab: PropTypes.oneOf(['friends', 'controllers', 'achievements']),
   controllerCount: PropTypes.number,
 };

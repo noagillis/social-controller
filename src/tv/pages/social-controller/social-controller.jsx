@@ -105,6 +105,12 @@ export const SocialControllerTV = (props) => {
     setCurrentStep(3);
   };
 
+  const onExitGame = () => {
+    setShowFriends(false);
+    setCurrentStep(1);
+    sendMessageTV?.('exitGame', {});
+  };
+
   // Step 2: overlay is always visible with controllers tab
   // Profile button: overlay opens with friends tab (default)
   const isOverlayVisible = currentStep === 2 || showFriends;
@@ -119,6 +125,7 @@ export const SocialControllerTV = (props) => {
         controllerCount={controllerCount}
         onBack={() => setShowFriends(false)}
         onPlayGame={onPlayGame}
+        onExitGame={onExitGame}
       />
     </div>
   );

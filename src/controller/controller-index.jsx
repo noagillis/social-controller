@@ -13,6 +13,7 @@ import ReadyToPlayModal from './common/ready-to-play-modal';
 import FriendSearchOverlay from './common/friend-search-overlay';
 import SocialOverlay from './common/social-overlay';
 import GameInviteModal from './common/game-invite-modal';
+import GameExitedScreen from './common/game-exited-screen';
 import { Pages } from './pages/page-constants';
 
 import classNames from 'classnames';
@@ -20,7 +21,7 @@ import classNames from 'classnames';
 import './controller-index.scss';
 
 export default function ControllerIndex() {
-  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites } = useGetMessage();
+  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited } = useGetMessage();
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
   const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
@@ -86,13 +87,14 @@ export default function ControllerIndex() {
         />
       )}
       {showOnboarding && <WelcomeToast profile={selectedProfile} />}
-      {showOnboarding && (
+      {showOnboarding && !gameExited && (
         <ReadyToPlayModal
           onStartPlaying={() => {
             sendMessage('navigate', { path: '/fifa-menu' });
           }}
         />
       )}
+      {gameExited && <GameExitedScreen />}
     </div>
   );
 }

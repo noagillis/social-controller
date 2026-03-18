@@ -904,3 +904,51 @@
     }
   }
 }
+
+// ─── Exit Game Confirmation ────────────────────────────
+.friends-overlay__exit-confirmation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 40px 20px;
+}
+
+.friends-overlay__exit-title {
+  color: #fff;
+  font-size: 48px;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+}
+
+.friends-overlay__exit-subtitle {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 20px;
+  margin: 8px 0 40px;
+  text-align: center;
+}
+
+.friends-overlay__exit-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.friends-overlay__exit-btn {
+  padding: 16px 48px;
+  border-radius: 32px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.isFocused,
+  &.isFocusedLeaf {
+    background: rgba(255, 255, 255, 0.25);
+    outline: 3px solid white;
+  }
+}
