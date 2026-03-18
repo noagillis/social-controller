@@ -21,7 +21,7 @@ import classNames from 'classnames';
 import './controller-index.scss';
 
 export default function ControllerIndex() {
-  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited } = useGetMessage();
+  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited, setGameExited } = useGetMessage();
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
   const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
@@ -94,7 +94,7 @@ export default function ControllerIndex() {
           }}
         />
       )}
-      {gameExited && <GameExitedScreen />}
+      {gameExited && <GameExitedScreen onExit={() => setGameExited(false)} />}
     </div>
   );
 }

@@ -582,6 +582,15 @@
   padding: 0 4px 12px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   margin-bottom: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex-shrink: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 .social-overlay__friends-tab {
@@ -598,6 +607,8 @@
   cursor: pointer;
   transition: all 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
 
   &.--active {
     background: rgba(255, 255, 255, 0.1);
@@ -731,6 +742,219 @@
   }
 }
 
+// ─── Suggested Friends ─────────────────────────────────
+.social-overlay__suggested-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 4px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.social-overlay__suggested-reason {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(176, 56, 220, 0.7);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.social-overlay__add-friend-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(109, 59, 227, 0.4);
+  background: rgba(109, 59, 227, 0.15);
+  color: #c59dff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+
+  &:active:not(:disabled) {
+    background: rgba(109, 59, 227, 0.3);
+    transform: scale(0.96);
+  }
+
+  &.--added {
+    border-color: rgba(76, 175, 80, 0.3);
+    background: rgba(76, 175, 80, 0.1);
+    color: #4dd8a6;
+    cursor: default;
+  }
+}
+
+// ─── Find Friends ──────────────────────────────────────
+.social-overlay__find-friends {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 8px 0;
+}
+
+.social-overlay__find-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.social-overlay__invite-link-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 16px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+  text-align: left;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.07);
+    transform: scale(0.98);
+  }
+
+  &.--copied {
+    border-color: rgba(76, 175, 80, 0.2);
+    background: rgba(76, 175, 80, 0.06);
+
+    .social-overlay__invite-link-icon {
+      background: rgba(76, 175, 80, 0.15);
+      color: #4dd8a6;
+    }
+  }
+}
+
+.social-overlay__invite-link-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(109, 59, 227, 0.15);
+  color: #c59dff;
+  transition: all 0.2s ease;
+}
+
+.social-overlay__invite-link-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.social-overlay__invite-link-title {
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.social-overlay__invite-link-sub {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 12px;
+}
+
+.social-overlay__invite-link-arrow {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.25);
+}
+
+.social-overlay__find-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 8px;
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.social-overlay__search-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 48px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.2s ease;
+
+  &.--focused {
+    border-color: rgba(109, 59, 227, 0.4);
+    background: rgba(109, 59, 227, 0.06);
+    box-shadow: 0 0 0 3px rgba(109, 59, 227, 0.08);
+  }
+}
+
+.social-overlay__search-icon {
+  flex-shrink: 0;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.social-overlay__search-input {
+  flex: 1;
+  background: none;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 500;
+  min-width: 0;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+    font-weight: 400;
+  }
+}
+
+.social-overlay__search-clear {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.social-overlay__search-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  text-align: center;
+}
+
 // ─── Achievements Panel ────────────────────────────────
 .social-overlay__achievements-panel {
   flex: 1;
@@ -835,6 +1059,10 @@
   align-items: center;
   justify-content: center;
   padding: 16px;
+
+  @media (orientation: landscape) {
+    padding: 8px 16px 68px;
+  }
 }
 
 .player-card {
@@ -855,6 +1083,7 @@
   @media (orientation: landscape) {
     flex-direction: row;
     max-width: 520px;
+    max-height: calc(100vh - 80px);
     gap: 24px;
     padding: 20px 24px;
     align-items: stretch;
@@ -1058,6 +1287,157 @@
 @keyframes player-card-spin {
   to {
     transform: rotate(360deg);
+  }
+}
+
+// ─── Suggested Profile Modal extras ─────────────────────
+.player-card__suggestion-reason {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(176, 56, 220, 0.08);
+  border: 1px solid rgba(176, 56, 220, 0.12);
+  color: #c59dff;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.player-card__top-games {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.player-card__top-games-label {
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.player-card__top-games-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.player-card__game-tag {
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.player-card__info-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.player-card__info-chip {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.player-card__add-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(109, 59, 227, 0.6);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+
+  &:active:not(:disabled) {
+    background: rgba(109, 59, 227, 0.8);
+    transform: scale(0.98);
+  }
+
+  &.--sending {
+    background: rgba(109, 59, 227, 0.35);
+    cursor: default;
+  }
+
+  &.--added {
+    background: rgba(76, 175, 80, 0.25);
+    color: #4caf50;
+    cursor: default;
+  }
+}
+
+.player-card--suggested .player-card__right {
+  gap: 10px;
+
+  @media (orientation: landscape) {
+    gap: 6px;
+    overflow-y: auto;
+  }
+}
+
+.player-card--suggested {
+  @media (orientation: landscape) {
+    max-width: 480px;
+    padding: 14px 18px;
+    gap: 16px;
+
+    .player-card__avatar {
+      width: 52px;
+      height: 52px;
+    }
+
+    .player-card__name {
+      font-size: 16px;
+    }
+
+    .player-card__stats-row {
+      padding: 6px 0;
+      gap: 10px;
+    }
+
+    .player-card__stat-value {
+      font-size: 15px;
+    }
+
+    .player-card__stat-label {
+      font-size: 10px;
+    }
+
+    .player-card__add-btn,
+    .player-card__invite-btn {
+      padding: 9px 16px;
+      font-size: 13px;
+    }
+
+    .player-card__suggestion-reason {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+
+    .player-card__actions {
+      gap: 6px;
+    }
   }
 }
 

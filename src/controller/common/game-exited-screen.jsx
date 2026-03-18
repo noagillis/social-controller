@@ -1,6 +1,59 @@
+import { useState } from 'react';
+import { PROFILES } from '../pages/profile-picker/profile-picker';
 import './game-exited-screen.scss';
 
 const IMG_PATH = import.meta.env.BASE_URL + 'images';
+
+const SUGGESTED_PLAYERS = [
+  { name: 'salx', avatar: PROFILES[2]?.avatar },
+  { name: 'pewpewpew', avatar: PROFILES[4]?.avatar },
+  { name: 'NightOwl_22', avatar: PROFILES[0]?.avatar },
+];
+
+function AddFriendIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+      <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function SuggestedPlayerItem({ player }) {
+  const [added, setAdded] = useState(false);
+
+  return (
+    <div className="game-exited-screen__suggested-item">
+      <div className="game-exited-screen__suggested-left">
+        <div className="game-exited-screen__suggested-avatar">
+          {player.avatar ? (
+            <img src={player.avatar} alt={player.name} />
+          ) : (
+            <div className="game-exited-screen__suggested-avatar-placeholder" />
+          )}
+        </div>
+        <div className="game-exited-screen__suggested-text">
+          <span className="game-exited-screen__suggested-name">{player.name}</span>
+        </div>
+      </div>
+      <button
+        className={`game-exited-screen__add-btn ${added ? '--added' : ''}`}
+        onClick={() => setAdded(true)}
+        disabled={added}
+      >
+        {added ? <CheckIcon /> : <AddFriendIcon />}
+        {added ? 'Sent' : 'Add'}
+      </button>
+    </div>
+  );
+}
 
 function ConnectedIcon() {
   return (
@@ -29,7 +82,7 @@ function HelpIcon() {
   );
 }
 
-export default function GameExitedScreen() {
+export default function GameExitedScreen({ onExit }) {
   return (
     <div className="game-exited-screen">
       <div className="game-exited-screen__bg">
@@ -58,7 +111,7 @@ export default function GameExitedScreen() {
         </p>
 
         <div className="game-exited-screen__actions">
-          <button className="game-exited-screen__btn game-exited-screen__btn--exit">
+          <button className="game-exited-screen__btn game-exited-screen__btn--exit" onClick={onExit}>
             <XIcon />
             <span>Exit Controller</span>
           </button>
@@ -66,6 +119,15 @@ export default function GameExitedScreen() {
             <HelpIcon />
             <span>Give Feedback</span>
           </button>
+        </div>
+      </div>
+
+      <div className="game-exited-screen__suggested">
+        <div className="game-exited-screen__suggested-header">Add Friends</div>
+        <div className="game-exited-screen__suggested-list">
+          {SUGGESTED_PLAYERS.map((player) => (
+            <SuggestedPlayerItem key={player.name} player={player} />
+          ))}
         </div>
       </div>
     </div>

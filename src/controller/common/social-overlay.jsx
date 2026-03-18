@@ -254,10 +254,59 @@ function NotificationsPanel({ onFriendRequestAction, onNavigateTab }) {
 }
 
 const MOCK_FRIEND_REQUESTS = [
-  { name: 'xXShadowLordXx', avatar: PROFILES[1]?.avatar, mutualFriends: 3, timeAgo: '2h ago' },
-  { name: 'PixelQueen99', avatar: PROFILES[3]?.avatar, mutualFriends: 7, timeAgo: '5h ago' },
-  { name: 'TurboNick', avatar: null, mutualFriends: 1, timeAgo: '1d ago' },
-  { name: 'CozyGamerVal', avatar: PROFILES[2]?.avatar, mutualFriends: 0, timeAgo: '3d ago' },
+  {
+    name: 'xXShadowLordXx', avatar: PROFILES[1]?.avatar, mutualFriends: 3, timeAgo: '2h ago',
+    online: true, friends: 112, games: 29, achievements: 14,
+    topGames: ['FIFA 26', 'Into the Breach'], playing: 'FIFA 26', memberSince: 'Aug 2024',
+  },
+  {
+    name: 'PixelQueen99', avatar: PROFILES[3]?.avatar, mutualFriends: 7, timeAgo: '5h ago',
+    online: true, friends: 203, games: 45, achievements: 31,
+    topGames: ['Oxenfree II', "TMNT: Shredder's Revenge", 'FIFA 26'], playing: 'Oxenfree II', memberSince: 'May 2024',
+  },
+  {
+    name: 'TurboNick', avatar: null, mutualFriends: 1, timeAgo: '1d ago',
+    online: false, friends: 18, games: 7, achievements: 3,
+    topGames: ['FIFA 26', 'Into the Breach'], playing: null, memberSince: 'Dec 2025',
+  },
+  {
+    name: 'CozyGamerVal', avatar: PROFILES[2]?.avatar, mutualFriends: 0, timeAgo: '3d ago',
+    online: false, friends: 56, games: 19, achievements: 11,
+    topGames: ["TMNT: Shredder's Revenge", 'Oxenfree II'], playing: null, memberSince: 'Oct 2024',
+  },
+];
+
+const MOCK_SUGGESTED_FRIENDS = [
+  {
+    name: 'salx', avatar: PROFILES[2]?.avatar, reason: 'Recently played together',
+    online: true, friends: 87, games: 24, achievements: 19,
+    topGames: ['FIFA 26', "TMNT: Shredder's Revenge", 'Oxenfree II'],
+    playing: 'FIFA 26', mutualFriends: 2, memberSince: 'Jan 2025',
+  },
+  {
+    name: 'pewpewpew', avatar: PROFILES[4]?.avatar, reason: 'Also likes Stranger Things',
+    online: true, friends: 214, games: 41, achievements: 33,
+    topGames: ['Oxenfree II', 'Into the Breach', 'Stranger Things: The Game'],
+    playing: 'Oxenfree II', mutualFriends: 5, memberSince: 'Mar 2024',
+  },
+  {
+    name: 'NightOwl_22', avatar: PROFILES[0]?.avatar, reason: 'Friends with LilnMiso',
+    online: false, friends: 34, games: 12, achievements: 8,
+    topGames: ["TMNT: Shredder's Revenge", 'FIFA 26'],
+    playing: null, mutualFriends: 1, memberSince: 'Nov 2025',
+  },
+  {
+    name: 'xKiraGaming', avatar: PROFILES[3]?.avatar, reason: 'Plays FIFA 26',
+    online: true, friends: 156, games: 38, achievements: 27,
+    topGames: ['FIFA 26', 'Into the Breach', "TMNT: Shredder's Revenge"],
+    playing: 'FIFA 26', mutualFriends: 3, memberSince: 'Jun 2024',
+  },
+  {
+    name: 'ghostlyvibes', avatar: null, reason: 'In the same tournament',
+    online: false, friends: 11, games: 6, achievements: 4,
+    topGames: ['Into the Breach', 'FIFA 26'],
+    playing: null, mutualFriends: 0, memberSince: 'Feb 2026',
+  },
 ];
 
 const MOCK_FRIENDS = [
@@ -306,9 +355,9 @@ function FriendItem({ friend, onClick }) {
   );
 }
 
-function FriendRequestItem({ request }) {
+function FriendRequestItem({ request, onClick }) {
   return (
-    <div className="social-overlay__friend-item">
+    <div className="social-overlay__friend-item" onClick={onClick} style={{ cursor: 'pointer' }}>
       <div className="social-overlay__friend-left">
         <div className="social-overlay__friend-avatar">
           {request.avatar ? (
@@ -329,7 +378,7 @@ function FriendRequestItem({ request }) {
           </span>
         </div>
       </div>
-      <div className="social-overlay__notif-actions">
+      <div className="social-overlay__notif-actions" onClick={(e) => e.stopPropagation()}>
         <button className="social-overlay__notif-circle-btn --reject">
           <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
             <path d="M6 6L14 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
@@ -466,30 +515,348 @@ function PlayerCardModal({ friend, onClose }) {
   );
 }
 
+function SuggestedProfileModal({ suggestion, onClose }) {
+  const [addState, setAddState] = useState('idle'); // idle | sending | added
+  const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
+  const sendMessage = useSendMessage();
+  const { profileData } = useDataContext();
+
+  const handleAddFriend = () => {
+    setAddState('sending');
+    setTimeout(() => setAddState('added'), 600);
+  };
+
+  const handleInvite = () => {
+    setInviteState('sending');
+    sendMessage('gameInvite', {
+      fromPlayer: profileData || 'Player',
+      toPlayer: suggestion.name,
+      toAvatar: suggestion.avatar,
+      game: 'FIFA',
+    });
+    setTimeout(() => setInviteState('sent'), 800);
+  };
+
+  return (
+    <motion.div
+      className="player-card-backdrop"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      onClick={onClose}
+    >
+      <motion.div
+        className="player-card player-card--suggested"
+        initial={{ opacity: 0, scale: 0.92, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.92, y: 20 }}
+        transition={{ duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button className="player-card__close" onClick={onClose}>
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M5 5L15 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
+            <path d="M15 5L5 15" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+
+        <div className="player-card__left">
+          <div className="player-card__header">
+            <div className="player-card__avatar">
+              {suggestion.avatar ? (
+                <img src={suggestion.avatar} alt={suggestion.name} />
+              ) : (
+                <div className="player-card__avatar-placeholder" />
+              )}
+              <div className={`player-card__presence ${suggestion.online ? '--online' : '--offline'}`} />
+            </div>
+            <div className="player-card__name">{suggestion.name}</div>
+            <div className="player-card__status">
+              {suggestion.online ? (suggestion.playing ? `Playing ${suggestion.playing}` : 'Online') : 'Offline'}
+            </div>
+          </div>
+
+          <div className="player-card__stats-row">
+            <div className="player-card__stat">
+              <span className="player-card__stat-value">{suggestion.friends}</span>
+              <span className="player-card__stat-label">Friends</span>
+            </div>
+            <div className="player-card__stat-divider" />
+            <div className="player-card__stat">
+              <span className="player-card__stat-value">{suggestion.games}</span>
+              <span className="player-card__stat-label">Games</span>
+            </div>
+            <div className="player-card__stat-divider" />
+            <div className="player-card__stat">
+              <span className="player-card__stat-value">{suggestion.achievements}</span>
+              <span className="player-card__stat-label">Achievements</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="player-card__right">
+          {/* Why suggested */}
+          {suggestion.reason && (
+            <div className="player-card__suggestion-reason">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+              </svg>
+              {suggestion.reason}
+            </div>
+          )}
+
+          {/* Top games */}
+          <div className="player-card__top-games">
+            <span className="player-card__top-games-label">Top Games</span>
+            <div className="player-card__top-games-list">
+              {suggestion.topGames.map((game) => (
+                <span key={game} className="player-card__game-tag">{game}</span>
+              ))}
+            </div>
+          </div>
+
+          {/* Extra info row */}
+          <div className="player-card__info-row">
+            {suggestion.mutualFriends > 0 && (
+              <span className="player-card__info-chip">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z" />
+                </svg>
+                {suggestion.mutualFriends} mutual
+              </span>
+            )}
+            <span className="player-card__info-chip">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67z" />
+              </svg>
+              Since {suggestion.memberSince}
+            </span>
+          </div>
+
+          {/* Actions */}
+          <div className="player-card__actions">
+            <button
+              className={`player-card__add-btn ${addState !== 'idle' ? '--' + addState : ''}`}
+              onClick={handleAddFriend}
+              disabled={addState !== 'idle'}
+            >
+              {addState === 'idle' && (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                  Add Friend
+                </>
+              )}
+              {addState === 'sending' && (
+                <>
+                  <span className="player-card__spinner" />
+                  Sending...
+                </>
+              )}
+              {addState === 'added' && (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Request Sent!
+                </>
+              )}
+            </button>
+            <button
+              className={`player-card__invite-btn ${inviteState !== 'idle' ? '--' + inviteState : ''}`}
+              onClick={handleInvite}
+              disabled={inviteState !== 'idle'}
+            >
+              {inviteState === 'idle' && (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-1.66 1.34-3 3-3 .35 0 .69.07 1 .18V5h5v2h-3v7.03A3.003 3.003 0 0111 18c-1.66 0-3-1.34-3-3z" />
+                  </svg>
+                  Invite to Game
+                </>
+              )}
+              {inviteState === 'sending' && (
+                <>
+                  <span className="player-card__spinner" />
+                  Sending...
+                </>
+              )}
+              {inviteState === 'sent' && (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Invite Sent!
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function SuggestedFriendItem({ suggestion, onClick }) {
+  const [added, setAdded] = useState(false);
+
+  return (
+    <div className="social-overlay__suggested-item" onClick={onClick} style={{ cursor: 'pointer' }}>
+      <div className="social-overlay__friend-left">
+        <div className="social-overlay__friend-avatar">
+          {suggestion.avatar ? (
+            <img src={suggestion.avatar} alt={suggestion.name} />
+          ) : (
+            <div className="social-overlay__friend-avatar-placeholder" />
+          )}
+        </div>
+        <div className="social-overlay__friend-text">
+          <span className="social-overlay__friend-name">{suggestion.name}</span>
+          <span className="social-overlay__suggested-reason">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.6 }}>
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+            </svg>
+            {suggestion.reason}
+          </span>
+        </div>
+      </div>
+      <button
+        className={`social-overlay__add-friend-btn ${added ? '--added' : ''}`}
+        onClick={(e) => { e.stopPropagation(); setAdded(true); }}
+        disabled={added}
+      >
+        {added ? (
+          <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        ) : (
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+          </svg>
+        )}
+        {added ? 'Sent' : 'Add'}
+      </button>
+    </div>
+  );
+}
+
+function FindFriendsPanel() {
+  const [copied, setCopied] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
+
+  const handleCopyLink = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
+  };
+
+  return (
+    <div className="social-overlay__find-friends">
+      <div className="social-overlay__find-section">
+        <button
+          className={`social-overlay__invite-link-btn ${copied ? '--copied' : ''}`}
+          onClick={handleCopyLink}
+        >
+          <div className="social-overlay__invite-link-icon">
+            {copied ? (
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
+              </svg>
+            )}
+          </div>
+          <div className="social-overlay__invite-link-text">
+            <span className="social-overlay__invite-link-title">
+              {copied ? 'Link Copied!' : 'Invite Friends'}
+            </span>
+            <span className="social-overlay__invite-link-sub">
+              {copied ? 'Share it with your friends' : 'Copy a link to share off-platform'}
+            </span>
+          </div>
+          <div className="social-overlay__invite-link-arrow">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+            </svg>
+          </div>
+        </button>
+      </div>
+
+      <div className="social-overlay__find-divider">
+        <span>or</span>
+      </div>
+
+      <div className="social-overlay__find-section">
+        <div className={`social-overlay__search-input-wrap ${searchFocused ? '--focused' : ''}`}>
+          <svg className="social-overlay__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+          </svg>
+          <input
+            type="text"
+            className="social-overlay__search-input"
+            placeholder="Search by username..."
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+          />
+          {searchValue && (
+            <button className="social-overlay__search-clear" onClick={() => setSearchValue('')}>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+                <path d="M6 6L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                <path d="M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </button>
+          )}
+        </div>
+        {searchValue && (
+          <div className="social-overlay__search-empty">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.2 }}>
+              <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+            </svg>
+            <span>No results for "{searchValue}"</span>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function FriendsPanel({ friends }) {
   const [friendsTab, setFriendsTab] = useState('friends');
   const sorted = sortByPresence(friends);
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [selectedSuggestion, setSelectedSuggestion] = useState(null);
+
+  const tabs = [
+    { key: 'friends', label: 'My Friends', count: friends.length },
+    { key: 'requests', label: 'Requests', badge: MOCK_FRIEND_REQUESTS.length },
+    { key: 'suggested', label: 'Suggested' },
+    { key: 'find', label: 'Find Friends' },
+  ];
 
   return (
     <div className="social-overlay__friends-panel">
       <div className="social-overlay__friends-tabs">
-        <button
-          className={`social-overlay__friends-tab ${friendsTab === 'friends' ? '--active' : ''}`}
-          onClick={() => setFriendsTab('friends')}
-        >
-          My Friends
-          <span className="social-overlay__friends-tab-count">{friends.length}</span>
-        </button>
-        <button
-          className={`social-overlay__friends-tab ${friendsTab === 'requests' ? '--active' : ''}`}
-          onClick={() => setFriendsTab('requests')}
-        >
-          Requests
-          {MOCK_FRIEND_REQUESTS.length > 0 && (
-            <span className="social-overlay__friends-tab-badge">{MOCK_FRIEND_REQUESTS.length}</span>
-          )}
-        </button>
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            className={`social-overlay__friends-tab ${friendsTab === tab.key ? '--active' : ''}`}
+            onClick={() => setFriendsTab(tab.key)}
+          >
+            {tab.label}
+            {tab.count != null && (
+              <span className="social-overlay__friends-tab-count">{tab.count}</span>
+            )}
+            {tab.badge > 0 && (
+              <span className="social-overlay__friends-tab-badge">{tab.badge}</span>
+            )}
+          </button>
+        ))}
       </div>
       <div className="social-overlay__friends-list">
         {friendsTab === 'friends' && (
@@ -508,13 +875,26 @@ function FriendsPanel({ friends }) {
           </AnimatePresence>
         )}
         {friendsTab === 'requests' &&
-          MOCK_FRIEND_REQUESTS.map((request, i) => <FriendRequestItem key={i} request={request} />)}
+          MOCK_FRIEND_REQUESTS.map((request, i) => (
+            <FriendRequestItem key={i} request={request} onClick={() => setSelectedSuggestion(request)} />
+          ))}
+        {friendsTab === 'suggested' &&
+          MOCK_SUGGESTED_FRIENDS.map((suggestion, i) => (
+            <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => setSelectedSuggestion(suggestion)} />
+          ))}
+        {friendsTab === 'find' && <FindFriendsPanel />}
       </div>
       <AnimatePresence>
         {selectedFriend && (
           <PlayerCardModal
             friend={selectedFriend}
             onClose={() => setSelectedFriend(null)}
+          />
+        )}
+        {selectedSuggestion && (
+          <SuggestedProfileModal
+            suggestion={selectedSuggestion}
+            onClose={() => setSelectedSuggestion(null)}
           />
         )}
       </AnimatePresence>
