@@ -851,8 +851,8 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
         </div>
       )}
 
-      {/* Party Creation Bar — below tabs, above list */}
-      <motion.div className="party-bar" layout>
+      {/* Party Creation Bar — below tabs, above list (only on My Friends sub-tab) */}
+      {(friendsTab === 'friends' || isSelecting) && <motion.div className="party-bar" layout>
         {!isSelecting ? (
           <motion.button
             className="party-bar__create-btn"
@@ -885,7 +885,7 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
             </button>
           </motion.div>
         )}
-      </motion.div>
+      </motion.div>}
 
       <div className="social-overlay__friends-list">
         {(friendsTab === 'friends' || isSelecting) && (
@@ -1230,20 +1230,29 @@ export default function SocialOverlay({ isVisible, onClose }) {
       {isVisible && (
         <motion.div
           className="social-overlay"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
+          initial={{ y: '100%' }}
+          animate={{ y: 0 }}
+          exit={{ y: '100%' }}
+          transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
         >
-          <div className="social-overlay__bg" />
-          <div className="social-overlay__glow" />
+          {/* Notch wings that extend above the body on either side of profile button */}
+          <div className="social-overlay__wing --left" />
+          <div className="social-overlay__wing --right" />
 
-          {/* Persistent profile button at top center */}
+          {/* Profile icon in notch (portrait only — in landscape the controller button shows through) */}
           {avatar && (
-            <button className="social-overlay__profile-btn" onClick={onClose}>
+            <button className="social-overlay__notch-profile" onClick={onClose}>
               <img src={avatar} alt="Profile" />
             </button>
           )}
+
+          {/* Main body below the notch */}
+          <div className="social-overlay__body">
+            <div className="social-overlay__bg" />
+          </div>
+
+          {/* Glow — sits above body+wings, clipped around the notch gap */}
+          <div className="social-overlay__glow" />
 
           {/* Dashboard Content */}
           <div className="social-overlay__content">
