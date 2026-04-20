@@ -15,6 +15,8 @@ const controllerIcon = '/images/game-controller.png';
 
 import './profile-picker.scss';
 
+const GUEST_USERNAMES = ['Otter44', 'Moose99', 'Sloth7', 'Panda23'];
+
 export const PROFILES = [
   { name: 'LilnMiso', avatar: pokemonConcierge },
   { name: 'Mudkip', avatar: mudkip },
@@ -29,11 +31,15 @@ export default function ProfilePicker({ onProfileSelected, onDismiss }) {
   const [exiting, setExiting] = useState(false);
 
   const handleSelect = (profile) => {
-    setProfileData(profile.name);
-    sendMessage('profileSelect', { name: profile.name, avatar: profile.avatar, isGuest: !!profile.isGuest });
+    const displayName = profile.isGuest
+      ? GUEST_USERNAMES[Math.floor(Math.random() * GUEST_USERNAMES.length)]
+      : profile.name;
+    setProfileData(displayName);
+    sendMessage('profileSelect', { name: displayName, avatar: profile.avatar, isGuest: !!profile.isGuest });
+    const resolvedProfile = { ...profile, name: displayName };
     setExiting(true);
     setTimeout(() => {
-      onProfileSelected(profile);
+      onProfileSelected(resolvedProfile);
     }, 400);
   };
 

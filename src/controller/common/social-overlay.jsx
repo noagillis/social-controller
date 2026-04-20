@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDataContext } from '@/contexts/data';
+import { useUIContext } from '@/contexts/ui';
 import { useSendMessage } from '@/controller/hooks/use-send-message';
 import { PROFILES } from '../pages/profile-picker/profile-picker';
 import GameControllerIcon from '/images/game-controller.png';
+import PhoneControllerPink from '/images/phone-controller-pink.png';
 import Game1Img from './game-1.png';
 import Game2Img from './game-2.png';
 import Game3Img from './game-3.png';
@@ -68,10 +70,11 @@ const TAB_ICONS = {
   Profile: null, // uses avatar image instead
 };
 
-function ProfileCard({ profileData, onClose }) {
+function ProfileCard({ profileData, onClose, currentStep, onNavigateToFriends }) {
   const selectedProfile = PROFILES.find((p) => p.name === profileData);
   const avatar = selectedProfile?.avatar;
   const name = profileData || 'Player';
+  const isPreGame = currentStep === 1;
 
   return (
     <div className="social-overlay__profile-card">
@@ -98,22 +101,30 @@ function ProfileCard({ profileData, onClose }) {
       <div className="social-overlay__now-playing">
         <div className="social-overlay__now-playing-info">
           <div className="social-overlay__now-playing-avatar">
-            <img src="/images/fifa-app.png" alt="FIFA 26" />
+            <img src="/images/fifa-app.png" alt={isPreGame ? 'Start a Game' : 'FIFA 26'} />
           </div>
           <div className="social-overlay__now-playing-text">
-            <span className="social-overlay__now-playing-label">Currently Playing</span>
-            <span className="social-overlay__now-playing-title">FIFA 26</span>
+            <span className="social-overlay__now-playing-label">{isPreGame ? 'Start a Game' : 'Currently Playing'}</span>
+            <span className="social-overlay__now-playing-title">{isPreGame ? 'Start a Game' : 'FIFA 26'}</span>
           </div>
         </div>
-        <div className="social-overlay__now-playing-gameplay">
-          <img src="/images/FIFA-gameplay-stadium.png" alt="" className="social-overlay__now-playing-gameplay-bg" />
-          <button className="social-overlay__resume-btn" onClick={onClose}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
-              <path d="M8 5v14l11-7z" />
-            </svg>
-            Resume
-          </button>
-        </div>
+        {isPreGame ? (
+          <div className="social-overlay__now-playing-gameplay">
+            <button className="social-overlay__resume-btn" onClick={onNavigateToFriends}>
+              Invite
+            </button>
+          </div>
+        ) : (
+          <div className="social-overlay__now-playing-gameplay">
+            <img src="/images/FIFA-gameplay-stadium.png" alt="" className="social-overlay__now-playing-gameplay-bg" />
+            <button className="social-overlay__resume-btn" onClick={onClose}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+              Resume
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -178,7 +189,7 @@ function ConfirmationNotification({ message, type }) {
   );
 }
 
-function NotificationsPanel({ onFriendRequestAction, onNavigateTab }) {
+function NotificationsPanel({ onFriendRequestAction, onNavigateTab, gameExited }) {
   const [confirmations, setConfirmations] = useState([]);
   const [pendingRequests, setPendingRequests] = useState(() => [getNextRandomRequest()]);
 
@@ -211,6 +222,20 @@ function NotificationsPanel({ onFriendRequestAction, onNavigateTab }) {
       setConfirmations((prev) => prev.filter((c) => c.id !== confirmation.id));
     }, 4000);
   }, [onFriendRequestAction]);
+
+  if (gameExited) {
+    const suggested = MOCK_SUGGESTED_FRIENDS.slice(0, 3);
+    return (
+      <div className="social-overlay__notifications">
+        <h3 className="social-overlay__notif-header">Add your recent friends</h3>
+        <div className="social-overlay__notif-list">
+          {suggested.map((suggestion, i) => (
+            <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => {}} hideReason />
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="social-overlay__notifications">
@@ -504,15 +529,28 @@ function PlayerCardModal({ friend, onClose }) {
   );
 }
 
-function SuggestedProfileModal({ suggestion, onClose }) {
+function SuggestedProfileModal({ suggestion, source, onClose }) {
   const [addState, setAddState] = useState('idle'); // idle | sending | added
   const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
+  const [acceptState, setAcceptState] = useState('idle'); // idle | accepting | accepted
+  const [declineState, setDeclineState] = useState('idle'); // idle | declined
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
+  const isRequest = source === 'request';
 
   const handleAddFriend = () => {
     setAddState('sending');
     setTimeout(() => setAddState('added'), 600);
+  };
+
+  const handleAccept = () => {
+    setAcceptState('accepting');
+    setTimeout(() => setAcceptState('accepted'), 600);
+  };
+
+  const handleDecline = () => {
+    setDeclineState('declined');
+    setTimeout(() => onClose(), 600);
   };
 
   const handleInvite = () => {
@@ -615,62 +653,108 @@ function SuggestedProfileModal({ suggestion, onClose }) {
 
           {/* Actions */}
           <div className="player-card__actions">
-            <button
-              className={`player-card__add-btn ${addState !== 'idle' ? '--' + addState : ''}`}
-              onClick={handleAddFriend}
-              disabled={addState !== 'idle'}
-            >
-              {addState === 'idle' && (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                  </svg>
-                  Add Friend
-                </>
-              )}
-              {addState === 'sending' && (
-                <>
-                  <span className="player-card__spinner" />
-                  Sending...
-                </>
-              )}
-              {addState === 'added' && (
-                <>
+            {isRequest ? (
+              <>
+                <button
+                  className={`player-card__accept-btn ${acceptState !== 'idle' ? '--' + acceptState : ''}`}
+                  onClick={handleAccept}
+                  disabled={acceptState !== 'idle' || declineState === 'declined'}
+                >
+                  {acceptState === 'idle' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Accept
+                    </>
+                  )}
+                  {acceptState === 'accepting' && (
+                    <>
+                      <span className="player-card__spinner" />
+                      Accepting...
+                    </>
+                  )}
+                  {acceptState === 'accepted' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Accepted!
+                    </>
+                  )}
+                </button>
+                <button
+                  className={`player-card__secondary-btn ${declineState === 'declined' ? '--declined' : ''}`}
+                  onClick={handleDecline}
+                  disabled={acceptState !== 'idle' || declineState === 'declined'}
+                >
                   <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M6 6L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                    <path d="M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                   </svg>
-                  Request Sent!
-                </>
-              )}
-            </button>
-            <button
-              className={`player-card__invite-btn ${inviteState !== 'idle' ? '--' + inviteState : ''}`}
-              onClick={handleInvite}
-              disabled={inviteState !== 'idle'}
-            >
-              {inviteState === 'idle' && (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-1.66 1.34-3 3-3 .35 0 .69.07 1 .18V5h5v2h-3v7.03A3.003 3.003 0 0111 18c-1.66 0-3-1.34-3-3z" />
-                  </svg>
-                  Invite to Game
-                </>
-              )}
-              {inviteState === 'sending' && (
-                <>
-                  <span className="player-card__spinner" />
-                  Sending...
-                </>
-              )}
-              {inviteState === 'sent' && (
-                <>
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Invite Sent!
-                </>
-              )}
-            </button>
+                  {declineState === 'declined' ? 'Declined' : 'Decline'}
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  className={`player-card__add-btn ${addState !== 'idle' ? '--' + addState : ''}`}
+                  onClick={handleAddFriend}
+                  disabled={addState !== 'idle'}
+                >
+                  {addState === 'idle' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                      </svg>
+                      Add Friend
+                    </>
+                  )}
+                  {addState === 'sending' && (
+                    <>
+                      <span className="player-card__spinner" />
+                      Sending...
+                    </>
+                  )}
+                  {addState === 'added' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Request Sent!
+                    </>
+                  )}
+                </button>
+                <button
+                  className={`player-card__invite-btn ${inviteState !== 'idle' ? '--' + inviteState : ''}`}
+                  onClick={handleInvite}
+                  disabled={inviteState !== 'idle'}
+                >
+                  {inviteState === 'idle' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-1.66 1.34-3 3-3 .35 0 .69.07 1 .18V5h5v2h-3v7.03A3.003 3.003 0 0111 18c-1.66 0-3-1.34-3-3z" />
+                      </svg>
+                      Invite to Game
+                    </>
+                  )}
+                  {inviteState === 'sending' && (
+                    <>
+                      <span className="player-card__spinner" />
+                      Sending...
+                    </>
+                  )}
+                  {inviteState === 'sent' && (
+                    <>
+                      <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                        <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      Invite Sent!
+                    </>
+                  )}
+                </button>
+              </>
+            )}
           </div>
         </div>
       </motion.div>
@@ -678,7 +762,7 @@ function SuggestedProfileModal({ suggestion, onClose }) {
   );
 }
 
-function SuggestedFriendItem({ suggestion, onClick }) {
+function SuggestedFriendItem({ suggestion, onClick, hideReason }) {
   const [added, setAdded] = useState(false);
 
   return (
@@ -693,12 +777,14 @@ function SuggestedFriendItem({ suggestion, onClick }) {
         </div>
         <div className="social-overlay__friend-text">
           <span className="social-overlay__friend-name">{suggestion.name}</span>
-          <span className="social-overlay__suggested-reason">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.6 }}>
-              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
-            </svg>
-            {suggestion.reason}
-          </span>
+          {!hideReason && (
+            <span className="social-overlay__suggested-reason">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.6 }}>
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+              </svg>
+              {suggestion.reason}
+            </span>
+          )}
         </div>
       </div>
       <button
@@ -726,9 +812,35 @@ function FindFriendsPanel() {
   const [searchValue, setSearchValue] = useState('');
   const [searchFocused, setSearchFocused] = useState(false);
 
-  const handleCopyLink = () => {
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+  const handleShareLink = async () => {
+    const url = window.location.origin;
+
+    try {
+      await navigator.share({
+        title: 'Join my game!',
+        text: 'Come play with me!',
+        url,
+      });
+    } catch (err) {
+      // User cancelled or share not supported — fall back to clipboard
+      if (err.name !== 'AbortError') {
+        try {
+          await navigator.clipboard.writeText(url);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        } catch {
+          // Last resort fallback
+          const textarea = document.createElement('textarea');
+          textarea.value = url;
+          document.body.appendChild(textarea);
+          textarea.select();
+          document.execCommand('copy');
+          document.body.removeChild(textarea);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        }
+      }
+    }
   };
 
   return (
@@ -736,30 +848,24 @@ function FindFriendsPanel() {
       <div className="social-overlay__find-section">
         <button
           className={`social-overlay__invite-link-btn ${copied ? '--copied' : ''}`}
-          onClick={handleCopyLink}
+          onClick={handleShareLink}
         >
           <div className="social-overlay__invite-link-icon">
-            {copied ? (
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            ) : (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3.9 12c0-1.71 1.39-3.1 3.1-3.1h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9H7c-1.71 0-3.1-1.39-3.1-3.1zM8 13h8v-2H8v2zm9-6h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1s-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5z" />
-              </svg>
-            )}
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
+            </svg>
           </div>
           <div className="social-overlay__invite-link-text">
             <span className="social-overlay__invite-link-title">
               {copied ? 'Link Copied!' : 'Invite Friends'}
             </span>
             <span className="social-overlay__invite-link-sub">
-              {copied ? 'Share it with your friends' : 'Copy a link to share off-platform'}
+              {copied ? 'Share it with your friends' : 'Share a link off-platform'}
             </span>
           </div>
           <div className="social-overlay__invite-link-arrow">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z" />
+              <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" />
             </svg>
           </div>
         </button>
@@ -805,11 +911,12 @@ function FindFriendsPanel() {
   );
 }
 
-function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancelParty, onToggleMember, onConfirmParty }) {
+function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancelParty, onToggleMember, onConfirmParty, currentStep }) {
   const [friendsTab, setFriendsTab] = useState('friends');
   const sorted = sortByPresence(friends);
   const [selectedFriend, setSelectedFriend] = useState(null);
   const [selectedSuggestion, setSelectedSuggestion] = useState(null);
+  const [selectedSource, setSelectedSource] = useState(null); // 'request' | 'suggested'
   const isSelecting = partyMode === 'selecting';
 
   const tabs = [
@@ -851,8 +958,8 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
         </div>
       )}
 
-      {/* Party Creation Bar — below tabs, above list (only on My Friends sub-tab) */}
-      {(friendsTab === 'friends' || isSelecting) && <motion.div className="party-bar" layout>
+      {/* Party Creation Bar — below tabs, above list (only on My Friends sub-tab, only in step 1) */}
+      {(friendsTab === 'friends' || isSelecting) && (currentStep === 1 || isSelecting) && <motion.div className="party-bar" layout>
         {!isSelecting ? (
           <motion.button
             className="party-bar__create-btn"
@@ -863,7 +970,7 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
               <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
             </svg>
-            Create a Party
+            Create a Group
           </motion.button>
         ) : (
           <motion.div className="party-bar__selecting" layout key="selecting">
@@ -951,11 +1058,11 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
         )}
         {!isSelecting && friendsTab === 'requests' &&
           MOCK_FRIEND_REQUESTS.map((request, i) => (
-            <FriendRequestItem key={i} request={request} onClick={() => setSelectedSuggestion(request)} />
+            <FriendRequestItem key={i} request={request} onClick={() => { setSelectedSuggestion(request); setSelectedSource('request'); }} />
           ))}
         {!isSelecting && friendsTab === 'suggested' &&
           MOCK_SUGGESTED_FRIENDS.map((suggestion, i) => (
-            <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => setSelectedSuggestion(suggestion)} />
+            <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => { setSelectedSuggestion(suggestion); setSelectedSource('suggested'); }} />
           ))}
         {!isSelecting && friendsTab === 'find' && <FindFriendsPanel />}
       </div>
@@ -969,7 +1076,8 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
         {selectedSuggestion && (
           <SuggestedProfileModal
             suggestion={selectedSuggestion}
-            onClose={() => setSelectedSuggestion(null)}
+            source={selectedSource}
+            onClose={() => { setSelectedSuggestion(null); setSelectedSource(null); }}
           />
         )}
       </AnimatePresence>
@@ -1166,12 +1274,22 @@ function DiscoveryPanel({ partyMembers, onDisband }) {
 
 let _friendIdCounter = 100;
 
-export default function SocialOverlay({ isVisible, onClose }) {
+export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameExited }) {
   const { profileData } = useDataContext();
+  const { currentStep } = useUIContext();
+  const sendMessage = useSendMessage();
+  const [hasScanned, setHasScanned] = useState(false);
   const [activeTab, setActiveTab] = useState('Home');
   const [friends, setFriends] = useState(MOCK_FRIENDS);
   const [partyMode, setPartyMode] = useState('idle'); // idle | selecting | formed
   const [partyMembers, setPartyMembers] = useState([]);
+
+  // When game exits, reset hasScanned so the "Scan to Play" button shows again
+  useEffect(() => {
+    if (gameExited) {
+      setHasScanned(false);
+    }
+  }, [gameExited]);
 
   const startPartyMode = useCallback(() => {
     setPartyMode('selecting');
@@ -1228,25 +1346,10 @@ export default function SocialOverlay({ isVisible, onClose }) {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
-          className="social-overlay"
-          initial={{ y: '100%' }}
-          animate={{ y: 0 }}
-          exit={{ y: '100%' }}
-          transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
-        >
-          {/* Notch wings that extend above the body on either side of profile button */}
-          <div className="social-overlay__wing --left" />
-          <div className="social-overlay__wing --right" />
+        <div className="social-overlay">
 
-          {/* Profile icon in notch (portrait only — in landscape the controller button shows through) */}
-          {avatar && (
-            <button className="social-overlay__notch-profile" onClick={onClose}>
-              <img src={avatar} alt="Profile" />
-            </button>
-          )}
-
-          {/* Main body below the notch */}
+          {/* Controller icon at the top of the overlay */}
+          {/* Main body */}
           <div className="social-overlay__body">
             <div className="social-overlay__bg" />
           </div>
@@ -1258,8 +1361,8 @@ export default function SocialOverlay({ isVisible, onClose }) {
           <div className="social-overlay__content">
             {activeTab === 'Home' && (
               <>
-                <ProfileCard profileData={profileData} onClose={onClose} />
-                <NotificationsPanel onFriendRequestAction={handleFriendRequestAccepted} onNavigateTab={setActiveTab} />
+                <ProfileCard profileData={profileData} onClose={onClose} currentStep={currentStep} onNavigateToFriends={() => setActiveTab('Friends')} />
+                <NotificationsPanel onFriendRequestAction={handleFriendRequestAccepted} onNavigateTab={setActiveTab} gameExited={gameExited} />
               </>
             )}
             {activeTab === 'Friends' && (
@@ -1271,6 +1374,7 @@ export default function SocialOverlay({ isVisible, onClose }) {
                 onCancelParty={cancelPartyMode}
                 onToggleMember={togglePartyMember}
                 onConfirmParty={confirmParty}
+                currentStep={currentStep}
               />
             )}
             {activeTab === 'Discovery' && (
@@ -1302,12 +1406,25 @@ export default function SocialOverlay({ isVisible, onClose }) {
                 </button>
               ))}
             </div>
-            <button className="social-overlay__navbar-fab" onClick={onClose}>
-              <img src={GameControllerIcon} alt="" className="social-overlay__navbar-fab-icon" />
-              <span>Back to Game</span>
-            </button>
+            {(currentStep === 1 || gameExited) && !hasScanned ? (
+              <button className="social-overlay__navbar-fab" onClick={() => {
+                sendMessage('navigate', { path: '/fifa-menu' });
+                setHasScanned(true);
+                onScanToPlay?.();
+              }}>
+                <svg className="social-overlay__navbar-fab-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M3 11h2V9H3v2zm0-4h2V3h4V1H3v6zm4 12H3v-6H1v8h8v-2H7zm14-12V3h-4V1h6v6h-2zm-2 12v-2h4v-4h2v8h-8v-2h4zM7 7h4v4H7V7zm0 6h4v4H7v-4zm6-6h4v4h-4V7zm0 6h4v4h-4v-4z"/>
+                </svg>
+                <span>Scan to Play</span>
+              </button>
+            ) : (
+              <button className="social-overlay__navbar-fab" onClick={onClose}>
+                <img src={GameControllerIcon} alt="" className="social-overlay__navbar-fab-icon" />
+                <span>Controller</span>
+              </button>
+            )}
           </div>
-        </motion.div>
+        </div>
       )}
     </AnimatePresence>
   );

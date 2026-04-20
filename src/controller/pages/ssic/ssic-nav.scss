@@ -24,6 +24,14 @@
   border-radius: inherit;
 }
 
+.ssic-nav__controller-icon {
+  width: 50px;
+  height: 34px;
+  object-fit: contain;
+  cursor: pointer;
+  z-index: 3;
+}
+
 .voice-chat-wrapper {
   display: flex;
   align-items: center;

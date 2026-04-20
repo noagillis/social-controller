@@ -93,7 +93,7 @@ function VoiceChatPlayersCard({ profiles, onClose }) {
 
 export function SSICNav({ action }) {
   const NavBackground = navSVG[action];
-  const { currentStep, toggleSocialOverlay } = useUIContext();
+  const { currentStep, toggleSocialOverlay, socialOverlayOpen } = useUIContext();
   const { profileData } = useDataContext();
   const [isMuted, setIsMuted] = useState(false);
   const [showPlayersCard, setShowPlayersCard] = useState(false);
@@ -101,8 +101,19 @@ export function SSICNav({ action }) {
 
   // Replace gear icon with the user's profile picture once selected
   if (action === 'Setting' && profileData) {
-    const selectedProfile = PROFILES.find((p) => p.name === profileData);
+    const selectedProfile = PROFILES.find((p) => p.name === profileData)
+      || PROFILES.find((p) => p.isGuest);
     if (selectedProfile?.avatar) {
+      if (socialOverlayOpen) {
+        return (
+          <img
+            src="/images/phone-controller-pink.png"
+            alt="Controller"
+            className="ssic-nav__controller-icon"
+            onClick={toggleSocialOverlay}
+          />
+        );
+      }
       return (
         <ButtonWrapper
           className={`ssic-nav outline-red --${action} --has-avatar`}
@@ -119,6 +130,8 @@ export function SSICNav({ action }) {
       );
     }
   }
+
+  if (socialOverlayOpen) return null;
 
   return (
     <ButtonWrapper

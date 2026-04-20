@@ -1,22 +1,13 @@
-// ─── Notch dimensions ───────────────────────────────────
-// Profile button: 50×34 at top:16px, centered
-// Notch gap: 62px wide (button + 6px padding each side)
-// Wings extend from 14px to 56px (42px tall)
-$notch-top: 14px;
-$notch-bottom: 56px;
-$notch-height: 42px;
-$notch-half-width: 31px; // half of 62px
-$notch-border-color: rgba(255, 255, 255, 0.08);
 $overlay-top-radius: 14px;
+$overlay-top: 30px;
 
 .social-overlay {
   position: fixed;
   inset: 0;
-  z-index: 50;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  // Let clicks pass through the notch gap to the controller underneath
   pointer-events: none;
 
   > * {
@@ -24,85 +15,42 @@ $overlay-top-radius: 14px;
   }
 }
 
-// ─── Notch Wings ────────────────────────────────────────
-.social-overlay__wing {
+// ─── Controller Icon at Top ─────────────────────────────
+.social-overlay__top-icon {
   position: absolute;
-  top: $notch-top;
-  height: $notch-height;
-  z-index: 2;
-  background: #0a0710;
-  border-top: 1px solid $notch-border-color;
-  pointer-events: none;
-
-  &.--left {
-    left: 0;
-    right: calc(50% + #{$notch-half-width});
-    border-top-left-radius: $overlay-top-radius;
-    border-top-right-radius: 16px;
-    border-right: 1px solid $notch-border-color;
-
-  }
-
-  &.--right {
-    left: calc(50% + #{$notch-half-width});
-    right: 0;
-    border-top-right-radius: $overlay-top-radius;
-    border-top-left-radius: 16px;
-    border-left: 1px solid $notch-border-color;
-  }
-}
-
-// ─── Notch Profile Icon (portrait only) ─────────────────
-.social-overlay__notch-profile {
-  display: none;
-  position: absolute;
-  top: 16px;
+  top: 10px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
   width: 50px;
   height: 34px;
   border-radius: 17px;
-  border: 1px solid #ff3434;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(22, 22, 22, 1);
   overflow: hidden;
-  padding: 0;
+  padding: 4px 8px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-
-  @media (orientation: portrait) {
-    display: block;
-  }
 
   img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
+    object-fit: contain;
   }
 }
 
-// ─── Main Body (below the notch) ────────────────────────
+// ─── Main Body ──────────────────────────────────────────
 .social-overlay__body {
   position: absolute;
-  top: $notch-bottom;
+  top: $overlay-top;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 0;
   overflow: visible;
-
-  // Notch bottom border (visible only in the gap between wings)
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: calc(50% - #{$notch-half-width});
-    width: #{$notch-half-width * 2};
-    height: 0;
-    border-top: 1px solid $notch-border-color;
-    z-index: 1;
-  }
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top-left-radius: $overlay-top-radius;
+  border-top-right-radius: $overlay-top-radius;
 }
 
 .social-overlay__bg {
@@ -113,28 +61,19 @@ $overlay-top-radius: 14px;
 
 .social-overlay__glow {
   position: absolute;
-  top: $notch-top;
+  top: $overlay-top;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 3;
+  border-top-left-radius: $overlay-top-radius;
+  border-top-right-radius: $overlay-top-radius;
   background: radial-gradient(
     60% 40% at 50% 0%,
     rgba(176, 56, 220, 0.2) 0%,
     rgba(109, 59, 227, 0) 100%
   );
   pointer-events: none;
-  // Cut out the notch gap so the profile button stays visible
-  clip-path: polygon(
-    0 0,
-    calc(50% - #{$notch-half-width}) 0,
-    calc(50% - #{$notch-half-width}) #{$notch-height},
-    calc(50% + #{$notch-half-width}) #{$notch-height},
-    calc(50% + #{$notch-half-width}) 0,
-    100% 0,
-    100% 100%,
-    0 100%
-  );
 }
 
 
@@ -263,7 +202,7 @@ $overlay-top-radius: 14px;
   display: flex;
   flex-direction: row;
   gap: 16px;
-  margin-top: $notch-bottom;
+  margin-top: $overlay-top;
   padding: 6px 20px 8px;
   overflow: hidden;
 
@@ -393,16 +332,18 @@ $overlay-top-radius: 14px;
   gap: 8px;
   overflow: hidden;
   min-height: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 10px;
 
   @media (orientation: portrait) {
     flex: 0 0 auto;
     flex-direction: row;
     align-items: stretch;
     gap: 0;
-    border-radius: 12px;
-    overflow: hidden;
+    padding: 0;
     background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.06);
   }
 }
 
@@ -1501,6 +1442,45 @@ $overlay-top-radius: 14px;
   }
 }
 
+.player-card__accept-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: none;
+  background: rgba(76, 175, 80, 0.6);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: all 0.2s ease;
+
+  &:active:not(:disabled) {
+    background: rgba(76, 175, 80, 0.8);
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+
+  &.--accepting {
+    background: rgba(76, 175, 80, 0.35);
+    cursor: default;
+  }
+
+  &.--accepted {
+    background: rgba(76, 175, 80, 0.25);
+    color: #4caf50;
+    cursor: default;
+  }
+}
+
 .player-card--suggested .player-card__right {
   gap: 10px;
 
@@ -1539,7 +1519,8 @@ $overlay-top-radius: 14px;
     }
 
     .player-card__add-btn,
-    .player-card__invite-btn {
+    .player-card__invite-btn,
+    .player-card__accept-btn {
       padding: 9px 16px;
       font-size: 13px;
     }

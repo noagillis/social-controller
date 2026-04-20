@@ -20,6 +20,30 @@
   touch-action: none;
 }
 
+.controller__slide {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 14px;
+    background: linear-gradient(
+      to top,
+      rgba(120, 50, 160, 0.25) 0%,
+      rgba(80, 30, 120, 0.1) 40%,
+      transparent 100%
+    );
+    border-bottom: 1px solid rgba(160, 80, 200, 0.4);
+    pointer-events: none;
+    z-index: 100;
+  }
+}
+
 .controller-alert {
   position: absolute;
   width: 100%;

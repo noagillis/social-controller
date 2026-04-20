@@ -21,6 +21,10 @@ export function useGetMessage() {
       console.log(updatedRoomData);
       setPageId(updatedRoomData.pageId);
       setStep(updatedRoomData?.step);
+      // Reset gameExited when moving forward to a new game (step 2+), not when dropping back to step 1
+      if (updatedRoomData?.step >= 2) {
+        setGameExited(false);
+      }
     };
 
     const handleMessage = (messageBody) => {
@@ -37,7 +41,8 @@ export function useGetMessage() {
         setPendingInvites(messageBody.data?.invites || []);
       }
       if (messageBody?.type === 'exitGame') {
-        setGameExited(true);
+        // Delay slightly so this wins over any concurrent pageUpdate to step 1
+        setTimeout(() => setGameExited(true), 50);
       }
     };
 

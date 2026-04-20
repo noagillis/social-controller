@@ -1,4 +1,5 @@
 import { createElement, useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 import { useGetMessage } from './hooks/use-get-message';
 import { useSendMessage } from './hooks/use-send-message';
 import { useDataContext } from '@/contexts/data';
@@ -13,7 +14,6 @@ import ReadyToPlayModal from './common/ready-to-play-modal';
 import FriendSearchOverlay from './common/friend-search-overlay';
 import SocialOverlay from './common/social-overlay';
 import GameInviteModal from './common/game-invite-modal';
-import GameExitedScreen from './common/game-exited-screen';
 import { Pages } from './pages/page-constants';
 
 import classNames from 'classnames';
@@ -21,12 +21,19 @@ import classNames from 'classnames';
 import './controller-index.scss';
 
 export default function ControllerIndex() {
-  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited, setGameExited } = useGetMessage();
+  const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited } = useGetMessage();
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
   const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
   const [selectedProfile, setSelectedProfile] = useState(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+
+  // When game exits, open the social overlay instead of showing a separate screen
+  useEffect(() => {
+    if (gameExited) {
+      setSocialOverlayOpen(true);
+    }
+  }, [gameExited]);
 
   // Find the first invite targeting this player
   const myInvite = pendingInvites.find(
@@ -52,7 +59,7 @@ export default function ControllerIndex() {
       <ProfilePicker
         onProfileSelected={(profile) => {
           setSelectedProfile(profile);
-          setShowOnboarding(true);
+          setSocialOverlayOpen(true);
         }}
         onDismiss={() => setSelectedProfile('skipped')}
       />
@@ -61,6 +68,20 @@ export default function ControllerIndex() {
 
   return (
     <div className="controller">
+      <SocialOverlay
+        isVisible={socialOverlayOpen}
+        onClose={() => setSocialOverlayOpen(false)}
+        onScanToPlay={() => {
+          setSocialOverlayOpen(false);
+          setShowOnboarding(true);
+        }}
+        gameExited={gameExited}
+      />
+      <motion.div
+        className="controller__slide"
+        animate={{ y: socialOverlayOpen ? 'calc(-100% + 14px)' : '0%' }}
+        transition={{ duration: 0.38, ease: [0.32, 0.72, 0, 1] }}
+      >
       <div className="controller-alert ">
         <h1 className="flex-col-center">
           {' '}
@@ -71,10 +92,7 @@ export default function ControllerIndex() {
       {/* {showHelpers && <DebugPanel />} */}
       {Pages[pageId] && createElement(Pages[pageId])}{' '}
       {!Pages[pageId] && <SSIC />}{' '}
-      <SocialOverlay
-        isVisible={socialOverlayOpen}
-        onClose={() => setSocialOverlayOpen(false)}
-      />
+      </motion.div>
       <FriendSearchOverlay
         isVisible={friendSearch}
         onClose={() => setFriendSearch(false)}
@@ -87,14 +105,7 @@ export default function ControllerIndex() {
         />
       )}
       {showOnboarding && <WelcomeToast profile={selectedProfile} />}
-      {showOnboarding && !gameExited && (
-        <ReadyToPlayModal
-          onStartPlaying={() => {
-            sendMessage('navigate', { path: '/fifa-menu' });
-          }}
-        />
-      )}
-      {gameExited && <GameExitedScreen onExit={() => setGameExited(false)} />}
+      {/* Game exited state now handled by SocialOverlay with scan-to-connect treatment */}
     </div>
   );
 }

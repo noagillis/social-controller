@@ -76,7 +76,7 @@ export default function FIFAMainMenu({ onNext, onBack }) {
   });
 
   const bgSrc = showStartMenu
-    ? `${IMG_PATH}/FIFA-start-menu.jpg`
+    ? `${IMG_PATH}/fifa-in-game.png`
     : `${IMG_PATH}/FIFA-main-menu-bg.jpg`;
 
   return (
