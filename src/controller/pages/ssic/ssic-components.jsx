@@ -9,9 +9,7 @@ import ButtonA from './assets/button-a.svg?react';
 import ButtonB from './assets/button-b.svg?react';
 import ButtonX from './assets/button-x.svg?react';
 import ButtonY from './assets/button-y.svg?react';
-import NavMenu from './assets/nav-menu.svg?react';
 import NavNetflix from './assets/nav-netflix.svg?react';
-import NavSettings from './assets/nav-settings.svg?react';
 import ArrowUp from './assets/arrow-up.svg?react';
 import ArrowDown from './assets/arrow-down.svg?react';
 import ArrowLeft from './assets/arrow-left.svg?react';
@@ -24,10 +22,27 @@ const actionSVG = {
   Y: ButtonY,
 };
 
+function NavHome() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.85" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-7h-6v7H4a1 1 0 0 1-1-1v-9.5z" />
+    </svg>
+  );
+}
+
+function NavNotifications() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeOpacity="0.85" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+      <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+    </svg>
+  );
+}
+
 const navSVG = {
-  Setting: NavSettings,
-  Profile: NavNetflix,
-  Menu: NavMenu,
+  NetflixN: NavNetflix,
+  Home: NavHome,
+  Notifications: NavNotifications,
 };
 
 const arrowSVG = {
@@ -93,30 +108,23 @@ function VoiceChatPlayersCard({ profiles, onClose }) {
 
 export function SSICNav({ action }) {
   const NavBackground = navSVG[action];
-  const { currentStep, toggleSocialOverlay, socialOverlayOpen } = useUIContext();
+  const {
+    toggleSocialOverlay,
+    hasUnreadNotification,
+    setHasUnreadNotification,
+    setInvitePanelOpen,
+    setInvitePanelTab,
+    setInvitePanelView,
+  } = useUIContext();
   const { profileData } = useDataContext();
-  const [isMuted, setIsMuted] = useState(false);
-  const [showPlayersCard, setShowPlayersCard] = useState(false);
-  const connectedProfiles = useConnectedProfiles();
 
-  // Replace gear icon with the user's profile picture once selected
-  if (action === 'Setting' && profileData) {
+  if (action === 'Profile' && profileData) {
     const selectedProfile = PROFILES.find((p) => p.name === profileData)
       || PROFILES.find((p) => p.isGuest);
     if (selectedProfile?.avatar) {
-      if (socialOverlayOpen) {
-        return (
-          <img
-            src="/images/phone-controller-pink.png"
-            alt="Controller"
-            className="ssic-nav__controller-icon"
-            onClick={toggleSocialOverlay}
-          />
-        );
-      }
       return (
         <ButtonWrapper
-          className={`ssic-nav outline-red --${action} --has-avatar`}
+          className={`ssic-nav --${action} --has-avatar`}
           action={action}
           scaleAmount={1.08}
           onClick={toggleSocialOverlay}
@@ -131,14 +139,48 @@ export function SSICNav({ action }) {
     }
   }
 
-  if (socialOverlayOpen) return null;
+  if (action === 'Notifications') {
+    const handleNotificationsClick = () => {
+      setHasUnreadNotification(false);
+      setInvitePanelTab('notifications');
+      setInvitePanelView('list');
+      setInvitePanelOpen(true);
+    };
 
+    return (
+      <ButtonWrapper
+        className={`ssic-nav --${action}`}
+        action={action}
+        scaleAmount={1.08}
+        onClick={handleNotificationsClick}
+      >
+        <NavBackground />
+        {hasUnreadNotification && <span className="ssic-nav__notif-dot" />}
+      </ButtonWrapper>
+    );
+  }
+
+  if (action === 'NetflixN') {
+    // Visually the Netflix N, but sends the "Profile" buttonPress so the TV
+    // overlay menu still opens.
+    return (
+      <ButtonWrapper
+        className={`ssic-nav --${action}`}
+        action="Profile"
+        scaleAmount={1.08}
+      >
+        <NavBackground />
+      </ButtonWrapper>
+    );
+  }
+
+  // Home
   return (
     <ButtonWrapper
-      className={`ssic-nav outline-red --${action}`}
+      className={`ssic-nav --${action}`}
       action={action}
       scaleAmount={1.08}
-      onClick={undefined}
+      onClick={toggleSocialOverlay}
     >
       <NavBackground />
     </ButtonWrapper>

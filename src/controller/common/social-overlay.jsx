@@ -1,34 +1,12 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDataContext } from '@/contexts/data';
 import { useUIContext } from '@/contexts/ui';
 import { useSendMessage } from '@/controller/hooks/use-send-message';
 import { PROFILES } from '../pages/profile-picker/profile-picker';
-import GameControllerIcon from '/images/game-controller.png';
 import PhoneControllerPink from '/images/phone-controller-pink.png';
-import Game1Img from './game-1.png';
-import Game2Img from './game-2.png';
-import Game3Img from './game-3.png';
-import SwordsImg from './swords.png';
 import './social-overlay.scss';
-
-const RANDOM_NAMES = [
-  'Michael', 'Sophia', 'Jayden', 'Aaliyah', 'Ethan', 'Chloe', 'Mason', 'Zara',
-  'Liam', 'Priya', 'Noah', 'Mei', 'Aiden', 'Luna', 'Kai', 'Amara',
-  'Felix', 'Nia', 'Oscar', 'Yuki', 'Dante', 'Suki', 'Ravi', 'Ines',
-];
-
-let _nameIndex = 0;
-function getNextRandomRequest() {
-  const name = RANDOM_NAMES[_nameIndex % RANDOM_NAMES.length];
-  const avatar = PROFILES[_nameIndex % PROFILES.length]?.avatar;
-  _nameIndex++;
-  return {
-    id: `fr-${_nameIndex}-${Date.now()}`,
-    name,
-    avatar,
-  };
-}
 
 function sortByPresence(friends) {
   return [...friends].sort((a, b) => {
@@ -37,19 +15,9 @@ function sortByPresence(friends) {
   });
 }
 
-const TABS = ['Home', 'Friends', 'Discovery'];
+const TABS = ['Home', 'Friends'];
 
 const MAX_PARTY_SIZE = 4;
-
-const MOCK_DISCOVERY_GAMES = [
-  { id: 'g-1', title: 'FIFA 26', image: '/images/fifa-app.png', players: '2-4', genre: 'Sports' },
-  { id: 'g-2', title: "TMNT: Shredder's Revenge", image: Game1Img, players: '2-6', genre: 'Beat \'em Up' },
-  { id: 'g-3', title: 'Oxenfree II', image: Game2Img, players: '2', genre: 'Adventure' },
-  { id: 'g-4', title: 'Into the Breach', image: Game3Img, players: '2', genre: 'Strategy' },
-  { id: 'g-5', title: 'Lucky Luna', image: null, players: '2-4', genre: 'Platformer', gradient: 'linear-gradient(135deg, #1a3a5c, #0d7377)' },
-  { id: 'g-6', title: 'Rival Pirates', image: null, players: '2-4', genre: 'Action', gradient: 'linear-gradient(135deg, #5c1a1a, #8b4513)' },
-  { id: 'g-7', title: 'Poinpy', image: null, players: '2-3', genre: 'Arcade', gradient: 'linear-gradient(135deg, #2d1b4e, #6b3fa0)' },
-];
 
 const TAB_ICONS = {
   Home: (
@@ -60,11 +28,6 @@ const TAB_ICONS = {
   Friends: (
     <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
       <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-    </svg>
-  ),
-  Discovery: (
-    <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5.5-2.5l7.51-3.49L17.5 6.5 9.99 9.99 6.5 17.5zm5.5-6.6c.61 0 1.1.49 1.1 1.1s-.49 1.1-1.1 1.1-1.1-.49-1.1-1.1.49-1.1 1.1-1.1z" />
     </svg>
   ),
   Profile: null, // uses avatar image instead
@@ -130,166 +93,92 @@ function ProfileCard({ profileData, onClose, currentStep, onNavigateToFriends })
   );
 }
 
-function NotificationItem({ avatar, name, subtitle, actions }) {
+function HomeFriendsList({ friends, onNavigateToFriends, onInvite }) {
+  const favorites = friends.slice(0, 4);
+
   return (
-    <motion.div
-      className="social-overlay__notif-item"
-      layout
-      initial={{ opacity: 1, height: 'auto' }}
-      animate={{ opacity: 1, height: 'auto' }}
-      exit={{ opacity: 0, height: 0, padding: 0, margin: 0, overflow: 'hidden' }}
-      transition={{ duration: 0.35, ease: [0.32, 0.94, 0.6, 1] }}
-    >
-      <div className="social-overlay__notif-left">
-        <div className="social-overlay__notif-avatar">
-          {avatar ? (
-            <img src={avatar} alt={name} />
-          ) : (
-            <div className="social-overlay__notif-avatar-placeholder" />
-          )}
-        </div>
-        <div className="social-overlay__notif-text">
-          <span className="social-overlay__notif-name">{name}</span>
-          <span className="social-overlay__notif-sub">{subtitle}</span>
+    <div className="social-overlay__home-friends">
+      <div className="social-overlay__home-friends-header">
+        <h3 className="social-overlay__home-friends-title">Friends</h3>
+        <div className="social-overlay__home-friends-actions">
+          <button className="social-overlay__home-friends-action" aria-label="Add friend" onClick={onNavigateToFriends}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          </button>
+          <button className="social-overlay__home-friends-action" aria-label="Invite">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13" />
+              <polygon points="22 2 15 22 11 13 2 9 22 2" />
+            </svg>
+          </button>
+          <button className="social-overlay__more-btn" aria-label="More">
+            <ThreeDotsVertical />
+          </button>
         </div>
       </div>
-      <div className="social-overlay__notif-actions">{actions}</div>
-    </motion.div>
+      <div className="social-overlay__home-friends-section-label">Favorites</div>
+      <div className="social-overlay__home-friends-list">
+        {favorites.map((friend) => (
+          <HomeFriendItem key={friend.id} friend={friend} onInvite={onInvite} />
+        ))}
+      </div>
+    </div>
   );
 }
 
-function ConfirmationNotification({ message, type }) {
+function HomeFriendItem({ friend, onInvite }) {
+  const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
+  const sendMessage = useSendMessage();
+  const { profileData } = useDataContext();
+
+  const subtitle = friend.online
+    ? (friend.playing ? `Playing ${friend.playing}` : 'Online')
+    : 'Online Yesterday';
+
+  const handleInvite = () => {
+    if (inviteState !== 'idle') return;
+    setInviteState('sending');
+    sendMessage('gameInvite', {
+      fromPlayer: profileData || 'Player',
+      toPlayer: friend.name,
+      toAvatar: friend.avatar,
+      game: 'FIFA',
+    });
+    onInvite?.({ id: friend.id ?? friend.name, name: friend.name, avatar: friend.avatar });
+    setTimeout(() => setInviteState('sent'), 800);
+  };
+
   return (
-    <motion.div
-      className={`social-overlay__notif-item social-overlay__notif-confirmation --${type}`}
-      layout
-      initial={{ opacity: 0, height: 0, overflow: 'hidden' }}
-      animate={{ opacity: 1, height: 'auto', overflow: 'visible' }}
-      exit={{ opacity: 0, height: 0, padding: 0, margin: 0, overflow: 'hidden' }}
-      transition={{ duration: 0.35, ease: [0.32, 0.94, 0.6, 1] }}
-    >
-      <div className="social-overlay__notif-left">
-        <div className={`social-overlay__notif-confirm-icon --${type}`}>
-          {type === 'accepted' ? (
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
+    <div className="social-overlay__home-friend-item">
+      <div className="social-overlay__home-friend-left">
+        <div className="social-overlay__home-friend-avatar">
+          {friend.avatar ? (
+            <img src={friend.avatar} alt={friend.name} />
           ) : (
-            <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-              <path d="M6 6L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-              <path d="M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            </svg>
+            <div className="social-overlay__home-friend-avatar-placeholder" />
           )}
         </div>
-        <div className="social-overlay__notif-text">
-          <span className="social-overlay__notif-name">{message}</span>
+        <div className="social-overlay__home-friend-text">
+          <span className="social-overlay__home-friend-name">{friend.name}</span>
+          <span className={`social-overlay__home-friend-sub ${friend.online ? '--online' : ''}`}>
+            {friend.online && <span className="social-overlay__home-friend-dot" />}
+            {subtitle}
+          </span>
         </div>
       </div>
-    </motion.div>
-  );
-}
-
-function NotificationsPanel({ onFriendRequestAction, onNavigateTab, gameExited }) {
-  const [confirmations, setConfirmations] = useState([]);
-  const [pendingRequests, setPendingRequests] = useState(() => [getNextRandomRequest()]);
-
-  const handleAction = useCallback((request, action) => {
-    // Replace with a new random request
-    setPendingRequests((prev) =>
-      prev.map((r) => (r.id === request.id ? getNextRandomRequest() : r))
-    );
-
-    const confirmation = {
-      id: `confirm-${request.id}`,
-      message: action === 'accepted'
-        ? `You and ${request.name} are now friends!`
-        : `Friend request from ${request.name} declined`,
-      type: action,
-    };
-    setConfirmations((prev) => [...prev, confirmation]);
-
-    if (action === 'accepted') {
-      onFriendRequestAction({
-        name: request.name,
-        avatar: request.avatar,
-        friends: Math.floor(Math.random() * 200) + 1,
-        games: Math.floor(Math.random() * 50) + 1,
-        online: Math.random() > 0.4,
-      });
-    }
-
-    setTimeout(() => {
-      setConfirmations((prev) => prev.filter((c) => c.id !== confirmation.id));
-    }, 4000);
-  }, [onFriendRequestAction]);
-
-  if (gameExited) {
-    const suggested = MOCK_SUGGESTED_FRIENDS.slice(0, 3);
-    return (
-      <div className="social-overlay__notifications">
-        <h3 className="social-overlay__notif-header">Add your recent friends</h3>
-        <div className="social-overlay__notif-list">
-          {suggested.map((suggestion, i) => (
-            <SuggestedFriendItem key={i} suggestion={suggestion} onClick={() => {}} hideReason />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="social-overlay__notifications">
-      <h3 className="social-overlay__notif-header">Notifications</h3>
-      <div className="social-overlay__notif-list">
-        <AnimatePresence mode="popLayout">
-          {pendingRequests.map((request) => (
-            <NotificationItem
-              key={request.id}
-              avatar={request.avatar}
-              name={request.name}
-              subtitle="Sent you a friend request"
-              actions={
-                <>
-                  <button
-                    className="social-overlay__notif-circle-btn --reject"
-                    onClick={() => handleAction(request, 'declined')}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                      <path d="M6 6L14 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                      <path d="M14 6L6 14" stroke="white" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                  </button>
-                  <button
-                    className="social-overlay__notif-circle-btn --accept"
-                    onClick={() => handleAction(request, 'accepted')}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8.5 14.5L16 6.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </button>
-                </>
-              }
-            />
-          ))}
-          {confirmations.map((c) => (
-            <ConfirmationNotification key={c.id} message={c.message} type={c.type} />
-          ))}
-        </AnimatePresence>
-        <NotificationItem
-          avatar={PROFILES[3]?.avatar}
-          name="Kalisha"
-          subtitle="Messaged you"
-          actions={<ChevronRight />}
-        />
-        <div onClick={() => onNavigateTab('Achievements')} style={{ cursor: 'pointer' }}>
-          <NotificationItem
-            avatar={null}
-            name="Achievement Unlocked"
-            subtitle="TMNT: Shredder's Revenge"
-            actions={<ChevronRight />}
-          />
-        </div>
-      </div>
+      <button
+        className={`social-overlay__home-friend-invite ${inviteState !== 'idle' ? '--' + inviteState : ''}`}
+        onClick={handleInvite}
+        disabled={inviteState !== 'idle'}
+      >
+        {inviteState === 'idle' && 'Invite'}
+        {inviteState === 'sending' && 'Sending...'}
+        {inviteState === 'sent' && 'Sent!'}
+      </button>
     </div>
   );
 }
@@ -409,7 +298,7 @@ function FriendRequestItem({ request, onClick }) {
   );
 }
 
-function PlayerCardModal({ friend, onClose }) {
+function PlayerCardModal({ friend, onClose, onInvite }) {
   const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
@@ -425,6 +314,7 @@ function PlayerCardModal({ friend, onClose }) {
       toAvatar: friend.avatar,
       game: 'FIFA',
     });
+    onInvite?.({ id: friend.id ?? friend.name, name: friend.name, avatar: friend.avatar });
     setTimeout(() => setInviteState('sent'), 800);
   };
 
@@ -467,23 +357,6 @@ function PlayerCardModal({ friend, onClose }) {
               {friend.online ? (playing ? `Playing ${playing}` : 'Online') : 'Offline'}
             </div>
           </div>
-
-          <div className="player-card__stats-row">
-            <div className="player-card__stat">
-              <span className="player-card__stat-value">{friend.friends}</span>
-              <span className="player-card__stat-label">Friends</span>
-            </div>
-            <div className="player-card__stat-divider" />
-            <div className="player-card__stat">
-              <span className="player-card__stat-value">{friend.games}</span>
-              <span className="player-card__stat-label">Games</span>
-            </div>
-            <div className="player-card__stat-divider" />
-            <div className="player-card__stat">
-              <span className="player-card__stat-value">{Math.floor(Math.random() * 30) + 1}</span>
-              <span className="player-card__stat-label">Achievements</span>
-            </div>
-          </div>
         </div>
 
         <div className="player-card__right">
@@ -493,33 +366,16 @@ function PlayerCardModal({ friend, onClose }) {
             onClick={handleInvite}
             disabled={inviteState !== 'idle'}
           >
-            {inviteState === 'idle' && (
-              <>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M21 3H3c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14zM8 15c0-1.66 1.34-3 3-3 .35 0 .69.07 1 .18V5h5v2h-3v7.03A3.003 3.003 0 0111 18c-1.66 0-3-1.34-3-3z" />
-                </svg>
-                Invite to Game
-              </>
-            )}
+            {inviteState === 'idle' && 'Invite to Game'}
             {inviteState === 'sending' && (
               <>
                 <span className="player-card__spinner" />
                 Sending...
               </>
             )}
-            {inviteState === 'sent' && (
-              <>
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                  <path d="M4 10L8.5 14.5L16 6.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Invite Sent!
-              </>
-            )}
+            {inviteState === 'sent' && 'Invite Sent!'}
           </button>
           <button className="player-card__secondary-btn" onClick={onClose}>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H6l-2 2V4h16v12z" />
-            </svg>
             Message
           </button>
         </div>
@@ -529,7 +385,7 @@ function PlayerCardModal({ friend, onClose }) {
   );
 }
 
-function SuggestedProfileModal({ suggestion, source, onClose }) {
+function SuggestedProfileModal({ suggestion, source, onClose, onInvite }) {
   const [addState, setAddState] = useState('idle'); // idle | sending | added
   const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
   const [acceptState, setAcceptState] = useState('idle'); // idle | accepting | accepted
@@ -561,6 +417,7 @@ function SuggestedProfileModal({ suggestion, source, onClose }) {
       toAvatar: suggestion.avatar,
       game: 'FIFA',
     });
+    onInvite?.({ id: suggestion.name, name: suggestion.name, avatar: suggestion.avatar });
     setTimeout(() => setInviteState('sent'), 800);
   };
 
@@ -911,7 +768,7 @@ function FindFriendsPanel() {
   );
 }
 
-function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancelParty, onToggleMember, onConfirmParty, currentStep }) {
+function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancelParty, onToggleMember, onConfirmParty, currentStep, onInvite }) {
   const [friendsTab, setFriendsTab] = useState('friends');
   const sorted = sortByPresence(friends);
   const [selectedFriend, setSelectedFriend] = useState(null);
@@ -1071,6 +928,7 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
           <PlayerCardModal
             friend={selectedFriend}
             onClose={() => setSelectedFriend(null)}
+            onInvite={onInvite}
           />
         )}
         {selectedSuggestion && (
@@ -1078,6 +936,7 @@ function FriendsPanel({ friends, partyMode, partyMembers, onStartParty, onCancel
             suggestion={selectedSuggestion}
             source={selectedSource}
             onClose={() => { setSelectedSuggestion(null); setSelectedSource(null); }}
+            onInvite={onInvite}
           />
         )}
       </AnimatePresence>
@@ -1151,145 +1010,154 @@ function ThreeDotsVertical() {
   );
 }
 
-function ChevronRight() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M9 18l6-6-6-6" />
-    </svg>
-  );
-}
+const TOAST_DURATION_MS = 5000;
 
-function PartyStrip({ members, onDisband }) {
-  return (
-    <motion.div
-      className="party-strip"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12, transition: { duration: 0.2 } }}
-      transition={{ duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
-    >
-      <div className="party-strip__left">
-        <div className="party-strip__avatars">
-          {members.map((member, i) => (
-            <motion.div
-              key={member.id}
-              className="party-strip__avatar"
-              initial={{ scale: 0.4, opacity: 0, y: 30 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.1 + i * 0.1,
-                type: 'spring',
-                stiffness: 350,
-                damping: 22,
-              }}
-              style={{ zIndex: members.length - i }}
-            >
-              <motion.div
-                className="party-strip__avatar-inner"
-                initial={{ boxShadow: '0 0 0px rgba(109, 59, 227, 0)' }}
-                animate={{ boxShadow: ['0 0 12px rgba(109, 59, 227, 0.5)', '0 0 0px rgba(109, 59, 227, 0)'] }}
-                transition={{ delay: 0.3 + i * 0.1, duration: 0.5 }}
-              >
-                {member.avatar ? (
-                  <img src={member.avatar} alt={member.name} />
-                ) : (
-                  <div className="party-strip__avatar-placeholder" />
-                )}
-              </motion.div>
-            </motion.div>
-          ))}
-        </div>
-        <div className="party-strip__info">
-          <span className="party-strip__label">Your Party</span>
-          <span className="party-strip__count">{members.length} {members.length === 1 ? 'player' : 'players'}</span>
-        </div>
-      </div>
-      <button className="party-strip__disband" onClick={onDisband}>
-        <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
-          <path d="M6 6L14 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-          <path d="M14 6L6 14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
-    </motion.div>
-  );
-}
+function InviteToast({ toast, onDismiss, onTap }) {
+  useEffect(() => {
+    const t = setTimeout(onDismiss, TOAST_DURATION_MS);
+    return () => clearTimeout(t);
+  }, [toast.id, onDismiss]);
 
-function DiscoveryPanel({ partyMembers, onDisband }) {
-  return (
-    <div className="discovery-panel">
-      <AnimatePresence>
-        {partyMembers.length > 0 && (
-          <PartyStrip members={partyMembers} onDisband={onDisband} />
-        )}
-      </AnimatePresence>
+  const handleDragEnd = (_e, info) => {
+    if (info.offset.y < -40 || info.velocity.y < -300) {
+      onDismiss();
+    }
+  };
 
-      <div className="discovery-panel__header">
-        <img src={SwordsImg} alt="" className="discovery-panel__header-icon" />
-        <div className="discovery-panel__header-text">
-          <h3 className="discovery-panel__title">
-            {partyMembers.length > 0 ? 'Play Together' : 'Discover Games'}
-          </h3>
-          {partyMembers.length > 0 && (
-            <span className="discovery-panel__subtitle">
-              Choose a game for your party
-            </span>
+  const isInvite = toast.variant === 'invite';
+
+  return (
+    <div className="invite-toast-wrap">
+      <motion.div
+        className="invite-toast"
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -60, transition: { duration: 0.2 } }}
+        transition={{ duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
+        drag="y"
+        dragConstraints={{ top: 0, bottom: 0 }}
+        dragElastic={{ top: 0.6, bottom: 0 }}
+        onDragEnd={handleDragEnd}
+        onClick={onTap ? () => onTap(toast) : undefined}
+        style={onTap ? { cursor: 'pointer' } : undefined}
+      >
+        <div className="invite-toast__drag-handle" />
+        <div className="invite-toast__icon-wrap">
+          <div className="invite-toast__app-icon">
+            <img src="/images/fifa-app.png" alt="FIFA" />
+          </div>
+          <div className="invite-toast__unread-dot" />
+          {toast.avatar && (
+            <div className="invite-toast__avatar">
+              <img src={toast.avatar} alt={toast.name} />
+            </div>
           )}
         </div>
-      </div>
-
-      <div className="discovery-panel__grid">
-        {MOCK_DISCOVERY_GAMES.map((game, i) => (
-          <motion.div
-            key={game.id}
-            className="discovery-panel__card"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.05, duration: 0.3, ease: [0.32, 0.94, 0.6, 1] }}
-          >
-            <div
-              className="discovery-panel__card-image"
-              style={game.image ? {} : { background: game.gradient }}
-            >
-              {game.image && <img src={game.image} alt={game.title} />}
-              {!game.image && (
-                <span className="discovery-panel__card-placeholder-title">{game.title}</span>
-              )}
-              <div className="discovery-panel__card-players">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z" />
-                </svg>
-                {game.players}
-              </div>
-            </div>
-            <div className="discovery-panel__card-info">
-              <span className="discovery-panel__card-title">{game.title}</span>
-              <span className="discovery-panel__card-genre">{game.genre}</span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+        <div className="invite-toast__text">
+          <span className="invite-toast__time">NOW</span>
+          <span className="invite-toast__message">
+            {isInvite ? (
+              <><strong>{toast.name}</strong> invited you to play FIFA</>
+            ) : (
+              <><strong>{toast.name}</strong> accepted your invitation to play!</>
+            )}
+          </span>
+        </div>
+        <button
+          className="invite-toast__close"
+          aria-label="Dismiss notification"
+          onClick={(e) => { e.stopPropagation(); onDismiss(); }}
+        >
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M5 5L15 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <path d="M15 5L5 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+        </button>
+      </motion.div>
     </div>
   );
 }
 
-let _friendIdCounter = 100;
-
-export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameExited }) {
+export default function SocialOverlay({ isVisible, onClose }) {
   const { profileData } = useDataContext();
-  const { currentStep } = useUIContext();
-  const sendMessage = useSendMessage();
-  const [hasScanned, setHasScanned] = useState(false);
+  const {
+    currentStep,
+    homeInviteFired,
+    setHomeInviteFired,
+    setPendingInvite,
+    setInvitePanelOpen,
+    setInvitePanelTab,
+    setInvitePanelView,
+    setHasUnreadNotification,
+    addPartyMember,
+  } = useUIContext();
   const [activeTab, setActiveTab] = useState('Home');
   const [friends, setFriends] = useState(MOCK_FRIENDS);
   const [partyMode, setPartyMode] = useState('idle'); // idle | selecting | formed
   const [partyMembers, setPartyMembers] = useState([]);
+  const [activeToast, setActiveToast] = useState(null);
+  const pendingToastTimers = useRef([]);
 
-  // When game exits, reset hasScanned so the "Scan to Play" button shows again
+  useEffect(() => () => {
+    pendingToastTimers.current.forEach(clearTimeout);
+    pendingToastTimers.current = [];
+  }, []);
+
+  const handleInvite = useCallback((friend) => {
+    const timer = setTimeout(() => {
+      setActiveToast({
+        id: `${friend.id}-${Date.now()}`,
+        name: friend.name,
+        avatar: friend.avatar,
+      });
+      addPartyMember({
+        id: friend.id ?? friend.name,
+        name: friend.name,
+        avatar: friend.avatar,
+      });
+    }, 2000);
+    pendingToastTimers.current.push(timer);
+  }, [addPartyMember]);
+
+  const dismissToast = useCallback(() => {
+    setActiveToast((current) => {
+      if (!current) return null;
+      if (current.variant === 'invite') {
+        setHasUnreadNotification(true);
+      }
+      return null;
+    });
+  }, [setHasUnreadNotification]);
+
+  // At step 1 (home page — FIFA billboard), fire a one-shot 5s invite
+  // notification. The homeInviteFired flag (reset in controller-index when
+  // step leaves 1) prevents re-firing if the user closes and reopens the hub
+  // while staying on step 1.
   useEffect(() => {
-    if (gameExited) {
-      setHasScanned(false);
-    }
-  }, [gameExited]);
+    if (currentStep !== 1 || homeInviteFired) return;
+    const inviter =
+      MOCK_FRIENDS.find((f) => f.online && f.name !== profileData) ||
+      MOCK_FRIENDS.find((f) => f.name !== profileData);
+    if (!inviter) return;
+    const timer = setTimeout(() => {
+      const invite = {
+        id: `home-invite-${Date.now()}`,
+        name: inviter.name,
+        avatar: inviter.avatar,
+      };
+      setPendingInvite(invite);
+      setActiveToast({ ...invite, variant: 'invite' });
+      setHomeInviteFired(true);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [currentStep, homeInviteFired, profileData, setHomeInviteFired, setPendingInvite]);
+
+  const handleInviteToastTap = useCallback(() => {
+    setActiveToast(null);
+    setInvitePanelTab('notifications');
+    setInvitePanelView('detail');
+    setInvitePanelOpen(true);
+  }, [setInvitePanelOpen, setInvitePanelTab, setInvitePanelView]);
 
   const startPartyMode = useCallback(() => {
     setPartyMode('selecting');
@@ -1312,13 +1180,6 @@ export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameEx
 
   const confirmParty = useCallback(() => {
     setPartyMode('formed');
-    setActiveTab('Discovery');
-  }, []);
-
-  const disbandParty = useCallback(() => {
-    setPartyMode('idle');
-    setPartyMembers([]);
-    setActiveTab('Friends');
   }, []);
 
   // Randomly toggle each friend's presence every 20s
@@ -1335,13 +1196,10 @@ export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameEx
     return () => clearInterval(interval);
   }, []);
 
-  const handleFriendRequestAccepted = useCallback((newFriend) => {
-    const id = `f-new-${_friendIdCounter++}`;
-    setFriends((prev) => [{ ...newFriend, id, _new: true }, ...prev]);
-  }, []);
-
   const selectedProfile = PROFILES.find((p) => p.name === profileData);
   const avatar = selectedProfile?.avatar;
+
+  const visibleFriends = friends.filter((f) => f.name !== profileData);
 
   return (
     <AnimatePresence>
@@ -1357,32 +1215,7 @@ export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameEx
           {/* Glow — sits above body+wings, clipped around the notch gap */}
           <div className="social-overlay__glow" />
 
-          {/* Dashboard Content */}
-          <div className="social-overlay__content">
-            {activeTab === 'Home' && (
-              <>
-                <ProfileCard profileData={profileData} onClose={onClose} currentStep={currentStep} onNavigateToFriends={() => setActiveTab('Friends')} />
-                <NotificationsPanel onFriendRequestAction={handleFriendRequestAccepted} onNavigateTab={setActiveTab} gameExited={gameExited} />
-              </>
-            )}
-            {activeTab === 'Friends' && (
-              <FriendsPanel
-                friends={friends}
-                partyMode={partyMode}
-                partyMembers={partyMembers}
-                onStartParty={startPartyMode}
-                onCancelParty={cancelPartyMode}
-                onToggleMember={togglePartyMember}
-                onConfirmParty={confirmParty}
-                currentStep={currentStep}
-              />
-            )}
-            {activeTab === 'Discovery' && (
-              <DiscoveryPanel partyMembers={partyMembers} onDisband={disbandParty} />
-            )}
-          </div>
-
-          {/* Bottom Navbar */}
+          {/* Top Navbar */}
           <div className="social-overlay__navbar">
             <div className="social-overlay__navbar-pill">
               {TABS.map((tab) => (
@@ -1392,6 +1225,13 @@ export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameEx
                   onClick={() => setActiveTab(tab)}
                   aria-label={tab}
                 >
+                  {activeTab === tab && (
+                    <motion.span
+                      className="social-overlay__navbar-item-bg"
+                      layoutId="navbar-active-pill"
+                      transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                    />
+                  )}
                   {tab === 'Profile' ? (
                     <div className="social-overlay__navbar-avatar">
                       {avatar ? (
@@ -1403,25 +1243,57 @@ export default function SocialOverlay({ isVisible, onClose, onScanToPlay, gameEx
                   ) : (
                     TAB_ICONS[tab]
                   )}
+                  {activeTab === tab && tab !== 'Profile' && (
+                    <motion.span
+                      className="social-overlay__navbar-item-label"
+                      initial={{ opacity: 0, x: -4 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.18, delay: 0.12 }}
+                    >
+                      {tab}
+                    </motion.span>
+                  )}
                 </button>
               ))}
             </div>
-            {(currentStep === 1 || gameExited) && !hasScanned ? (
-              <button className="social-overlay__navbar-fab" onClick={() => {
-                sendMessage('navigate', { path: '/fifa-menu' });
-                setHasScanned(true);
-                onScanToPlay?.();
-              }}>
-                <svg className="social-overlay__navbar-fab-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M3 11h2V9H3v2zm0-4h2V3h4V1H3v6zm4 12H3v-6H1v8h8v-2H7zm14-12V3h-4V1h6v6h-2zm-2 12v-2h4v-4h2v8h-8v-2h4zM7 7h4v4H7V7zm0 6h4v4H7v-4zm6-6h4v4h-4V7zm0 6h4v4h-4v-4z"/>
-                </svg>
-                <span>Scan to Play</span>
-              </button>
-            ) : (
-              <button className="social-overlay__navbar-fab" onClick={onClose}>
-                <img src={GameControllerIcon} alt="" className="social-overlay__navbar-fab-icon" />
-                <span>Controller</span>
-              </button>
+            {/* Profile + bell live in <SocialControllerHeader />, which sits
+                above this overlay and slides in from the controller view. */}
+          </div>
+
+          {createPortal(
+            <AnimatePresence>
+              {activeToast && (
+                <InviteToast
+                  key={activeToast.id}
+                  toast={activeToast}
+                  onDismiss={dismissToast}
+                  onTap={activeToast.variant === 'invite' ? handleInviteToastTap : undefined}
+                />
+              )}
+            </AnimatePresence>,
+            document.body
+          )}
+
+          {/* Dashboard Content */}
+          <div className={`social-overlay__content ${activeTab === 'Home' ? '--home' : ''}`}>
+            {activeTab === 'Home' && (
+              <>
+                <ProfileCard profileData={profileData} onClose={onClose} currentStep={currentStep} onNavigateToFriends={() => setActiveTab('Friends')} />
+                <HomeFriendsList friends={visibleFriends} onNavigateToFriends={() => setActiveTab('Friends')} onInvite={handleInvite} />
+              </>
+            )}
+            {activeTab === 'Friends' && (
+              <FriendsPanel
+                friends={visibleFriends}
+                partyMode={partyMode}
+                partyMembers={partyMembers}
+                onStartParty={startPartyMode}
+                onCancelParty={cancelPartyMode}
+                onToggleMember={togglePartyMember}
+                onConfirmParty={confirmParty}
+                currentStep={currentStep}
+                onInvite={handleInvite}
+              />
             )}
           </div>
         </div>

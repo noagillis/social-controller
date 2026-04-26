@@ -77,19 +77,19 @@ $overlay-top: 30px;
 }
 
 
-// ─── Bottom Navbar ──────────────────────────────────────
+// ─── Top Navbar ─────────────────────────────────────────
 .social-overlay__navbar {
   position: relative;
-  z-index: 2;
+  z-index: 4;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 12px;
-  padding: 8px 20px 16px;
+  padding: 25px 20px 8px;
   flex-shrink: 0;
 
   @media (orientation: portrait) {
-    padding: 8px 16px 24px;
+    padding: 25px 16px 8px;
   }
 }
 
@@ -104,10 +104,12 @@ $overlay-top: 30px;
 }
 
 .social-overlay__navbar-item {
-  flex: 1 0 0;
+  position: relative;
+  flex: 0 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   height: 36px;
   min-width: 36px;
   padding: 0 10px;
@@ -116,20 +118,25 @@ $overlay-top: 30px;
   background: transparent;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
 
   svg {
+    position: relative;
+    z-index: 1;
     color: rgba(255, 255, 255, 0.5);
     flex-shrink: 0;
+    transition: color 0.2s ease;
+  }
+
+  .social-overlay__navbar-avatar {
+    position: relative;
+    z-index: 1;
   }
 
   &.--active {
-    background: #fff;
-    box-shadow: 0 0 21px rgba(219, 31, 75, 0.29);
-    padding: 0 24px;
+    padding: 0 14px;
 
     svg {
-      color: #000;
+      color: #fff;
     }
 
     .social-overlay__navbar-avatar {
@@ -139,6 +146,92 @@ $overlay-top: 30px;
 
   &:not(.--active):active {
     background: rgba(255, 255, 255, 0.1);
+  }
+}
+
+.social-overlay__navbar-item-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: 143.459px;
+  background: radial-gradient(231.59% 163.41% at 50% 100%, #D3317A 0%, #E50914 100%);
+  box-shadow: 0 0 21.447px 0 rgba(219, 31, 75, 0.29);
+}
+
+.social-overlay__navbar-item-label {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.social-overlay__navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.social-overlay__navbar-profile {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: visible;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px #2fd07a;
+
+  > img,
+  > .social-overlay__navbar-profile-placeholder {
+    position: relative;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__navbar-profile-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+}
+
+.social-overlay__navbar-profile-dot {
+  position: absolute;
+  right: -1px;
+  bottom: -1px;
+  z-index: 21;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2fd07a;
+  border: 2px solid #0a0710;
+}
+
+.social-overlay__navbar-bell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(0, 0, 0, 0.34);
+  color: rgba(255, 255, 255, 0.75);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.12);
   }
 }
 
@@ -202,16 +295,19 @@ $overlay-top: 30px;
   display: flex;
   flex-direction: row;
   gap: 16px;
-  margin-top: $overlay-top;
-  padding: 6px 20px 8px;
+  padding: 6px 20px 16px;
   overflow: hidden;
 
   @media (orientation: portrait) {
     flex-direction: column;
     gap: 12px;
-    padding: 6px 16px 6px;
+    padding: 6px 16px 16px;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+
+    &.--home {
+      overflow-y: hidden;
+    }
   }
 }
 
@@ -452,6 +548,175 @@ $overlay-top: 30px;
     font-size: 12px;
     border-radius: 16px;
     gap: 5px;
+  }
+}
+
+// ─── Home Friends List ──────────────────────────────────
+.social-overlay__home-friends {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow: hidden;
+
+  @media (orientation: portrait) {
+    flex: 1 1 0;
+    min-height: 0;
+    padding: 12px 14px;
+  }
+}
+
+.social-overlay__home-friends-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.social-overlay__home-friends-title {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.social-overlay__home-friends-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.social-overlay__home-friends-action {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.14);
+  }
+}
+
+.social-overlay__home-friends-section-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.social-overlay__home-friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.social-overlay__home-friend-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.social-overlay__home-friend-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.social-overlay__home-friend-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.06);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__home-friend-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
+  border-radius: inherit;
+}
+
+.social-overlay__home-friend-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.social-overlay__home-friend-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.social-overlay__home-friend-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 12px;
+
+  &.--online {
+    color: rgba(255, 255, 255, 0.75);
+  }
+}
+
+.social-overlay__home-friend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #2fd07a;
+  flex-shrink: 0;
+}
+
+.social-overlay__home-friend-invite {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -1116,7 +1381,7 @@ $overlay-top: 30px;
   padding: 16px;
 
   @media (orientation: landscape) {
-    padding: 8px 16px 68px;
+    padding: 100px 16px 16px;
   }
 }
 
@@ -1137,8 +1402,8 @@ $overlay-top: 30px;
 
   @media (orientation: landscape) {
     flex-direction: row;
-    max-width: 520px;
-    max-height: calc(100vh - 80px);
+    max-width: 400px;
+    max-height: calc(100vh - 116px);
     gap: 24px;
     padding: 20px 24px;
     align-items: stretch;
@@ -1932,4 +2197,192 @@ $overlay-top: 30px;
   color: rgba(255, 255, 255, 0.35);
   font-size: 11px;
   font-weight: 500;
+}
+
+// ─── Invite Toast ───────────────────────────────────────
+.invite-toast-wrap {
+  position: fixed;
+  top: 14px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  padding: 0 12px;
+}
+
+.invite-toast {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  max-width: 420px;
+  padding: 10px 12px 10px 14px;
+  border-radius: 22px;
+  background: rgba(32, 32, 34, 0.55);
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  cursor: grab;
+  touch-action: none;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.invite-toast__drag-handle {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 42px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.invite-toast__icon-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  margin-top: 4px;
+}
+
+.invite-toast__app-icon {
+  position: absolute;
+  inset: 0;
+  border-radius: 9px;
+  overflow: hidden;
+  background: #0e7f3a;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.invite-toast__unread-dot {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff453a;
+  z-index: 2;
+}
+
+.invite-toast__avatar {
+  position: absolute;
+  right: -8px;
+  bottom: -4px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(32, 32, 34, 0.92);
+  background: #1a1a1a;
+  z-index: 3;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.invite-toast__text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  margin-top: 4px;
+  padding-left: 4px;
+}
+
+.invite-toast__time {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.55);
+  text-transform: uppercase;
+}
+
+.invite-toast__message {
+  font-size: 14px;
+  line-height: 1.25;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  strong {
+    font-weight: 700;
+  }
+}
+
+.invite-toast__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  margin-top: 4px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+  }
+}
+
+// ─── Invited Friends Stack ──────────────────────────────
+.social-overlay__invited-stack {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.social-overlay__invited-avatar {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #0a0710;
+  background: #1a1a1a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.social-overlay__invited-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(109, 59, 227, 0.4), rgba(176, 56, 220, 0.3));
 }

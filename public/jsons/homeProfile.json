@@ -1,0 +1,24 @@
+{
+  "isNonMember": false,
+  "memberSince": "2024-07-15T20:10:50.000Z",
+  "canCreateUserProfile": true,
+  "isAgeVerified": true,
+  "profiles": [
+    {
+      "name": "User",
+      "isKids": false,
+      "userId": "WKDO3WA72NBZXNSQJ3AO4YT74U",
+      "avatar": {
+        "url": "https://occ-0-2218-2219.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABUC4nDi5AkhhLekti7lLFujg8vaHwxFA3E7TxzCuM05V3NDveZI_nwfD9dTuWx0-BAx-biAq-vrgkA3b2HK4lBR2RxPNLyo.png?r=229"
+      }
+    },
+    {
+      "name": "Kids",
+      "isKids": true,
+      "userId": "TUFHNAG3AVC7PKGDQKNDMDILKI",
+      "avatar": {
+        "url": "https://occ-0-2218-2219.1.nflxso.net/dnm/api/v6/vN7bi_My87NPKvsBoib006Llxzg/AAAABRzQt-xOdMesRRULotWO2lNLgHX_uX0IhfASDW_bqR41mxQvK9nc0vEOJTX9-W-mT8oXIDqafluTZdq-TAs8D_VtnP8Poe4.png?r=f55"
+      }
+    }
+  ]
+}

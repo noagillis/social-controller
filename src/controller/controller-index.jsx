@@ -13,7 +13,9 @@ import WelcomeToast from './common/welcome-toast';
 import ReadyToPlayModal from './common/ready-to-play-modal';
 import FriendSearchOverlay from './common/friend-search-overlay';
 import SocialOverlay from './common/social-overlay';
+import SocialControllerHeader from './common/social-controller-header';
 import GameInviteModal from './common/game-invite-modal';
+import InvitePanel from './common/invite-panel';
 import { Pages } from './pages/page-constants';
 
 import classNames from 'classnames';
@@ -24,9 +26,9 @@ export default function ControllerIndex() {
   const { pageId, step, friendSearch, setFriendSearch, pendingInvites, setPendingInvites, gameExited } = useGetMessage();
   const sendMessage = useSendMessage();
   const { profileData } = useDataContext();
-  const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen } = useUIContext();
+  const { setPageId, setCurrentStep, socialOverlayOpen, setSocialOverlayOpen, setHomeInviteFired, clearPartyMembers } = useUIContext();
   const [selectedProfile, setSelectedProfile] = useState(null);
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding] = useState(false);
 
   // When game exits, open the social overlay instead of showing a separate screen
   useEffect(() => {
@@ -34,6 +36,20 @@ export default function ControllerIndex() {
       setSocialOverlayOpen(true);
     }
   }, [gameExited]);
+
+  // On the home page (step 1 — FIFA billboard on TV), social hub is the
+  // default surface on the phone. For any FIFA-related TV step, SSIC is.
+  // Also reset the home-invite firing flag when leaving step 1, so the
+  // notification re-fires on the next entry.
+  useEffect(() => {
+    if (step === 1) {
+      setSocialOverlayOpen(true);
+      clearPartyMembers();
+    } else {
+      setSocialOverlayOpen(false);
+      setHomeInviteFired(false);
+    }
+  }, [step]);
 
   // Find the first invite targeting this player
   const myInvite = pendingInvites.find(
@@ -59,7 +75,6 @@ export default function ControllerIndex() {
       <ProfilePicker
         onProfileSelected={(profile) => {
           setSelectedProfile(profile);
-          setSocialOverlayOpen(true);
         }}
         onDismiss={() => setSelectedProfile('skipped')}
       />
@@ -71,11 +86,6 @@ export default function ControllerIndex() {
       <SocialOverlay
         isVisible={socialOverlayOpen}
         onClose={() => setSocialOverlayOpen(false)}
-        onScanToPlay={() => {
-          setSocialOverlayOpen(false);
-          setShowOnboarding(true);
-        }}
-        gameExited={gameExited}
       />
       <motion.div
         className="controller__slide"
@@ -104,7 +114,16 @@ export default function ControllerIndex() {
           onDecline={() => handleDismissInvite(myInvite, false)}
         />
       )}
+      <InvitePanel />
+      <SocialControllerHeader />
       {showOnboarding && <WelcomeToast profile={selectedProfile} />}
+      {selectedProfile && selectedProfile !== 'skipped' && !gameExited && step < 3 && (
+        <ReadyToPlayModal
+          onStartPlaying={() => {
+            sendMessage('navigate', { path: '/fifa-menu' });
+          }}
+        />
+      )}
       {/* Game exited state now handled by SocialOverlay with scan-to-connect treatment */}
     </div>
   );

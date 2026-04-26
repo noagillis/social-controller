@@ -1,15 +1,27 @@
+.ssic-nav-shared {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ssic-nav {
-  height: 34px;
-  width: 50px;
-  border-radius: 17px;
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
   cursor: pointer;
   display: grid;
   place-content: center;
+  position: relative;
+  background: transparent;
   z-index: 3;
 
+  &.--NetflixN {
+    width: auto;
+    padding: 0 4px;
+  }
+
   &.--Profile {
-    border-radius: 25px;
-    height: 50px;
+    box-shadow: 0 0 0 2px #2fd07a;
   }
 
   &.--has-avatar {
@@ -22,6 +34,17 @@
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
+}
+
+.ssic-nav__notif-dot {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #e50914;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.6);
 }
 
 .ssic-nav__controller-icon {

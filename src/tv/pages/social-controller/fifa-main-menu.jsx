@@ -30,6 +30,7 @@ export default function FIFAMainMenu({ onNext, onBack }) {
   const handleKeyDown = useCallback(
     (e) => {
       if (e.key === 'Enter') {
+        if (showFriends) return;
         e.preventDefault();
         if (showStartMenu) {
           if (onNext) onNext();
@@ -106,6 +107,7 @@ export default function FIFAMainMenu({ onNext, onBack }) {
       </div>
       <FriendsOverlay
         isVisible={showFriends}
+        initialTab="controllers"
         onBack={() => setShowFriends(false)}
         onExitGame={() => {
           setShowFriends(false);

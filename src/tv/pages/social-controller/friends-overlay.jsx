@@ -20,14 +20,12 @@ const FRIENDS = [
   { name: 'Alex2k', game: 'Oxenfree', avatar: 'friend-avatar-1.png' },
   { name: 'itsmilktea', game: 'Tetris Time Warp', avatar: 'friend-avatar-2.png' },
   { name: 'shawty', game: 'Boggle Party', avatar: 'friend-avatar-3.png' },
-  { name: 'GameHandle', game: 'Tetris Time Warp', avatar: 'friend-avatar-4.png' },
 ];
 
 const MENU_ITEMS = [
   { label: 'Play Game', icon: BackIcon, id: 'play-game' },
   { label: 'Friends', icon: UsersIcon, id: 'friends' },
   { label: 'Controllers', icon: ControllerIcon, id: 'controllers' },
-  { label: 'Achievements', icon: TrophyIcon, id: 'achievements' },
   { label: 'Exit Game', icon: XIcon, id: 'exit-game', separate: true },
 ];
 
@@ -72,18 +70,6 @@ function ControllerIcon() {
       <path d="M3.5 8H6.5" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
       <circle cx="10.5" cy="7" r="0.75" fill="currentColor" />
       <circle cx="12" cy="8.5" r="0.75" fill="currentColor" />
-    </svg>
-  );
-}
-
-function TrophyIcon() {
-  return (
-    <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M8 5H18V12C18 14.761 15.761 17 13 17C10.239 17 8 14.761 8 12V5Z" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M8 8H5C5 11 6.5 12 8 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M18 8H21C21 11 19.5 12 18 12" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M10 21H16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-      <path d="M13 17V21" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -188,7 +174,7 @@ function ControllersContent({ connectedProfiles, controllerCount }) {
   );
 }
 
-function ExitGameCard({ onExitGame }) {
+function ExitGameCard() {
   return (
     <div className="friends-overlay__exit-card">
       <div className="friends-overlay__exit-card-bg" />
@@ -202,15 +188,10 @@ function ExitGameCard({ onExitGame }) {
         <p className="friends-overlay__exit-card-desc">
           Go back to Netflix or launch a different game from here. Any progress not automatically saved will be lost.
         </p>
-        <FocusNode
-          focusId="exit-card-btn"
-          elementType="button"
-          className="friends-overlay__exit-card-btn"
-          onSelected={onExitGame}
-        >
+        <div className="friends-overlay__exit-card-btn">
           <XIcon />
           <span>Exit Game</span>
-        </FocusNode>
+        </div>
       </div>
     </div>
   );
@@ -251,7 +232,7 @@ function FriendsTitleCard() {
   );
 }
 
-function PlayerCard({ friend }) {
+function PlayerCard({ friend, isInvited }) {
   return (
     <div className="friends-overlay__player-card">
       <div className="friends-overlay__player-card-bg" />
@@ -276,6 +257,9 @@ function PlayerCard({ friend }) {
           </div>
           <p className="friends-overlay__player-card-game">{friend.game}</p>
         </div>
+        <div className={`friends-overlay__player-card-invite${isInvited ? ' -invited' : ''}`}>
+          <span>{isInvited ? 'Invited' : 'Invite to play'}</span>
+        </div>
       </div>
     </div>
   );
@@ -287,6 +271,7 @@ PlayerCard.propTypes = {
     game: PropTypes.string.isRequired,
     avatar: PropTypes.string.isRequired,
   }).isRequired,
+  isInvited: PropTypes.bool,
 };
 
 // Card widths + gap used for scroll offset calculation
@@ -313,6 +298,7 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGa
   const [focusedCardIndex, setFocusedCardIndex] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [invitedFriends, setInvitedFriends] = useState(() => new Set());
 
   useEffect(() => {
     if (isVisible) {
@@ -415,8 +401,9 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGa
                 <FocusNode
                   focusId="exit-card-wrapper"
                   className="friends-overlay__card-focus-wrapper"
+                  onSelected={() => onExitGame ? onExitGame() : onBack()}
                 >
-                  <ExitGameCard onExitGame={() => onExitGame ? onExitGame() : onBack()} />
+                  <ExitGameCard />
                 </FocusNode>
                 {SUGGESTED_GAMES.map((game) => (
                   <FocusNode
@@ -476,8 +463,13 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGa
                     focusId={`friends-card-${friend.name}`}
                     className="friends-overlay__card-focus-wrapper"
                     onFocused={() => setFocusedCardIndex(i + 1)}
+                    onSelected={() => setInvitedFriends((prev) => {
+                      const next = new Set(prev);
+                      next.add(friend.name);
+                      return next;
+                    })}
                   >
-                    <PlayerCard friend={friend} />
+                    <PlayerCard friend={friend} isInvited={invitedFriends.has(friend.name)} />
                   </FocusNode>
                 ))}
               </FocusNode>
@@ -523,9 +515,14 @@ export default function FriendsOverlay({ isVisible, onBack, onPlayGame, onExitGa
               focusId="friends-menu-exit-game"
               className="friends-overlay__menu-item -separate"
               onFocused={() => setShowExitConfirmation(true)}
+              onUp={({ preventDefault }) => {
+                preventDefault();
+                setShowExitConfirmation(true);
+                setTimeout(() => setFocus('exit-card-wrapper'), 0);
+              }}
               onSelected={() => {
                 setShowExitConfirmation(true);
-                setTimeout(() => setFocus('exit-confirm-continue'), 0);
+                setTimeout(() => setFocus('exit-card-wrapper'), 0);
               }}
             >
               <XIcon />
@@ -555,6 +552,6 @@ FriendsOverlay.propTypes = {
   onBack: PropTypes.func.isRequired,
   onPlayGame: PropTypes.func,
   onExitGame: PropTypes.func,
-  initialTab: PropTypes.oneOf(['friends', 'controllers', 'achievements']),
+  initialTab: PropTypes.oneOf(['friends', 'controllers']),
   controllerCount: PropTypes.number,
 };

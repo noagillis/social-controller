@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import './ready-to-play-modal.scss';
 
-const SHOW_DELAY = 5500; // appears after welcome toast fades (~500ms delay + 4000ms display + 300ms exit + buffer)
+const SHOW_DELAY = 2000;
 
 export default function ReadyToPlayModal({ onStartPlaying, onGoBack }) {
   const [visible, setVisible] = useState(false);

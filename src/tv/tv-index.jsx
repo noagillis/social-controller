@@ -29,7 +29,7 @@ function TvAppWrapper({ children }) {
   const sendMessage = useSendMessageTV();
 
   const { setGameData } = useDataContext();
-  const { setSelectedTitle, pageId, currentStep, toggleMuted } = useUIContext();
+  const { setSelectedTitle, pageId, currentStep, toggleMuted, setCurrentStep } = useUIContext();
   const { isLoading, data, status } = useLoadData();
   const [isSettingsPanelVisible, setIsSettingsPanelVisible] = useState(false);
 
@@ -50,6 +50,14 @@ function TvAppWrapper({ children }) {
       navigate(data.path);
     }
   });
+
+  useOnReceiveMessage('requestExitGame', useCallback(() => {
+    if (sendMessage) {
+      sendMessage('exitGame', {});
+    }
+    navigate('/f10');
+    setTimeout(() => setCurrentStep(1), 50);
+  }, [sendMessage, navigate, setCurrentStep]));
 
   // ─── Game Invite persistence ───────────────────────────
   const pendingInvitesRef = useRef([]);

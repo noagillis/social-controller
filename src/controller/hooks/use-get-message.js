@@ -5,7 +5,10 @@ import { roomId } from '../utils/get-room-id-from-query-param';
 // This hook listens for room updates from the server and allows passing extra data (e.g., pageId)
 export function useGetMessage() {
   const [pageId, setPageId] = useState(null);
-  const [step, setStep] = useState(1);
+  // Start as null — we don't know the TV's state until it broadcasts.
+  // Defaulting to 1 used to auto-open the social hub on connect even when
+  // the TV was actually past step 1.
+  const [step, setStep] = useState(null);
   const [inputFocus, setInputFocus] = useState(null);
   const [friendSearch, setFriendSearch] = useState(false);
   const [pendingInvites, setPendingInvites] = useState([]);

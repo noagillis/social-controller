@@ -8,12 +8,6 @@
   height: 100%;
 }
 
-.ssic-menu {
-  position: absolute;
-  top: 16px;
-  gap: 16px;
-}
-
 .ssic-layout {
   --center-width: calc(var(--vw) * 0.35);
   --half-center-width: calc(var(--center-width) / 2);

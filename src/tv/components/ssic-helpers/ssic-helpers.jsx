@@ -1,12 +1,9 @@
-import { useSettings } from '@netflix-internal/xd-settings';
-import { useUIContext } from '@/contexts/ui';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { QRCodeSVG } from 'qrcode.react';
 import { useState, useEffect } from 'react';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useOnRoomUpdate } from '../../hooks/use-on-room-update';
 import { useRoomId } from '../../hooks/use-room-id';
-import useBrowserFocus from '../../hooks/use-browser-focus'; // Import the custom hook
 
 import useSSICKeys from '../../hooks/use-ssic-keys';
 import NLogo from '@/tv/assets/svgs/n-logo.svg';
@@ -14,13 +11,10 @@ import NLogo from '@/tv/assets/svgs/n-logo.svg';
 import './ssic-helpers.scss';
 
 export function SSICHelpers() {
-  const { pageId, currentStep } = useUIContext();
   const [hasController, setHasController] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
-  const { showHelpers } = useSettings();
 
   const [mostRecentAction, setMostRecentAction] = useState('');
-  const isFocused = useBrowserFocus();
 
   useSSICKeys('all', (data) => {
     setMostRecentAction(data);
@@ -59,38 +53,6 @@ export function SSICHelpers() {
 
   return (
     <div className="ssic-helpers flex-col">
-      {showHelpers && (
-        <div className="ssic-helpers__tips flex-col">
-          {pageId !== 'home' && (
-            <p>
-              Step <b>{currentStep}</b>
-            </p>
-          )}
-
-          <p>
-            Browser:
-            <b style={{ color: isFocused ? 'green' : 'red' }}>
-              {' '}
-              {isFocused && 'Ready'}
-              {!isFocused && 'Out of focus'}
-            </b>
-            {', '}
-            Controller:
-            <b style={{ color: hasController ? 'green' : 'red' }}>
-              {' '}
-              {hasController && 'Ready'}
-              {!hasController && 'Not connected'}
-            </b>
-          </p>
-
-          <p>
-            Controller: <b>C</b>
-          </p>
-          <p>
-            Keyboard: <b>Arrow keys</b>, <b>Enter</b>, <b>Esc</b>
-          </p>
-        </div>
-      )}
       {showInfo && (
         <div className="ssic-helpers__qrCode">
           <ControllerConnectedText

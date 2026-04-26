@@ -37,6 +37,21 @@ const UIWrapper = ({ children }) => {
   };
   const setSocialOverlayOpen = (v) => updateUI('socialOverlayOpen', v);
   const toggleSocialOverlay = () => toggleUI('socialOverlayOpen');
+  const setInvitePanelOpen = (v) => updateUI('invitePanelOpen', v);
+  const setPendingInvite = (v) => updateUI('pendingInvite', v);
+  const setInvitePanelTab = (v) => updateUI('invitePanelTab', v);
+  const setInvitePanelView = (v) => updateUI('invitePanelView', v);
+  const setHomeInviteFired = (v) => updateUI('homeInviteFired', v);
+  const setHasUnreadNotification = (v) => updateUI('hasUnreadNotification', v);
+  const addPartyMember = (member) => {
+    setUI((prevState) => {
+      const existing = prevState.partyMembers || [];
+      const id = member.id ?? member.name;
+      if (existing.some((m) => (m.id ?? m.name) === id)) return prevState;
+      return { ...prevState, partyMembers: [...existing, member] };
+    });
+  };
+  const clearPartyMembers = () => updateUI('partyMembers', []);
 
   const resetUIContext = () => {
     setUI(defaultState);
@@ -52,6 +67,13 @@ const UIWrapper = ({ children }) => {
     isToastDismissed: true,
     connectedProfiles: [],
     socialOverlayOpen: false,
+    invitePanelOpen: false,
+    pendingInvite: null,
+    invitePanelTab: 'notifications',
+    invitePanelView: 'list',
+    homeInviteFired: false,
+    hasUnreadNotification: false,
+    partyMembers: [],
     setIsToastDismissed,
     setPageId,
     setFocusedTitleObj,
@@ -62,6 +84,14 @@ const UIWrapper = ({ children }) => {
     toggleMuted,
     setSocialOverlayOpen,
     toggleSocialOverlay,
+    setInvitePanelOpen,
+    setPendingInvite,
+    setInvitePanelTab,
+    setInvitePanelView,
+    setHomeInviteFired,
+    setHasUnreadNotification,
+    addPartyMember,
+    clearPartyMembers,
     resetUIContext,
   };
 

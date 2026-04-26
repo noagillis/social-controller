@@ -9,11 +9,28 @@ import FriendsOverlay from './friends-overlay';
 
 import './social-controller.scss';
 
-export const SocialControllerMobile = ({ onBack, ...props }) => {
-  const { currentStep, connectedProfiles, setConnectedProfiles } = useUIContext();
+export const SocialControllerMobile = ({ onBack, onNext, ...props }) => {
+  const { currentStep, setCurrentStep, connectedProfiles, setConnectedProfiles } = useUIContext();
   const [showFriends, setShowFriends] = useState(false);
   const [controllerCount, setControllerCount] = useState(0);
+  const navigate = useNavigate();
   const sendMessageTV = useSendMessageTV();
+
+  const handleLandingNext = () => {
+    const hasController = controllerCount > 0 || connectedProfiles.length > 0;
+    console.log('[social-controller] enter on landing', { controllerCount, connectedProfilesLen: connectedProfiles.length, hasController });
+    if (hasController) {
+      setCurrentStep(3);
+    } else if (onNext) {
+      onNext();
+    }
+  };
+
+  useEffect(() => {
+    if (currentStep === 3) {
+      navigate('/fifa-menu');
+    }
+  }, [currentStep, navigate]);
 
   useOnReceiveMessage('buttonPress', (data) => {
     if (data.button === 'Profile') {
@@ -42,27 +59,50 @@ export const SocialControllerMobile = ({ onBack, ...props }) => {
     }
   }, [connectedProfiles, sendMessageTV]);
 
+  const onPlayGame = () => {
+    setShowFriends(false);
+    setCurrentStep(3);
+  };
+
+  const onExitGame = () => {
+    setShowFriends(false);
+    setCurrentStep(1);
+    sendMessageTV?.('exitGame', {});
+  };
+
   return (
     <div className='screen'>
-      {currentStep === 1 && <FIFALandingPage {...props} />}
+      {currentStep === 1 && <FIFALandingPage {...props} onNext={handleLandingNext} />}
       {currentStep === 2 && (
         <FriendsOverlay
           isVisible={true}
           initialTab="controllers"
           controllerCount={controllerCount}
           onBack={() => setShowFriends(false)}
+          onPlayGame={onPlayGame}
+          onExitGame={onExitGame}
         />
       )}
     </div>
   );
 };
 
-export const SocialControllerTV = (props) => {
+export const SocialControllerTV = ({ onNext, ...props }) => {
   const { currentStep, setCurrentStep, connectedProfiles, setConnectedProfiles } = useUIContext();
   const [showFriends, setShowFriends] = useState(false);
   const [controllerCount, setControllerCount] = useState(0);
   const navigate = useNavigate();
   const sendMessageTV = useSendMessageTV();
+
+  const handleLandingNext = () => {
+    const hasController = controllerCount > 0 || connectedProfiles.length > 0;
+    console.log('[social-controller-tv] enter on landing', { controllerCount, connectedProfilesLen: connectedProfiles.length, hasController });
+    if (hasController) {
+      setCurrentStep(3);
+    } else if (onNext) {
+      onNext();
+    }
+  };
 
   // Navigate to fifa-menu route when step reaches 3
   useEffect(() => {
@@ -118,7 +158,7 @@ export const SocialControllerTV = (props) => {
 
   return (
     <div className='screen'>
-      <FIFALandingPage {...props} />
+      <FIFALandingPage {...props} onNext={handleLandingNext} />
       <FriendsOverlay
         isVisible={isOverlayVisible}
         initialTab={overlayInitialTab}

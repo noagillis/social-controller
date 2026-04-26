@@ -1,0 +1,726 @@
+.invite-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.invite-panel__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.invite-panel__content {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 14px;
+  padding: 16px;
+  width: min(640px, 70%);
+  height: 100%;
+}
+
+.invite-panel__card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 24px 28px;
+  border-radius: 28px;
+  background: linear-gradient(
+    160deg,
+    rgba(85, 30, 120, 0.92) 0%,
+    rgba(58, 26, 82, 0.92) 45%,
+    rgba(36, 20, 52, 0.92) 100%
+  );
+  backdrop-filter: blur(24px) saturate(140%);
+  -webkit-backdrop-filter: blur(24px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.invite-panel__back {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 4px;
+  margin-bottom: 4px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+
+  &:active {
+    opacity: 0.6;
+  }
+}
+
+.invite-panel__hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0 16px;
+}
+
+.invite-panel__game-icon {
+  width: 82px;
+  height: 82px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.invite-panel__inviter-avatar {
+  position: absolute;
+  right: -12px;
+  bottom: -6px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(36, 20, 52, 1);
+  background: #1a1a1a;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.invite-panel__title {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  text-align: center;
+  letter-spacing: -0.2px;
+
+  &.--small {
+    font-size: 18px;
+    margin-top: 4px;
+  }
+}
+
+.invite-panel__subtitle {
+  margin: 0 0 18px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+  max-width: 320px;
+}
+
+.invite-panel__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+}
+
+.invite-panel__action {
+  width: 100%;
+  padding: 13px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.22);
+  }
+}
+
+// ─── Sidebar ────────────────────────────────────────────
+.invite-panel__sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 14px;
+  padding-top: 6px;
+}
+
+.invite-panel__sidebar-btn {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(32, 32, 34, 0.55);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease, color 0.15s ease;
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  &.--active {
+    background: #fff;
+    color: #1a1a1a;
+    border-color: transparent;
+  }
+}
+
+.invite-panel__sidebar-dot {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff453a;
+}
+
+// ─── Party / Voice chat card (Figma) ────────────────────
+.invite-panel__party-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 10px 10px;
+  border-radius: 30px;
+  background: #2d2d2d;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  min-height: 0;
+}
+
+.invite-panel__party-header {
+  padding: 0 6px 6px;
+  font-family: 'Netflix Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  color: #fff;
+}
+
+.invite-panel__party-list {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 0;
+}
+
+.invite-panel__party-me {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    radial-gradient(
+      ellipse at top,
+      rgba(65, 65, 65, 1) 0%,
+      rgba(50, 50, 50, 1) 50%,
+      rgba(35, 35, 35, 1) 100%
+    );
+  box-shadow: inset 0 -3px 6px rgba(45, 45, 45, 1);
+}
+
+.invite-panel__party-participants {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 16px;
+  overflow-y: auto;
+  min-height: 0;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.invite-panel__party-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.invite-panel__party-avatar {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 0.5px solid rgba(128, 128, 128, 0.2);
+  background: #1a1a1a;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.invite-panel__party-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+}
+
+.invite-panel__party-name {
+  flex: 1;
+  min-width: 0;
+  font-family: 'Netflix Sans', sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.invite-panel__party-mic-btn,
+.invite-panel__party-callend-btn,
+.invite-panel__party-volume-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, filter 0.15s ease;
+  color: #fff;
+  flex-shrink: 0;
+
+  &:active {
+    transform: scale(0.94);
+  }
+}
+
+.invite-panel__party-mic-btn {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #f6c5db;
+  background:
+    radial-gradient(
+      ellipse at top,
+      rgba(28, 141, 151, 1) 0%,
+      rgba(28, 109, 122, 1) 50%,
+      rgba(29, 77, 93, 1) 100%
+    );
+  box-shadow: inset 0 -3px 6px rgba(22, 131, 141, 1);
+
+  &.--muted {
+    background:
+      radial-gradient(
+        ellipse at top,
+        rgba(70, 70, 70, 1) 0%,
+        rgba(55, 55, 55, 1) 50%,
+        rgba(40, 40, 40, 1) 100%
+      );
+    box-shadow: inset 0 -3px 6px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.invite-panel__party-callend-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #f6c5db;
+  background:
+    radial-gradient(
+      ellipse at top,
+      rgba(169, 14, 14, 1) 0%,
+      rgba(135, 13, 23, 1) 50%,
+      rgba(102, 11, 32, 1) 100%
+    );
+  box-shadow: inset 0 -3px 6px rgba(153, 22, 29, 1);
+}
+
+.invite-panel__party-volume-btn {
+  width: 40px;
+  height: 40px;
+  background: rgba(128, 128, 128, 0.4);
+}
+
+.invite-panel__party-fade {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  pointer-events: none;
+  background: linear-gradient(to bottom, rgba(45, 45, 45, 0), #2d2d2d);
+}
+
+.invite-panel__party-footer {
+  display: flex;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.invite-panel__party-action-btn {
+  flex: 1;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 9999px;
+  background: rgba(128, 128, 128, 0.4);
+  color: #fff;
+  font-family: 'Netflix Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+
+  &:active {
+    background: rgba(128, 128, 128, 0.55);
+  }
+}
+
+// ─── Notifications list (Figma) ─────────────────────────
+.invite-panel__list-card {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 30px;
+  background: linear-gradient(90deg, #4e1a5f 0%, #581c33 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
+}
+
+.invite-panel__list-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  padding: 0 12px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.invite-panel__list-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 67px;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(128, 128, 128, 0.2);
+  border: none;
+  color: #fff;
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.15s ease;
+
+  &:not(.--disabled):active {
+    background: rgba(128, 128, 128, 0.32);
+  }
+
+  &.--disabled {
+    opacity: 0.2;
+    cursor: default;
+    pointer-events: none;
+  }
+}
+
+.invite-panel__list-item-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+}
+
+.invite-panel__list-item-title {
+  font-family: 'Netflix Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 21px;
+  color: #fff;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.invite-panel__list-item-subtitle {
+  font-size: 13px;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 0.7);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ─── Portrait layout ────────────────────────────────────
+// In portrait the device is narrow, so:
+//  • The panel goes near full-width (small breathing room on the left).
+//  • The vertical sidebar becomes a horizontal pill at the top, matching
+//    the social-overlay navbar pill aesthetic.
+//  • Padding, hero size, and list rows tighten to fit comfortably.
+@media (orientation: portrait) {
+  .invite-panel__content {
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    width: min(640px, 94%);
+    gap: 10px;
+    padding: 25px 16px 16px;
+  }
+
+  .invite-panel__sidebar {
+    flex-direction: row;
+    align-self: flex-end;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    background: rgba(0, 0, 0, 0.55);
+    border-radius: 999px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .invite-panel__sidebar-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &.--active {
+      background: #fff;
+      color: #1a1a1a;
+    }
+  }
+
+  .invite-panel__sidebar-dot {
+    top: 4px;
+    right: 6px;
+    width: 7px;
+    height: 7px;
+    border: 2px solid rgba(0, 0, 0, 0.55);
+  }
+
+  // Notifications list — tighter rhythm for narrow width.
+  .invite-panel__list-card {
+    padding: 10px;
+    border-radius: 22px;
+    gap: 8px;
+  }
+
+  .invite-panel__list-header {
+    height: 32px;
+    padding: 0 8px;
+    font-size: 15px;
+    line-height: 20px;
+  }
+
+  .invite-panel__list-item {
+    height: auto;
+    min-height: 60px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    gap: 10px;
+  }
+
+  .invite-panel__list-item-title {
+    font-size: 13px;
+    line-height: 18px;
+  }
+
+  .invite-panel__list-item-subtitle {
+    font-size: 12px;
+    line-height: 17px;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  // Detail card — game invite "Play FIFA?" sheet.
+  .invite-panel__card {
+    flex: 0 1 auto;
+    padding: 14px 18px 22px;
+    border-radius: 22px;
+  }
+
+  .invite-panel__back {
+    font-size: 14px;
+    margin-bottom: 2px;
+  }
+
+  .invite-panel__hero {
+    margin: 2px 0 12px;
+  }
+
+  .invite-panel__game-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+  }
+
+  .invite-panel__inviter-avatar {
+    width: 28px;
+    height: 28px;
+    right: -10px;
+    bottom: -4px;
+  }
+
+  .invite-panel__title {
+    font-size: 19px;
+    margin-bottom: 4px;
+
+    &.--small {
+      font-size: 16px;
+    }
+  }
+
+  .invite-panel__subtitle {
+    font-size: 12px;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    max-width: 260px;
+  }
+
+  .invite-panel__actions {
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  .invite-panel__action {
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+
+  // Party card — tighter rhythm on narrow widths.
+  .invite-panel__party-card {
+    flex: 0 1 auto;
+    padding: 14px 8px 8px;
+    border-radius: 22px;
+    gap: 6px;
+  }
+
+  .invite-panel__party-list {
+    flex: 0 1 auto;
+  }
+
+  .invite-panel__party-participants {
+    flex: 0 1 auto;
+    overflow-y: visible;
+  }
+
+  .invite-panel__party-fade {
+    display: none;
+  }
+
+  .invite-panel__party-header {
+    font-size: 14px;
+    line-height: 20px;
+    padding: 0 4px 4px;
+  }
+
+  .invite-panel__party-me {
+    padding: 10px 12px;
+    border-radius: 18px;
+    gap: 10px;
+  }
+
+  .invite-panel__party-participants {
+    padding: 2px 12px;
+    gap: 8px;
+  }
+
+  .invite-panel__party-row {
+    gap: 10px;
+  }
+
+  .invite-panel__party-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .invite-panel__party-name {
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .invite-panel__party-mic-btn {
+    width: 36px;
+    height: 36px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .invite-panel__party-callend-btn,
+  .invite-panel__party-volume-btn {
+    width: 34px;
+    height: 34px;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .invite-panel__party-action-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+

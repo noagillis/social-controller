@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/nbakergillis/code-projects/templates/**)",
+      "Bash(grep -E \"\\\\.\\(jsx?|json\\)$\")",
+      "Bash(npx eslint *)",
+      "Bash(grep -n \"navbar-item-label\\\\|initial={{ opacity: 0, width\" /Users/nbakergillis/code-projects/games/social-controller/social-controller/src/controller/common/social-overlay.jsx)",
+      "Bash(node -e ' *)",
+      "Bash(npx sass *)",
+      "Bash(node_modules/.bin/sass --no-source-map src/controller/common/invite-panel.scss /tmp/invite-panel-test.css)",
+      "Read(//private/tmp/**)",
+      "Bash(sort -t: -k3 -n -r)",
+      "Bash(awk -F'z-index:' '{print $2}')"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
+    ]
+  }
+}
