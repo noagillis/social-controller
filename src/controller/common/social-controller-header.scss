@@ -20,10 +20,10 @@
   pointer-events: auto;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 10px;
+  padding: 4px 6px;
+  background: #1c1c1c;
+  border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 999px;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
@@ -59,13 +59,13 @@
 }
 
 .social-controller-header__stack-avatar {
-  width: 32px;
-  height: 32px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.55);
-  border: 2px solid rgba(10, 7, 16, 0.95);
-  margin-left: -12px;
+  border: 1.5px solid rgba(0, 0, 0, 0.6);
+  margin-left: -10px;
   flex-shrink: 0;
   position: relative;
 
@@ -81,4 +81,132 @@
   width: 100%;
   height: 100%;
   background: rgba(255, 255, 255, 0.15);
+}
+
+// ─── Voice chat group (Figma 1290:27862) ──────────────────────────────
+// Outer container wrapping the purple party pill + cyan voice/mute pill.
+.social-controller-header__voice-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px;
+  height: 40px;
+  border: 0.8px solid rgba(255, 80, 110, 0.55);
+  border-radius: 22px;
+  background: rgba(30, 16, 30, 0.35);
+}
+
+// ─── Party pill (Figma 1290:27863) — purple gradient with avatar + +N ──
+.social-controller-header__party-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  padding: 3px 10px 3px 4px;
+  border: 0.8px solid rgba(246, 197, 219, 0.8);
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.12s ease;
+
+  // Radial blue → purple → magenta gradient (Figma colors).
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.3) 100%),
+    radial-gradient(
+      ellipse 120% 90% at 50% -10%,
+      rgba(28, 64, 114, 1) 0%,
+      rgba(59, 49, 112, 1) 50%,
+      rgba(89, 33, 110, 1) 100%
+    );
+  box-shadow: inset 0 -2.4px 4.8px rgba(89, 33, 110, 1);
+
+  &:active {
+    transform: scale(0.96);
+  }
+}
+
+.social-controller-header__party-pill-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 0.8px solid rgba(128, 128, 128, 0.4);
+  background: #1a1a1a;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+}
+
+.social-controller-header__party-pill-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.05));
+}
+
+.social-controller-header__party-pill-count {
+  font-family: 'Netflix Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: #fff;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+// ─── Voice/mute pill (Figma 1290:27871) — cyan gradient with mic + pips ──
+.social-controller-header__voice-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 34px;
+  padding: 0 10px;
+  border: 0.8px solid rgba(246, 197, 219, 0.8);
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.12s ease;
+
+  background: radial-gradient(
+    ellipse 130% 100% at 50% -10%,
+    rgba(28, 141, 151, 1) 0%,
+    rgba(28, 109, 122, 1) 50%,
+    rgba(29, 77, 93, 1) 100%
+  );
+  box-shadow: inset 0 -2.4px 4.8px #16838d;
+
+  &:active {
+    transform: scale(0.94);
+  }
+
+  svg {
+    flex-shrink: 0;
+    display: block;
+  }
+}
+
+.social-controller-header__voice-activity {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.social-controller-header__voice-pip {
+  width: 2px;
+  height: 5px;
+  background: #d1ebed;
+  border-radius: 2px;
 }

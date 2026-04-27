@@ -10,7 +10,8 @@
       "Bash(node_modules/.bin/sass --no-source-map src/controller/common/invite-panel.scss /tmp/invite-panel-test.css)",
       "Read(//private/tmp/**)",
       "Bash(sort -t: -k3 -n -r)",
-      "Bash(awk -F'z-index:' '{print $2}')"
+      "Bash(awk -F'z-index:' '{print $2}')",
+      "mcp__GenAI_MCP_Gateway_dropship__netflix_search_api"
     ],
     "additionalDirectories": [
       "/private/tmp"

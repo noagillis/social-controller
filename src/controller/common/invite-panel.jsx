@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUIContext } from '@/contexts/ui';
 import { useDataContext } from '@/contexts/data';
@@ -182,6 +182,99 @@ function PartyMemberRow({ member }) {
   );
 }
 
+function UserAddIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+    </svg>
+  );
+}
+
+function ChevronLeftIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 18l-6-6 6-6" />
+    </svg>
+  );
+}
+
+const MOCK_INVITE_FRIENDS = [
+  { id: 'inv-mudkip', name: 'Mudkip', avatar: PROFILES[1]?.avatar, online: true, playing: 'Overcooked' },
+  { id: 'inv-gamehandle', name: 'GameHandle', avatar: PROFILES[3]?.avatar, online: false, playing: null },
+  { id: 'inv-lilnmiso', name: 'LilnMiso', avatar: PROFILES[0]?.avatar, online: true, playing: 'FIFA' },
+  { id: 'inv-geryriviera', name: 'GeryRiviera', avatar: PROFILES[2]?.avatar, online: true, playing: "TMNT: Shredder's Revenge" },
+  { id: 'inv-ciriously', name: 'Ciriously', avatar: PROFILES[4]?.avatar, online: false, playing: null },
+];
+
+const INVITE_DELAY_MS = 5000;
+
+function InviteFriendRow({ friend }) {
+  const [inviteState, setInviteState] = useState('idle'); // idle | sending | sent
+  const sendMessage = useSendMessage();
+  const { profileData } = useDataContext();
+  const { addPartyMember, setActiveToast } = useUIContext();
+  const mountedRef = useRef(true);
+
+  useEffect(() => () => { mountedRef.current = false; }, []);
+
+  const status = friend.online
+    ? (friend.playing ? `Playing ${friend.playing}` : 'Online')
+    : 'Offline';
+
+  const handleInvite = (e) => {
+    e.stopPropagation();
+    if (inviteState !== 'idle') return;
+    setInviteState('sending');
+    sendMessage('gameInvite', {
+      fromPlayer: profileData || 'Player',
+      toPlayer: friend.name,
+      toAvatar: friend.avatar,
+      game: 'FIFA',
+    });
+    // Schedule outside the component lifecycle so the user can close the
+    // panel during the 5s delay and still see the toast + party stack update.
+    setTimeout(() => {
+      addPartyMember({ id: friend.id, name: friend.name, avatar: friend.avatar });
+      setActiveToast({
+        id: `invite-${friend.id}-${Date.now()}`,
+        name: friend.name,
+        avatar: friend.avatar,
+      });
+      if (mountedRef.current) setInviteState('sent');
+    }, INVITE_DELAY_MS);
+  };
+
+  return (
+    <div className="invite-panel__friends-row">
+      <div className={`invite-panel__friends-identity ${friend.online ? '' : '--offline'}`}>
+        <div className="invite-panel__party-avatar">
+          {friend.avatar ? (
+            <img src={friend.avatar} alt={friend.name} />
+          ) : (
+            <div className="invite-panel__party-avatar-placeholder" />
+          )}
+        </div>
+        <div className="invite-panel__friends-text">
+          <span className="invite-panel__friends-name">{friend.name}</span>
+          <div className="invite-panel__friends-status">
+            <span className={`invite-panel__friends-status-dot ${friend.online ? '--online' : '--offline'}`} />
+            <span className="invite-panel__friends-status-label">{status}</span>
+          </div>
+        </div>
+      </div>
+      <button
+        className={`invite-panel__friends-invite-btn ${inviteState !== 'idle' ? '--' + inviteState : ''}`}
+        onClick={handleInvite}
+        disabled={inviteState !== 'idle'}
+      >
+        {inviteState === 'idle' && 'Invite'}
+        {inviteState === 'sending' && '...'}
+        {inviteState === 'sent' && 'Sent'}
+      </button>
+    </div>
+  );
+}
+
 function FriendsCard({ onBack }) {
   const { profileData } = useDataContext();
   const {
@@ -192,6 +285,7 @@ function FriendsCard({ onBack }) {
   } = useUIContext();
   const sendMessage = useSendMessage();
   const [muted, setMuted] = useState(false);
+  const [view, setView] = useState('party'); // 'party' | 'invite-list'
 
   const selfProfile = PROFILES.find((p) => p.name === profileData);
   const selfAvatar = selfProfile?.avatar;
@@ -208,40 +302,92 @@ function FriendsCard({ onBack }) {
     setSocialOverlayOpen(false);
   };
 
-  return (
-    <div className="invite-panel__party-card">
-      <div className="invite-panel__party-header">Playing FIFA</div>
+  if (view === 'invite-list') {
+    const partyKeys = new Set(
+      partyMembers.flatMap((m) => [m.id, m.name].filter(Boolean))
+    );
+    const invitable = MOCK_INVITE_FRIENDS
+      .filter((f) => f.name !== profileData)
+      .filter((f) => !partyKeys.has(f.id) && !partyKeys.has(f.name))
+      .slice(0, 4);
 
-      <div className="invite-panel__party-list">
-        <div className="invite-panel__party-me">
-          <div className="invite-panel__party-avatar">
-            {selfAvatar ? (
-              <img src={selfAvatar} alt={selfName} />
-            ) : (
-              <div className="invite-panel__party-avatar-placeholder" />
-            )}
-          </div>
-          <span className="invite-panel__party-name">{selfName}</span>
+    return (
+      <div className="invite-panel__party-card">
+        <div className="invite-panel__friends-header">
           <button
-            className={`invite-panel__party-mic-btn ${muted ? '--muted' : ''}`}
-            onClick={() => setMuted((m) => !m)}
-            aria-label={muted ? 'Unmute' : 'Mute'}
+            className="invite-panel__friends-back-btn"
+            onClick={() => setView('party')}
+            aria-label="Back to party"
           >
-            <MicIcon muted={muted} />
+            <ChevronLeftIcon />
           </button>
-          <button
-            className="invite-panel__party-callend-btn"
-            onClick={handleEndVoiceChat}
-            aria-label="End call"
-          >
-            <CallEndIcon />
-          </button>
+          <span className="invite-panel__party-header --inline">Friends</span>
         </div>
 
-        <div className="invite-panel__party-participants">
-          {partyMembers.map((member) => (
-            <PartyMemberRow key={member.id ?? member.name} member={member} />
+        <div className="invite-panel__friends-list-scroll">
+          {invitable.map((friend) => (
+            <InviteFriendRow key={friend.id} friend={friend} />
           ))}
+        </div>
+
+        <div className="invite-panel__party-footer">
+          <button
+            className="invite-panel__party-action-btn"
+            onClick={() => setView('party')}
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="invite-panel__party-card">
+      <div className="invite-panel__party-header-row">
+        <span className="invite-panel__party-header">Playing FIFA</span>
+        <button
+          className="invite-panel__party-invite-btn"
+          onClick={() => setView('invite-list')}
+          aria-label="Invite friends"
+        >
+          <UserAddIcon />
+          <span>Invite</span>
+        </button>
+      </div>
+
+      <div className="invite-panel__party-list">
+        <div className="invite-panel__party-scroll">
+          <div className="invite-panel__party-me">
+            <div className="invite-panel__party-avatar">
+              {selfAvatar ? (
+                <img src={selfAvatar} alt={selfName} />
+              ) : (
+                <div className="invite-panel__party-avatar-placeholder" />
+              )}
+            </div>
+            <span className="invite-panel__party-name">{selfName}</span>
+            <button
+              className={`invite-panel__party-mic-btn ${muted ? '--muted' : ''}`}
+              onClick={() => setMuted((m) => !m)}
+              aria-label={muted ? 'Unmute' : 'Mute'}
+            >
+              <MicIcon muted={muted} />
+            </button>
+            <button
+              className="invite-panel__party-callend-btn"
+              onClick={handleEndVoiceChat}
+              aria-label="End call"
+            >
+              <CallEndIcon />
+            </button>
+          </div>
+
+          <div className="invite-panel__party-participants">
+            {partyMembers.map((member) => (
+              <PartyMemberRow key={member.id ?? member.name} member={member} />
+            ))}
+          </div>
         </div>
 
         {partyMembers.length > 0 && <div className="invite-panel__party-fade" />}

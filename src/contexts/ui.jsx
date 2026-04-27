@@ -43,11 +43,18 @@ const UIWrapper = ({ children }) => {
   const setInvitePanelView = (v) => updateUI('invitePanelView', v);
   const setHomeInviteFired = (v) => updateUI('homeInviteFired', v);
   const setHasUnreadNotification = (v) => updateUI('hasUnreadNotification', v);
+  const setActiveToast = (v) => updateUI('activeToast', v);
   const addPartyMember = (member) => {
     setUI((prevState) => {
       const existing = prevState.partyMembers || [];
       const id = member.id ?? member.name;
-      if (existing.some((m) => (m.id ?? m.name) === id)) return prevState;
+      const name = member.name;
+      // Dedupe by id OR name — invites from different entry points may use
+      // different id schemes (e.g. 'f-0' vs 'inv-lilnmiso') for the same person.
+      const isDuplicate = existing.some(
+        (m) => (m.id ?? m.name) === id || (name && m.name === name)
+      );
+      if (isDuplicate) return prevState;
       return { ...prevState, partyMembers: [...existing, member] };
     });
   };
@@ -73,6 +80,7 @@ const UIWrapper = ({ children }) => {
     invitePanelView: 'list',
     homeInviteFired: false,
     hasUnreadNotification: false,
+    activeToast: null,
     partyMembers: [],
     setIsToastDismissed,
     setPageId,
@@ -90,6 +98,7 @@ const UIWrapper = ({ children }) => {
     setInvitePanelView,
     setHomeInviteFired,
     setHasUnreadNotification,
+    setActiveToast,
     addPartyMember,
     clearPartyMembers,
     resetUIContext,

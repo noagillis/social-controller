@@ -1089,13 +1089,14 @@ export default function SocialOverlay({ isVisible, onClose }) {
     setInvitePanelTab,
     setInvitePanelView,
     setHasUnreadNotification,
+    activeToast,
+    setActiveToast,
     addPartyMember,
   } = useUIContext();
   const [activeTab, setActiveTab] = useState('Home');
   const [friends, setFriends] = useState(MOCK_FRIENDS);
   const [partyMode, setPartyMode] = useState('idle'); // idle | selecting | formed
   const [partyMembers, setPartyMembers] = useState([]);
-  const [activeToast, setActiveToast] = useState(null);
   const pendingToastTimers = useRef([]);
 
   useEffect(() => () => {
@@ -1120,14 +1121,11 @@ export default function SocialOverlay({ isVisible, onClose }) {
   }, [addPartyMember]);
 
   const dismissToast = useCallback(() => {
-    setActiveToast((current) => {
-      if (!current) return null;
-      if (current.variant === 'invite') {
-        setHasUnreadNotification(true);
-      }
-      return null;
-    });
-  }, [setHasUnreadNotification]);
+    if (activeToast?.variant === 'invite') {
+      setHasUnreadNotification(true);
+    }
+    setActiveToast(null);
+  }, [activeToast, setActiveToast, setHasUnreadNotification]);
 
   // At step 1 (home page — FIFA billboard), fire a one-shot 5s invite
   // notification. The homeInviteFired flag (reset in controller-index when
@@ -1202,79 +1200,83 @@ export default function SocialOverlay({ isVisible, onClose }) {
   const visibleFriends = friends.filter((f) => f.name !== profileData);
 
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <div className="social-overlay">
-
-          {/* Controller icon at the top of the overlay */}
-          {/* Main body */}
-          <div className="social-overlay__body">
-            <div className="social-overlay__bg" />
-          </div>
-
-          {/* Glow — sits above body+wings, clipped around the notch gap */}
-          <div className="social-overlay__glow" />
-
-          {/* Top Navbar */}
-          <div className="social-overlay__navbar">
-            <div className="social-overlay__navbar-pill">
-              {TABS.map((tab) => (
-                <button
-                  key={tab}
-                  className={`social-overlay__navbar-item ${activeTab === tab ? '--active' : ''}`}
-                  onClick={() => setActiveTab(tab)}
-                  aria-label={tab}
-                >
-                  {activeTab === tab && (
-                    <motion.span
-                      className="social-overlay__navbar-item-bg"
-                      layoutId="navbar-active-pill"
-                      transition={{ type: 'spring', stiffness: 380, damping: 34 }}
-                    />
-                  )}
-                  {tab === 'Profile' ? (
-                    <div className="social-overlay__navbar-avatar">
-                      {avatar ? (
-                        <img src={avatar} alt="Profile" />
-                      ) : (
-                        <div className="social-overlay__navbar-avatar-placeholder" />
-                      )}
-                    </div>
-                  ) : (
-                    TAB_ICONS[tab]
-                  )}
-                  {activeTab === tab && tab !== 'Profile' && (
-                    <motion.span
-                      className="social-overlay__navbar-item-label"
-                      initial={{ opacity: 0, x: -4 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.18, delay: 0.12 }}
-                    >
-                      {tab}
-                    </motion.span>
-                  )}
-                </button>
-              ))}
-            </div>
-            {/* Profile + bell live in <SocialControllerHeader />, which sits
-                above this overlay and slides in from the controller view. */}
-          </div>
-
-          {createPortal(
-            <AnimatePresence>
-              {activeToast && (
-                <InviteToast
-                  key={activeToast.id}
-                  toast={activeToast}
-                  onDismiss={dismissToast}
-                  onTap={activeToast.variant === 'invite' ? handleInviteToastTap : undefined}
-                />
-              )}
-            </AnimatePresence>,
-            document.body
+    <>
+      {/* Toast portal lives outside the overlay so it can fire when the
+          social overlay isn't open (e.g. invites accepted from the
+          right-panel friends list while the overlay is closed). */}
+      {createPortal(
+        <AnimatePresence>
+          {activeToast && (
+            <InviteToast
+              key={activeToast.id}
+              toast={activeToast}
+              onDismiss={dismissToast}
+              onTap={activeToast.variant === 'invite' ? handleInviteToastTap : undefined}
+            />
           )}
+        </AnimatePresence>,
+        document.body
+      )}
 
-          {/* Dashboard Content */}
+      <AnimatePresence>
+        {isVisible && (
+          <div className="social-overlay">
+
+            {/* Controller icon at the top of the overlay */}
+            {/* Main body */}
+            <div className="social-overlay__body">
+              <div className="social-overlay__bg" />
+            </div>
+
+            {/* Glow — sits above body+wings, clipped around the notch gap */}
+            <div className="social-overlay__glow" />
+
+            {/* Top Navbar */}
+            <div className="social-overlay__navbar">
+              <div className="social-overlay__navbar-pill">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab}
+                    className={`social-overlay__navbar-item ${activeTab === tab ? '--active' : ''}`}
+                    onClick={() => setActiveTab(tab)}
+                    aria-label={tab}
+                  >
+                    {activeTab === tab && (
+                      <motion.span
+                        className="social-overlay__navbar-item-bg"
+                        layoutId="navbar-active-pill"
+                        transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                      />
+                    )}
+                    {tab === 'Profile' ? (
+                      <div className="social-overlay__navbar-avatar">
+                        {avatar ? (
+                          <img src={avatar} alt="Profile" />
+                        ) : (
+                          <div className="social-overlay__navbar-avatar-placeholder" />
+                        )}
+                      </div>
+                    ) : (
+                      TAB_ICONS[tab]
+                    )}
+                    {activeTab === tab && tab !== 'Profile' && (
+                      <motion.span
+                        className="social-overlay__navbar-item-label"
+                        initial={{ opacity: 0, x: -4 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.18, delay: 0.12 }}
+                      >
+                        {tab}
+                      </motion.span>
+                    )}
+                  </button>
+                ))}
+              </div>
+              {/* Profile + bell live in <SocialControllerHeader />, which sits
+                  above this overlay and slides in from the controller view. */}
+            </div>
+
+            {/* Dashboard Content */}
           <div className={`social-overlay__content ${activeTab === 'Home' ? '--home' : ''}`}>
             {activeTab === 'Home' && (
               <>
@@ -1299,5 +1301,6 @@ export default function SocialOverlay({ isVisible, onClose }) {
         </div>
       )}
     </AnimatePresence>
+    </>
   );
 }
